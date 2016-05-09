@@ -1,26 +1,34 @@
 {% extends 'base.html' %}
 {% block content %} 
 
- <form action="/login" method="POST">
+ <form action="/register_process" method="POST">
 
     <div>
-        <label>Phone number:
+        <label for="phone">Phone number:
             <input type="text" name="user_id" required>
         </label>
-        <div>
+        <div class="information">
             This must be a text message enabled phone. You'll receive daily text message (sms) reminders to log your child's reading progress on this phone. 
         </div>
     </div>
-
+    <br>
     <div>
-        <label>Pass Phrase:
+        <label>Password Phrase:
             <input type="password" name="password" required>
         </label>
-        <div>It's easier to remember a password phrase, so put something in you'll remember easily. Minimum 10 characters. Max 25 characters.</div>
+        <div class="information">It's easier to remember a password phrase, so put something in you'll remember easily. Minimum 10 characters. Max 25 characters.</div>
     </div>
-
+    <br>
     <div>
-        <input type="submit" value="Login">
+        <label>Email address (optional):
+            <input type="text" name="email">
+        </label>
+        <div class="information">
+            We'll use this only for application notifications or to reset your password.
+        </div>
+    </div>
+    <div>
+        <input type="submit" value="Register">
     </div>
 
 </form>
