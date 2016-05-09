@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block content %} 
+
+ <form action="/login" method="POST">
+
+    <div>
+        <label>Phone number:
+            <input type="text" name="user_id" required>
+        </label>
+        <div>
+            This must be a text message enabled phone. You'll receive daily text message (sms) reminders to log your child's reading progress on this phone. 
+        </div>
+    </div>
+
+    <div>
+        <label>Pass Phrase:
+            <input type="password" name="password" required>
+        </label>
+        <div>It's easier to remember a password phrase, so put something in you'll remember easily. Minimum 10 characters. Max 25 characters.</div>
+    </div>
+
+    <div>
+        <input type="submit" value="Login">
+    </div>
+
+</form>
+
+{% endblock %}
