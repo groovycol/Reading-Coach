@@ -20,6 +20,21 @@
     </div>
     <br>
     <div>
+        <label>Child's First name:
+            <input type="text" name="first_name">
+        </label>
+    </div>
+    <div>
+        <label>Your child's Teacher's name:
+            <select name="teacher_id" id="teacher_id">
+                {% for teacher in teachers%}
+                    <option value={{teacher.teacher_id}}>{{ teacher.last_name}}</option>
+                {%endfor%}
+                </select>
+            
+        </label>
+    </div>
+    <div>
         <label>Email address (optional):
             <input type="text" name="email">
         </label>

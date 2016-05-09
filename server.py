@@ -62,8 +62,10 @@ def logout():
 @app.route('/register')
 def register():
     """Add a new user to the database"""
+    teachers=Teacher.query.all()
+    titles=NameTitle.query.all()
 
-    return render_template("register.html")
+    return render_template("register.html", teachers=teachers, titles=titles)
 
 
 @app.route('/register_process', methods=['POST'])
