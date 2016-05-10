@@ -1,6 +1,6 @@
 
 from flask import Flask, render_template, request, flash, redirect, session
-from model import connect_to_db, db, Coach, Reader, Teacher, NameTitle, ReadingLogs
+from model import connect_to_db, db, Coach, Reader, Teacher, NameTitle, ReadingLog, Message
 
 from jinja2 import StrictUndefined
 from datetime import datetime
@@ -85,7 +85,7 @@ def register_process():
         #Add new user_id to the database
         new_coach = Coach(phone=user_id,
                         password=password,
-                        email=email)
+                        email=email, start_date=datetime.strftime(datetime.now(), '%Y-%m-%d %H:%M:%S'))
         db.session.add(new_coach)
         db.session.commit()
 
@@ -116,7 +116,7 @@ def register_process():
 @app.route("/record")
 def record_mins():
     """Allows logged in user to record minutes read"""
-    
+
     #make sure user is logged in
     if "user_id" in session:
         coach = Coach.query.filter_by(phone=session["user_id"]).first()
@@ -134,8 +134,8 @@ def log_minutes():
     coach = Coach.query.filter_by(phone=session["user_id"]).first()
     child = Reader.query.filter_by(coach_id=coach.coach_id).first()
     minutes = request.form["minutes_read"]
- 
-    logentry = ReadingLogs(reader_id=child.reader_id,
+
+    logentry = ReadingLog(reader_id=child.reader_id,
                             minutes_read=minutes,
                             date_time=datetime.strftime(datetime.now(), '%Y-%m-%d %H:%M:%S'))
 

@@ -14,6 +14,7 @@ class Coach(db.Model):
     phone = db.Column(db.String(15), nullable=False, unique=True)
     email = db.Column(db.String(35), nullable=True)
     password = db.Column(db.String(25), nullable=False)
+    start_date = db.Column(db.DateTime, nullable=False)
 
     child = db.relationship('Reader')
 
@@ -30,6 +31,7 @@ class Reader(db.Model):
     first_name = db.Column(db.String(25), nullable=False)
     coach_id = db.Column(db.Integer, db.ForeignKey('coaches.coach_id'))
     teacher_id = db.Column(db.Integer, db.ForeignKey('teachers.teacher_id'))
+    
 
     parent = db.relationship('Coach')
     teacher = db.relationship('Teacher')
@@ -65,7 +67,7 @@ class Teacher(db.Model):
         return "<Teacher teacher_id=%d last_name=%s>" % (self.teacher_id, self.last_name)
 
 
-class ReadingLogs(db.Model):
+class ReadingLog(db.Model):
     """User recorded reading minutes read, many to one relationship with Readers"""
 
     __tablename__ = "readinglogs"
@@ -85,6 +87,18 @@ class ReadingLogs(db.Model):
                                                             self.minutes_read)
 
 
+class Message(db.Model):
+    """Collection of messages to send via text"""
+
+    __tablename__ = "messages"
+
+    message_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    message_text = db.Column(db.String(200), nullable=False)
+
+    def __repr__(self):
+        return "<Message id=%d message=%s>" % (self.message_id, self.message_text)
+
+
 def example_data():
     """Create some sample data."""
 
@@ -93,13 +107,14 @@ def example_data():
     Reader.query.delete()
     Teacher.query.delete()
     NameTitle.query.delete()
-    ReadingLogs.query.delete()
+    ReadingLog.query.delete()
+    Message.query.delete()
 
     # Add sample Coaches
-    c1 = Coach(phone="5103848508", password='MyPassword', email='groovycol@gmail.com')
-    c2 = Coach(phone="5106581353", password='MyPassword')
-    c3 = Coach(phone="4106323222", password='MyPassword', email='adfoodie@gmail.com')
-    c4 = Coach(phone="4106513757", password='MyPassword')
+    c1 = Coach(phone="5103848508", password='MyPassword', email='groovycol@gmail.com', start_date ="2016-05-06 10:34:09")
+    c2 = Coach(phone="5106581353", password='MyPassword', start_date = "2016-05-06 10:34:09")
+    c3 = Coach(phone="4106323222", password='MyPassword', email='adfoodie@gmail.com', start_date="2016-05-06 10:34:09")
+    c4 = Coach(phone="4106513757", password='MyPassword', start_date="2016-05-06 10:34:09")
 
     # Add sample Titles
     prefix1 = NameTitle(title='Ms.')
@@ -121,17 +136,26 @@ def example_data():
     r6 = Reader(first_name="Cora", coach_id="4", teacher_id="2")
 
     # Add sample reading log entries
-    logentry1 = ReadingLogs(reader_id=1, minutes_read=10, date_time='2016-05-06 10:34:09', title="The Penderwicks")
-    logentry2 = ReadingLogs(reader_id=1, minutes_read=30, date_time='2016-05-06 11:34:09', title="The Penderwicks")
-    logentry3 = ReadingLogs(reader_id=2, minutes_read=5, date_time='2016-05-06 9:34:09')
-    logentry4 = ReadingLogs(reader_id=2, minutes_read=10, date_time='2016-05-07 10:34:09')
-    logentry5 = ReadingLogs(reader_id=3, minutes_read=25, date_time='2016-05-06 10:34:09', title="Harry Potter")
-    logentry6 = ReadingLogs(reader_id=3, minutes_read=30, date_time='2016-05-07 10:34:09', title="Harry Potter")
-    logentry7 = ReadingLogs(reader_id=4, minutes_read=10, date_time='2016-05-06 10:34:09')
-    logentry8 = ReadingLogs(reader_id=4, minutes_read=40, date_time='2016-05-06 11:34:09')
-    logentry9 = ReadingLogs(reader_id=5, minutes_read=20, date_time='2016-05-06 10:34:09')
-    logentry10 = ReadingLogs(reader_id=5, minutes_read=10, date_time='2016-05-07 10:34:09')
-    logentry11 = ReadingLogs(reader_id=6, minutes_read=15, date_time='2016-05-06 10:34:09')
+    logentry1 = ReadingLog(reader_id=1, minutes_read=10, date_time='2016-05-06 10:34:09', title="The Penderwicks")
+    logentry2 = ReadingLog(reader_id=1, minutes_read=30, date_time='2016-05-06 11:34:09', title="The Penderwicks")
+    logentry3 = ReadingLog(reader_id=2, minutes_read=5, date_time='2016-05-06 9:34:09')
+    logentry4 = ReadingLog(reader_id=2, minutes_read=10, date_time='2016-05-07 10:34:09')
+    logentry5 = ReadingLog(reader_id=3, minutes_read=25, date_time='2016-05-06 10:34:09', title="Harry Potter")
+    logentry6 = ReadingLog(reader_id=3, minutes_read=30, date_time='2016-05-07 10:34:09', title="Harry Potter")
+    logentry7 = ReadingLog(reader_id=4, minutes_read=10, date_time='2016-05-06 10:34:09')
+    logentry8 = ReadingLog(reader_id=4, minutes_read=40, date_time='2016-05-06 11:34:09')
+    logentry9 = ReadingLog(reader_id=5, minutes_read=20, date_time='2016-05-06 10:34:09')
+    logentry10 = ReadingLog(reader_id=5, minutes_read=10, date_time='2016-05-07 10:34:09')
+    logentry11 = ReadingLog(reader_id=6, minutes_read=15, date_time='2016-05-06 10:34:09')
+
+    message1 = Message(message_text = "It's time to read!")
+    message2 = Message(message_text = "Set a goal for a specific number of minutes to read each day.")
+    message3 = Message(message_text = "It's reading time. Set the timer and go!")
+    message4 = Message(message_text = "Summer is the perfect time to do lots of just right reading.")
+    message5 = Message(message_text = "Another great day for reading.")
+    message6 = Message(message_text = "Grab a book and read.")
+    message7 = Message(message_text = "Reading aloud to your child counts!")
+    message8 = Message(message_text = "Did your child read today? Don't forget to log it!")
 
     #Add all the data to the session
     db.session.add_all([c1,
@@ -161,7 +185,15 @@ def example_data():
                         logentry8,
                         logentry9,
                         logentry10,
-                        logentry11])
+                        logentry11,
+                        message1,
+                        message2,
+                        message3,
+                        message4,
+                        message5,
+                        message6,
+                        message7,
+                        message8])
 
     #commit data to the database
     db.session.commit()
@@ -178,7 +210,8 @@ if __name__ == '__main__':
 
     connect_to_db(app)
     print "Connected to DB."
-    #uncomment as needed after dropdb/createdb to regen sample data.
+    
+    # uncomment as needed after dropdb/createdb to regen sample data.
     # db.create_all()
     # example_data()
     # print "Sample Data created"
