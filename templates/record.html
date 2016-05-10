@@ -4,9 +4,19 @@
 <!-- implement form to log reading minutes -->
 <body>
     {{ session["user_id"] }}
-    <p><a href="/dashboard">View your reader's progress</a></p>
+    <h2> Record Reading Minutes here</h1>
+    <h1>Reader : {{ child.first_name}}</h2>
+    <form action="/log_minutes" method="POST">
+        <br>
+        <label>Number of minutes read:
+            <input type="text" name="minutes_read">
+        </label>
+        <br>
+    <div>
+        <input type="submit" value="Reading Log">
+    </div>
 
-    <div>Record minutes read here</div>
+</form>
 </body>
 
 {% endblock %}

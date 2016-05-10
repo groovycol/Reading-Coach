@@ -3,7 +3,7 @@ from flask import Flask, render_template, request, flash, redirect, session
 from model import connect_to_db, db, Coach, Reader, Teacher, NameTitle, ReadingLogs
 
 from jinja2 import StrictUndefined
-
+from datetime import datetime
 from flask_debugtoolbar import DebugToolbarExtension
 
 app = Flask(__name__)
@@ -75,6 +75,8 @@ def register_process():
     user_id = request.form["user_id"]
     password = request.form["password"]
     email = request.form["email"]
+    first_name = request.form["first_name"]
+    teacher = request.form["teacher_id"]
 
     #make sure this user_id isn't already in use
     user = Coach.query.filter_by(phone=user_id).first()
@@ -87,10 +89,21 @@ def register_process():
         db.session.add(new_coach)
         db.session.commit()
 
-        #Give the user a confirmation message about being registered.
-        flash(user_id + " is now registered to receive text message reminders")
-        #Add the new user_id to the session to keep user logged in.
-        session["user_id"] = user_id
+        #Now, we need the id of the coach just added to the dbase
+        coach = Coach.query.filter_by(phone=user_id).first()
+        if coach:
+            new_reader = Reader(first_name=first_name, coach_id=coach.coach_id, teacher_id=teacher)
+            db.session.add(new_reader)
+            db.session.commit()
+
+            #Give the user a confirmation message about being registered.
+            flash(user_id + " is now registered to receive text message reminders")
+            #Add the new user_id to the session to keep user logged in.
+            session["user_id"] = user_id
+        else:
+            #problem adding Coach to dbase as there is not a matching user now.
+            flash("ERROR, problem adding new registration to the dbase")
+            return redirect("/register")
     else:
         #already in the dbase, redirect to login page
         flash(user_id + " is already registered")
@@ -103,11 +116,33 @@ def register_process():
 @app.route("/record")
 def record_mins():
     """Allows logged in user to record minutes read"""
+    
+    #make sure user is logged in
     if "user_id" in session:
-        return render_template("record.html")
+        coach = Coach.query.filter_by(phone=session["user_id"]).first()
+        child = Reader.query.filter_by(coach_id=coach.coach_id).first()
+        return render_template("record.html", child=child)
     else:
         flash("You must be logged in to record reading minutes")
         return redirect("/login")
+
+
+@app.route("/log_minutes", methods=['POST'])
+def log_minutes():
+    """Adds minutes read that are submitted to the database"""
+
+    coach = Coach.query.filter_by(phone=session["user_id"]).first()
+    child = Reader.query.filter_by(coach_id=coach.coach_id).first()
+    minutes = request.form["minutes_read"]
+ 
+    logentry = ReadingLogs(reader_id=child.reader_id,
+                            minutes_read=minutes,
+                            date_time=datetime.strftime(datetime.now(), '%Y-%m-%d %H:%M:%S'))
+
+    db.session.add(logentry)
+    db.session.commit()
+    flash(minutes + " minutes recorded")
+    return redirect('/record')
 
 
 @app.route("/dashboard")

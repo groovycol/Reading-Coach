@@ -37,6 +37,15 @@ class Reader(db.Model):
     def __repr__(self):
         return "<Reader reader_id=%s name=%s>" % (self.reader_id, self.first_name)
 
+class NameTitle(db.Model):
+    """Controls title data for Teachers via foregin key """
+
+    __tablename__ = "titles"
+
+    title_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    title = db.Column(db.String(20), nullable=False, unique=True)
+
+    # title = db.relationship('Teacher')
 
 class Teacher(db.Model):
     """Teacher or other Admin, one to many relationship with Readers"""
@@ -50,18 +59,10 @@ class Teacher(db.Model):
     password = db.Column(db.String(25), nullable=False)
 
     student = db.relationship('Reader')
+    prefix = db.relationship('NameTitle')
 
     def __repr__(self):
         return "<Teacher teacher_id=%d last_name=%s>" % (self.teacher_id, self.last_name)
-
-
-class NameTitle(db.Model):
-    """Controls title data for Teachers via foregin key """
-
-    __tablename__ = "titles"
-
-    title_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    title = db.Column(db.String(20), nullable=False, unique=True)
 
 
 class ReadingLogs(db.Model):
