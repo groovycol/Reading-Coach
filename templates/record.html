@@ -3,15 +3,20 @@
 
 <!-- implement form to log reading minutes -->
 <body>
-    {{ session["user_id"] }}
-    <h2> Record Reading Minutes here</h1>
-    <h1>Reader : {{ child.first_name}}</h2>
+    <h1> Record Reading Minutes</h1>
+    <br>
+    
+    <h2>Reader : {{ child.first_name}}</h2>
+    <h2> {{ msg.message_text }}
     <form action="/log_minutes" method="POST">
         <br>
         <label>Number of minutes read:
             <input type="text" name="minutes_read">
         </label>
         <br>
+        <label>Title (optional):
+            <input type="text" name="title">
+        </label>
     <div>
         <input type="submit" value="Add to Reading Log">
     </div>

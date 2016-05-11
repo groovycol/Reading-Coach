@@ -121,7 +121,14 @@ def record_mins():
     if "user_id" in session:
         coach = Coach.query.filter_by(phone=session["user_id"]).first()
         child = Reader.query.filter_by(coach_id=coach.coach_id).first()
-        return render_template("record.html", child=child)
+
+        #find the day of the program the user is on
+        date1 = coach.start_date
+        delta = datetime.now() - date1
+        day_index = delta.days + 1
+        msg = Message.query.filter_by(message_id=day_index).first()
+
+        return render_template("record.html", child=child, msg=msg)
     else:
         flash("You must be logged in to record reading minutes")
         return redirect("/login")
@@ -129,29 +136,37 @@ def record_mins():
 
 @app.route("/log_minutes", methods=['POST'])
 def log_minutes():
-    """Adds minutes read that are submitted to the database"""
+    """Adds submitted minutes read to the database"""
 
     coach = Coach.query.filter_by(phone=session["user_id"]).first()
     child = Reader.query.filter_by(coach_id=coach.coach_id).first()
     minutes = request.form["minutes_read"]
+    title = request.form["title"]
 
     logentry = ReadingLog(reader_id=child.reader_id,
                             minutes_read=minutes,
-                            date_time=datetime.strftime(datetime.now(), '%Y-%m-%d %H:%M:%S'))
+                            date_time=datetime.strftime(datetime.now(), '%Y-%m-%d %H:%M:%S'),
+                            title=title)
 
     db.session.add(logentry)
     db.session.commit()
     flash(minutes + " minutes recorded")
-    return redirect('/record')
+    return redirect("/record")
 
 
 @app.route("/dashboard")
 def show_dashboard():
     """Allows logged in user to view progress charts"""
+
+    #make sure user is logged in
     if "user_id" in session:
-        return render_template("dashboard.html")
+        coach = Coach.query.filter_by(phone=session["user_id"]).first()
+        child = Reader.query.filter_by(coach_id=coach.coach_id).first()
+        logs = ReadingLog.query.filter_by(reader_id=child.reader_id).all()
+
+        return render_template("dashboard.html", child=child, logs=logs)
     else:
-        flash("You must be logged in to view progress")
+        flash("You must be logged in to record reading minutes")
         return redirect("/login")
 
 

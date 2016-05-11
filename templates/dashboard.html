@@ -4,10 +4,14 @@
 <!-- implement to show progress charts -->
 
 <body>
-    {{ session["user_id"] }}
-    <p><a href="./record">Record more reading minutes</a></p>
+    <h1>Reading Progress</h1>
     <br>
-    <div>Great progress! Look at how much reading you've logged!</div>
+    <h2>Reader : {{ child.first_name}}</h2>
+    <br>
+    {% for log in logs %}
+
+       <div> Date: {{ log.date_time}} Minutes Read: {{ log.minutes_read}} Title: {{ log.title }} </div>
+    {% endfor %}
 </body>
 
 {% endblock %}

@@ -9,6 +9,7 @@
     <a href="/logout">Logout</a>
     <a href="/record">Record reading minutes</a>
     <a href="/dashboard">View your reader's progress</a>
+    {{ session["user_id"] }}
 {% else %}
     <a href="/login">Login</a>
     <a href="/register">Register</a>
