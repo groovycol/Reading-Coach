@@ -1,0 +1,29 @@
+
+READCOACH App. 
+
+*********************************************************
+To get the app working:
+
+source env/bin/activate
+source secrets.sh
+
+python server.py
+
+Go to: localhost:5000
+
+*********************************************************
+To recreate the sample data:
+
+dropdb readcoachdb
+createdb readcoachdb
+
+uncomment the last 3 lines in model.py
+python -i model.py
+then comment out those lines again
+
+*********************************************************
+To run the flask tests:
+
+dropdb testdb
+createdb testdb
+python tests.py

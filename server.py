@@ -5,7 +5,7 @@ from datetime import datetime
 from flask_debugtoolbar import DebugToolbarExtension
 
 from twilio_api import send_message
-from model import connect_to_db, db, Coach, Reader, Teacher, NameTitle, ReadingLog, Message
+from model import *
 from readcoach import *
 
 app = Flask(__name__)
@@ -34,20 +34,19 @@ def login_process():
     password = request.form["password"]
 
     #make sure this user_id and password match in the database
-
-    user = Coach.query.filter_by(phone=user_id).first()
+    user = get_coach_by_phone(user_id)
 
     if not user:
         flash("No such user")
         return redirect("/login")
 
     if user.password != password:
+        #if password doesn't match, back to /login rte w/msg
         flash("Incorrect password")
         return redirect("/login")
     else:
         #add user_id to the session
         session["user_id"] = user_id
-
         return redirect("/record")
 
 
@@ -81,22 +80,19 @@ def register_process():
     teacher = request.form["teacher_id"]
 
     #make sure this user_id isn't already in use
-    user = Coach.query.filter_by(phone=user_id).first()
+    user = get_coach_by_phone(user_id)
 
     if not user:
         #Add new user_id to the database
-        new_coach = Coach(phone=user_id,
-                        password=password,
-                        email=email, start_date=datetime.strftime(datetime.now(), '%Y-%m-%d %H:%M:%S'))
-        db.session.add(new_coach)
-        db.session.commit()
+        add_coach_to_db(user_id, password, email)
 
         #Now, we need the id of the coach just added to the dbase
-        coach = Coach.query.filter_by(phone=user_id).first()
+        coach = get_coach_by_phone(user_id)
         if coach:
-            new_reader = Reader(first_name=first_name, coach_id=coach.coach_id, teacher_id=teacher)
-            db.session.add(new_reader)
-            db.session.commit()
+            #add a new reader to the db
+            add_reader_to_db(first_name, 
+                        coach.coach_id, 
+                        teacher)
 
             #Give the user a confirmation message about being registered.
             flash(user_id + " is now registered to receive text message reminders")
@@ -121,15 +117,16 @@ def record_mins():
 
     #make sure user is logged in
     if "user_id" in session:
-        coach = Coach.query.filter_by(phone=session["user_id"]).first()
-        child = Reader.query.filter_by(coach_id=coach.coach_id).first()
+        coach = get_coach_by_phone(session["user_id"])
+        child = get_reader_by_coach_id(coach.coach_id)
 
-        #find the day of the program the user is on
+        #find the day and message to display:
         day_index = get_day_index(coach.start_date)
+        msg = get_message_by_day(day_index)
         
-        msg = Message.query.filter_by(message_id=day_index).first()
-
         return render_template("record.html", child=child, msg=msg)
+
+    #if not logged in, return user to the /login screen
     else:
         flash("You must be logged in to record reading minutes")
         return redirect("/login")
@@ -139,18 +136,13 @@ def record_mins():
 def log_minutes():
     """Adds submitted minutes read to the database"""
 
-    coach = Coach.query.filter_by(phone=session["user_id"]).first()
-    child = Reader.query.filter_by(coach_id=coach.coach_id).first()
+    coach = get_coach_by_phone(session["user_id"])
+    child = get_reader_by_coach_id(coach.coach_id)
     minutes = request.form["minutes_read"]
     title = request.form["title"]
 
-    logentry = ReadingLog(reader_id=child.reader_id,
-                            minutes_read=minutes,
-                            date_time=datetime.strftime(datetime.now(), '%Y-%m-%d %H:%M:%S'),
-                            title=title)
+    add_logentry_to_db(child.reader_id, minutes, title)
 
-    db.session.add(logentry)
-    db.session.commit()
     flash(minutes + " minutes recorded")
     return redirect("/record")
 
@@ -161,11 +153,14 @@ def show_dashboard():
 
     #make sure user is logged in
     if "user_id" in session:
-        coach = Coach.query.filter_by(phone=session["user_id"]).first()
-        child = Reader.query.filter_by(coach_id=coach.coach_id).first()
-        logs = ReadingLog.query.filter_by(reader_id=child.reader_id).all()
+        coach = get_coach_by_phone(session["user_id"])
+        child = get_reader_by_coach_id(coach.coach_id)
+        logs = get_all_logs_for_reader(child.reader_id)
+        
 
-        return render_template("dashboard.html", child=child, logs=logs)
+        return render_template("dashboard.html", 
+                                child=child, 
+                                logs=logs)
     else:
         flash("You must be logged in to record reading minutes")
         return redirect("/login")
@@ -188,11 +183,14 @@ def send_sms_message():
     #hard-coded to just my number for now
     recipient = Coach.query.filter_by(phone="5103848508").first()
 
+    #pull the recipient's phone number
     phone_number = recipient.phone
 
+    #determin which message to send
     day = get_day_index(recipient.start_date)
-    message = Message.query.filter_by(message_id=day).first()
+    message = get_message_by_day(day)
     
+    #send the message
     send_message(phone_number, message.message_text)
 
     return redirect("/record") 
