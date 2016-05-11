@@ -1,10 +1,12 @@
 
 from flask import Flask, render_template, request, flash, redirect, session
-from model import connect_to_db, db, Coach, Reader, Teacher, NameTitle, ReadingLog, Message
-
 from jinja2 import StrictUndefined
 from datetime import datetime
 from flask_debugtoolbar import DebugToolbarExtension
+
+from twilio_api import send_message
+from model import connect_to_db, db, Coach, Reader, Teacher, NameTitle, ReadingLog, Message
+from readcoach import *
 
 app = Flask(__name__)
 app.secret_key = "secret"
@@ -123,9 +125,8 @@ def record_mins():
         child = Reader.query.filter_by(coach_id=coach.coach_id).first()
 
         #find the day of the program the user is on
-        date1 = coach.start_date
-        delta = datetime.now() - date1
-        day_index = delta.days + 1
+        day_index = get_day_index(coach.start_date)
+        
         msg = Message.query.filter_by(message_id=day_index).first()
 
         return render_template("record.html", child=child, msg=msg)
@@ -169,6 +170,32 @@ def show_dashboard():
         flash("You must be logged in to record reading minutes")
         return redirect("/login")
 
+
+@app.route("/send-message")
+def send_sms_message():
+    """Sends an SMS message to the user via the Twilio API"""
+
+    #Create a list of all message recipients
+    #disabled for now, so that we don't send to all recipients
+    #recipients = Coaches.query.all()
+
+    # for recipient in recipients:
+        # phone_number = recipient.phone
+        # day = get_day_index(recipient.start_date)
+        # message = Message.query.filter_by(message_id=day).first()
+        # send_message(phone_number, message)
+
+    #hard-coded to just my number for now
+    recipient = Coach.query.filter_by(phone="5103848508").first()
+
+    phone_number = recipient.phone
+
+    day = get_day_index(recipient.start_date)
+    message = Message.query.filter_by(message_id=day).first()
+    
+    send_message(phone_number, message.message_text)
+
+    return redirect("/record") 
 
 if __name__ == "__main__":
     # turn this off for demos
