@@ -1,11 +1,11 @@
-import json
-from unittest import TestCase
+import unittest
+
 from model import connect_to_db, db, Coach, Reader, Teacher, NameTitle, ReadingLog, Message, example_data
 from server import app
 import server
 
 
-class FlaskTestsBasic(TestCase):
+class FlaskTestsBasic(unittest.TestCase):
     """Flask tests."""
 
     def setUp(self):
@@ -24,7 +24,7 @@ class FlaskTestsBasic(TestCase):
         self.assertIn("Welcome", result.data)
 
 
-class FlaskTestsDatabase(TestCase):
+class FlaskTestsDatabase(unittest.TestCase):
     """Flask tests that use the database."""
 
     def setUp(self):
@@ -36,10 +36,13 @@ class FlaskTestsDatabase(TestCase):
 
         # Connect to test database
         connect_to_db(app, "postgresql:///testdb")
+        print "connected to db"
 
         # Create tables and add sample data
         db.create_all()
+        print "tables created"
         example_data()
+        print "example data created"
 
     def tearDown(self):
         """Do at end of every test."""
@@ -57,19 +60,36 @@ class FlaskTestsDatabase(TestCase):
         self.assertIn("Number of minutes read:", result.data)
 
 
-class FlaskTestsLoggedIn(TestCase):
+class FlaskTestsLoggedIn(unittest.TestCase):
     """Flask tests with user logged in to session."""
 
     def setUp(self):
         """Stuff to do before every test."""
 
         app.config['TESTING'] = True
-        app.config['SECRET_KEY'] = 'key'
         self.client = app.test_client()
 
         with self.client as c:
             with c.session_transaction() as sess:
-                sess['user_id'] = 1
+                sess['user_id'] = "5103848508"
+
+         # Connect to test database
+        connect_to_db(app, "postgresql:///testdb")
+        print "connected to db"
+
+        # Create tables and add sample data
+        db.create_all()
+        print "tables created"
+        example_data()
+        print "example data created"
+
+    def tearDown(self):
+        """Do at end of every test."""
+
+        # (uncomment when testing database)
+        db.session.close()
+        db.drop_all()
+
 
     def test_record(self):
         """Test record minutes page."""
@@ -85,7 +105,7 @@ class FlaskTestsLoggedIn(TestCase):
         self.assertIn("Reading Progress", result.data)
 
 
-class FlaskTestsLoggedOut(TestCase):
+class FlaskTestsLoggedOut(unittest.TestCase):
     """Flask tests with user logged in to session."""
 
     def setUp(self):
