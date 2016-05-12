@@ -4,11 +4,11 @@
 <!-- implement to show progress charts -->
 
 <body>
-    <h1> {{ teacher.prefix.title }}{{ teacher.last_name}} Student Reading Progress</h1>
+    <h1> {{ teacher.nametitle.title }}{{ teacher.last_name}} Student Reading Progress</h1>
     <br>
     <br>
-    {% for key, values in logs %}
-        {{ key.first_name }}
+    {% for log in logs %}
+        {{ log }}
         {% for value in values %}
             {{value.date_time}} 
        <!-- <div> Student: {{ log.reader.first_name }} Date: {{ log.date_time}} Minutes Read: {{ log.minutes_read}} Title: {{ log.title }} </div> -->

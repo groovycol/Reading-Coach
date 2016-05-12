@@ -1,8 +1,11 @@
-import unittest
+"""Flask unit tests"""
 
-from model import connect_to_db, db, Coach, Reader, Teacher, NameTitle, ReadingLog, Message, example_data
+import unittest
 from server import app
-import server
+from flask.ext.sqlalchemy import SQLAlchemy
+
+from model import *
+from sample_data import *
 
 
 class FlaskTestsBasic(unittest.TestCase):
@@ -50,11 +53,10 @@ class FlaskTestsDatabase(unittest.TestCase):
         db.session.close()
         db.drop_all()
 
-
     def test_login(self):
         """Test login page."""
 
-        result = self.client.post("/login", 
+        result = self.client.post("/login",
                                   data={"user_id": "5103848508", "password": "MyPassword"},
                                   follow_redirects=True)
         self.assertIn("Number of minutes read:", result.data)
@@ -90,13 +92,11 @@ class FlaskTestsLoggedIn(unittest.TestCase):
         db.session.close()
         db.drop_all()
 
-
     def test_record(self):
         """Test record minutes page."""
 
         result = self.client.get("/record")
         self.assertIn("Record Reading Minutes", result.data)
-
 
     def test_dashboard(self):
         """Test dashboard page."""
@@ -114,14 +114,12 @@ class FlaskTestsLoggedOut(unittest.TestCase):
         app.config['TESTING'] = True
         self.client = app.test_client()
 
-
     def test_record_page(self):
         """Test that user can't see record page when logged out."""
 
         result = self.client.get("/record", follow_redirects=True)
         self.assertNotIn("Record Reading Minutes", result.data)
         self.assertIn("You must be logged in to record reading minutes", result.data)
-
 
     def test_dashboard_page(self):
         """Test that user can't see dashboard page when logged out."""
