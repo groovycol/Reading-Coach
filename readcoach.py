@@ -16,19 +16,19 @@ def get_day_index(start_date):
 def get_coach_by_phone(phone):
     """Given a phone number, return a Coach object"""
 
-    return Coach.query.filter_by(phone=phone).first()
+    return Coach.query.filter_by(phone=phone).one()
 
 
 def get_teacher_by_email(email):
     """Given an email address, return a Teacher object"""
 
-    return Teacher.query.filter_by(email=email).first()
+    return Teacher.query.filter_by(email=email).one()
 
 
 def get_message_by_day(num):
     """Given an integer, retrieve the message_text for that message_id"""
 
-    return Message.query.filter_by(message_id=num).first()
+    return Message.query.filter_by(message_id=num).one()
 
 
 def add_coach_to_db(user_id, password, email):
@@ -40,6 +40,7 @@ def add_coach_to_db(user_id, password, email):
                     start_date=datetime.strftime(datetime.now(), '%Y-%m-%d %H:%M:%S'))
     db.session.add(new_coach)
     db.session.commit()
+
 
 def add_reader_to_db(first_name, coach_id, teacher):
     """Add a new reader to the database"""
