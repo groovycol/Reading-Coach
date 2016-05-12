@@ -114,6 +114,6 @@ if __name__ == '__main__':
     print "Connected to DB."
 
     # uncomment as needed after dropdb/createdb to regen sample data.
-    db.create_all()
-    example_data()
-    print "Sample Data created"
+    # db.create_all()
+    # example_data()
+    # print "Sample Data created"

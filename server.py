@@ -218,31 +218,14 @@ def show_progress():
         return redirect("/login-teacher")
 
 
-@app.route("/send-message")
+@app.route("/send-message/<int:phone>")
 def send_sms_message():
     """Sends an SMS message to the user via the Twilio API"""
 
-    #Create a list of all message recipients
-    #disabled for now, so that we don't send to all recipients
-    #recipients = Coaches.query.all()
-
-    # for recipient in recipients:
-        # phone_number = recipient.phone
-        # day = get_day_index(recipient.start_date)
-        # message = get_message_by_day(day)
-        # send_message(phone_number, message)
-
-    #hard-coded to just my number for now
-    phone_number = "5103848508"
-
-    #determine which message to send
-    day = get_day_index(recipient.start_date)
-    message = get_message_by_day(day)
-
-    #send the message
-    send_message(phone_number, message.message_text)
+    send_message(phone)
 
     return redirect("/record")
+
 
 if __name__ == "__main__":
     # turn this off for demos
