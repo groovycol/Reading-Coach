@@ -10,6 +10,10 @@
     <a href="/record">Record reading minutes</a>
     <a href="/dashboard">View your reader's progress</a>
     {{ session["user_id"] }}
+{% elif "admin" in session %}
+    <a href="/logout">Logout</a>
+    <a href="/progress-view">View Student Progress</a>
+    {{ session["admin"] }}
 {% else %}
     <a href="/login">Parent or CareGiver Login</a>
     <a href="/register">Register as a parent or CareGiver</a>

@@ -1,7 +1,6 @@
 
 from flask import Flask, render_template, request, flash, redirect, session
 from jinja2 import StrictUndefined
-from datetime import datetime
 from flask_debugtoolbar import DebugToolbarExtension
 
 from twilio_api import send_message
@@ -63,7 +62,7 @@ def process_teach_login():
     email = request.form["email"]
     password = request.form["password"]
 
-    #make sure this user_id and password match in the database
+    #make sure this email and password match in the database
     user = get_teacher_by_email(email)
 
     if not user:
@@ -75,14 +74,19 @@ def process_teach_login():
         flash("Incorrect password")
         return redirect("/login-teacher")
     else:
-        #add user_id to the session
-        session["user_id"] = email
+        #add email to the session
+        session["admin"] = email
         return redirect("/progress-view")
+
 
 @app.route("/logout")
 def logout():
     """User must be logged in."""
-    del session["user_id"]
+
+    user_info = session.keys()
+    for key in user_info:
+        del session[key]
+
     flash("You have logged out.")
 
     return redirect("/login")
@@ -200,8 +204,8 @@ def show_progress():
     """Allows logged in teacher to view progress charts"""
 
     #make sure user is logged in
-    if "user_id" in session:
-        logs = get_all_logs_for_teacher(session["user_id"])
+    if "admin" in session:
+        logs = get_all_logs_for_teacher(session["admin"])
 
         return render_template("progress-view.html", logs=logs)
     else:
