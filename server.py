@@ -13,6 +13,7 @@ app.secret_key = "secret"
 # Force jinja to raise an error
 app.jinja_env.undefined = StrictUndefined
 
+
 @app.route("/")
 def index():
     """Index route"""
@@ -96,8 +97,8 @@ def logout():
 @app.route('/register')
 def register():
     """Add a new user to the database"""
-    teachers=Teacher.query.all()
-    titles=NameTitle.query.all()
+    teachers = Teacher.query.all()
+    titles = NameTitle.query.all()
 
     return render_template("register.html", teachers=teachers, titles=titles)
 
@@ -156,7 +157,7 @@ def record_mins():
         #find the day and message to display:
         day_index = get_day_index(coach.start_date)
         msg = get_message_by_day(day_index)
-        
+
         return render_template("record.html", child=child, msg=msg)
 
     #if not logged in, return user to the /login screen
@@ -189,10 +190,9 @@ def show_dashboard():
         coach = get_coach_by_phone(session["user_id"])
         child = get_reader_by_coach_id(coach.coach_id)
         logs = get_all_logs_for_reader(child.reader_id)
-        
 
-        return render_template("dashboard.html", 
-                                child=child, 
+        return render_template("dashboard.html",
+                                child=child,
                                 logs=logs)
     else:
         flash("You must be logged in to record reading minutes")
