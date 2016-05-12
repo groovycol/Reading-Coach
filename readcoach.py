@@ -19,34 +19,16 @@ def get_coach_by_phone(phone):
     return Coach.query.filter_by(phone=phone).first()
 
 
-def get_reader_by_coach_id(coach):
-    """Given a coach id, return a Reader object"""
-
-    return Reader.query.filter_by(coach_id=coach).first()
-
-
 def get_teacher_by_email(email):
     """Given an email address, return a Teacher object"""
 
     return Teacher.query.filter_by(email=email).first()
 
 
-def get_readers_by_teacher_email(email):
-    """Given a teacher email address, get all associated readers"""
-    teacher = Teacher.query.filter_by(email=email).one()
-    return teacher.readers
-
-
 def get_message_by_day(num):
     """Given an integer, retrieve the message_text for that message_id"""
 
     return Message.query.filter_by(message_id=num).first()
-
-
-def get_all_logs_for_reader(reader_id):
-    """Given a reader_id, return all reading logs"""
-
-    return ReadingLog.query.filter_by(reader_id=reader_id).all()
 
 
 def add_coach_to_db(user_id, password, email):
