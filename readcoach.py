@@ -44,16 +44,17 @@ def get_all_logs_for_reader(reader_id):
 
 
 def get_all_logs_for_teacher(email):
-    """Given a Teacher's email address, return all reading logs"""
+    """Given a Teacher's email address, return a dictionary of
+    student keys with a list of reading logs as values
+    """
 
     teacher = Teacher.query.filter_by(email=email).first()
     students = Reader.query.filter_by(teacher_id=teacher.teacher_id)
-    
-    student_logs = []
+
+    student_logs = {} 
     for student in students:
        logs = ReadingLog.query.filter_by(reader_id=student.reader_id).all()
-       for log in logs:
-            student_logs.append(log)
+       student_logs[student] = logs
 
     return student_logs
 

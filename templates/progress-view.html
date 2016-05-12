@@ -4,12 +4,15 @@
 <!-- implement to show progress charts -->
 
 <body>
-    <h1>Student Reading  Progress</h1>
+    <h1> {{ teacher.prefix.title }}{{ teacher.last_name}} Student Reading Progress</h1>
     <br>
     <br>
-    {% for log in logs %}
-
-       <div> Student: {{ log.reader.first_name }} Date: {{ log.date_time}} Minutes Read: {{ log.minutes_read}} Title: {{ log.title }} </div>
+    {% for key, values in logs %}
+        {{ key.first_name }}
+        {% for value in values %}
+            {{value.date_time}} 
+       <!-- <div> Student: {{ log.reader.first_name }} Date: {{ log.date_time}} Minutes Read: {{ log.minutes_read}} Title: {{ log.title }} </div> -->
+        {% endfor %}
     {% endfor %}
 </body>
 

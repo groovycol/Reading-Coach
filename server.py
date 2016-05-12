@@ -2,6 +2,7 @@
 from flask import Flask, render_template, request, flash, redirect, session
 from jinja2 import StrictUndefined
 from flask_debugtoolbar import DebugToolbarExtension
+import json
 
 from twilio_api import send_message
 from model import *
@@ -205,9 +206,13 @@ def show_progress():
 
     #make sure user is logged in
     if "admin" in session:
+        teacher = get_teacher_by_email(session["admin"])
         logs = get_all_logs_for_teacher(session["admin"])
+        logs_json = json.dumps(logs)
 
-        return render_template("progress-view.html", logs=logs)
+        return render_template("progress-view.html",
+                                logs_json=logs_json,
+                                teacher=teacher)
     else:
         flash("You must be logged in to view progress")
         return redirect("/login-teacher")
@@ -224,16 +229,13 @@ def send_sms_message():
     # for recipient in recipients:
         # phone_number = recipient.phone
         # day = get_day_index(recipient.start_date)
-        # message = Message.query.filter_by(message_id=day).first()
+        # message = get_message_by_day(day)
         # send_message(phone_number, message)
 
     #hard-coded to just my number for now
-    recipient = Coach.query.filter_by(phone="5103848508").first()
+    phone_number = "5103848508"
 
-    #pull the recipient's phone number
-    phone_number = recipient.phone
-
-    #determin which message to send
+    #determine which message to send
     day = get_day_index(recipient.start_date)
     message = get_message_by_day(day)
 
