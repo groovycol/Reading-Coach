@@ -3,7 +3,7 @@ import os
 from twilio.rest import TwilioRestClient
 
 from model import *
-from readcoach import get_day_index, get_message_by_day, get_coach_by_phone
+from readcoach import *
 
 ACCOUNT_SID = os.environ['TWILIO_SID']
 AUTH_TOKEN = os.environ['TWILIO_SECRET']
@@ -21,7 +21,7 @@ def send_message(phone_number):
     msg = get_message_by_day(day)
 
     #format message to send
-    msg_body = "ReadingCoach reminder: " + msg.message_text + "Log progress now! http://goo.gl/dEA6eq"
+    msg_body = "ReadingCoach reminder: " + msg.message_text + " Log progress now! http://goo.gl/dEA6eq"
 
     print phone_number
     print msg_body

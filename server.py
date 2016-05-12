@@ -218,8 +218,8 @@ def show_progress():
         return redirect("/login-teacher")
 
 
-@app.route("/send-message/<int:phone>")
-def send_sms_message():
+@app.route("/send-message/<phone>")
+def send_sms_message(phone):
     """Sends an SMS message to the user via the Twilio API"""
 
     send_message(phone)
