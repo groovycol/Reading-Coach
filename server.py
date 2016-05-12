@@ -153,13 +153,12 @@ def record_mins():
     #make sure user is logged in
     if "user_id" in session:
         coach = get_coach_by_phone(session["user_id"])
-        child = get_reader_by_coach_id(coach.coach_id)
 
         #find the day and message to display:
         day_index = get_day_index(coach.start_date)
         msg = get_message_by_day(day_index)
 
-        return render_template("record.html", child=child, msg=msg)
+        return render_template("record.html", coach=coach, msg=msg)
 
     #if not logged in, return user to the /login screen
     else:
@@ -171,12 +170,11 @@ def record_mins():
 def log_minutes():
     """Adds submitted minutes read to the database"""
 
-    coach = get_coach_by_phone(session["user_id"])
-    child = get_reader_by_coach_id(coach.coach_id)
     minutes = request.form["minutes_read"]
     title = request.form["title"]
+    reader_id = request.form["reader_id"]
 
-    add_logentry_to_db(child.reader_id, minutes, title)
+    add_logentry_to_db(reader_id, minutes, title)
 
     flash(minutes + " minutes recorded")
     return redirect("/record")
@@ -189,12 +187,8 @@ def show_dashboard():
     #make sure user is logged in
     if "user_id" in session:
         coach = get_coach_by_phone(session["user_id"])
-        child = get_reader_by_coach_id(coach.coach_id)
-        logs = get_all_logs_for_reader(child.reader_id)
 
-        return render_template("dashboard.html",
-                                child=child,
-                                logs=logs)
+        return render_template("dashboard.html", coach=coach)
     else:
         flash("You must be logged in to record reading minutes")
         return redirect("/login")

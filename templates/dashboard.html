@@ -6,11 +6,13 @@
 <body>
     <h1>Reading Progress</h1>
     <br>
-    <h2>Reader : {{ child.first_name}}</h2>
-    <br>
-    {% for log in logs %}
-
-       <div> Date: {{ log.date_time}} Minutes Read: {{ log.minutes_read}} Title: {{ log.title }} </div>
+    {% for reader in coach.readers %}
+         <h2>{{ reader.first_name }}</h2>
+         {% for log in reader.logs %}
+         <ul>
+            <li>Date: {{ log.date_time }} Minutes read: {{ log.minutes_read }} Title: {{ log.title }}
+         </ul>
+         {% endfor %}
     {% endfor %}
 </body>
 

@@ -5,10 +5,11 @@
 <body>
     <h1> Record Reading Minutes</h1>
     <br>
-    
-    <h2>Reader : {{ child.first_name}}</h2>
-    <h2> {{ msg.message_text }}
+    {% for reader in coach.readers %}
+         <h2>{{ reader.first_name }}</h2>
+    <h3> {{ msg.message_text }}</h3>
     <form action="/log_minutes" method="POST">
+        <input type="hidden" name="reader_id" value="{{reader.reader_id}}">
         <br>
         <label>Number of minutes read:
             <input type="text" name="minutes_read">
@@ -20,7 +21,7 @@
     <div>
         <input type="submit" value="Add to Reading Log">
     </div>
-
+    {% endfor %}
 </form>
 </body>
 
