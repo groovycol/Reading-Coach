@@ -61,7 +61,7 @@ class Teacher(db.Model):
     email = db.Column(db.String(35), nullable=True, unique=True)
     password = db.Column(db.String(25), nullable=False)
 
-    students = db.relationship('Reader')
+    readers = db.relationship('Reader')
     nametitle = db.relationship('NameTitle')
 
     def __repr__(self):

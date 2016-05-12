@@ -207,12 +207,8 @@ def show_progress():
     #make sure user is logged in
     if "admin" in session:
         teacher = get_teacher_by_email(session["admin"])
-        logs = get_all_logs_for_teacher(session["admin"])
-        logs_json = json.dumps(logs)
 
-        return render_template("progress-view.html",
-                                logs_json=logs_json,
-                                teacher=teacher)
+        return render_template("progress-view.html", teacher=teacher)
     else:
         flash("You must be logged in to view progress")
         return redirect("/login-teacher")
