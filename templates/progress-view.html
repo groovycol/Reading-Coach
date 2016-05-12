@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<!-- implement to show progress charts -->
+
+<body>
+    <h1>Student Reading  Progress</h1>
+    <br>
+    <br>
+    {% for log in logs %}
+
+       <div> Student: {{ log.reader.first_name }} Date: {{ log.date_time}} Minutes Read: {{ log.minutes_read}} Title: {{ log.title }} </div>
+    {% endfor %}
+</body>
+
+{% endblock %}

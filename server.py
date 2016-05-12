@@ -21,10 +21,16 @@ def index():
 
 
 #Routes to manage login and logout
-@app.route('/login', methods=['GET'])
+@app.route('/login')
 def login_form():
     """Show login form."""
     return render_template("login.html")
+
+
+@app.route('/login-teacher')
+def login_teacher():
+    """Show login form for Teacher portal"""
+    return render_template("login-teacher.html")
 
 
 @app.route('/login', methods=['POST'])
@@ -49,6 +55,29 @@ def login_process():
         session["user_id"] = user_id
         return redirect("/record")
 
+
+@app.route('/process_teach_login', methods=['POST'])
+def process_teach_login():
+    """Process login for teacher."""
+
+    email = request.form["email"]
+    password = request.form["password"]
+
+    #make sure this user_id and password match in the database
+    user = get_teacher_by_email(email)
+
+    if not user:
+        flash("No such user")
+        return redirect("/login-teacher")
+
+    if user.password != password:
+        #if password doesn't match, back to /login rte w/msg
+        flash("Incorrect password")
+        return redirect("/login-teacher")
+    else:
+        #add user_id to the session
+        session["user_id"] = email
+        return redirect("/progress-view")
 
 @app.route("/logout")
 def logout():
@@ -166,6 +195,20 @@ def show_dashboard():
         return redirect("/login")
 
 
+@app.route("/progress-view")
+def show_progress():
+    """Allows logged in teacher to view progress charts"""
+
+    #make sure user is logged in
+    if "user_id" in session:
+        logs = get_all_logs_for_teacher(session["user_id"])
+
+        return render_template("progress-view.html", logs=logs)
+    else:
+        flash("You must be logged in to view progress")
+        return redirect("/login-teacher")
+
+
 @app.route("/send-message")
 def send_sms_message():
     """Sends an SMS message to the user via the Twilio API"""
@@ -189,11 +232,11 @@ def send_sms_message():
     #determin which message to send
     day = get_day_index(recipient.start_date)
     message = get_message_by_day(day)
-    
+
     #send the message
     send_message(phone_number, message.message_text)
 
-    return redirect("/record") 
+    return redirect("/record")
 
 if __name__ == "__main__":
     # turn this off for demos

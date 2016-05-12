@@ -11,8 +11,9 @@
     <a href="/dashboard">View your reader's progress</a>
     {{ session["user_id"] }}
 {% else %}
-    <a href="/login">Login</a>
-    <a href="/register">Register</a>
+    <a href="/login">Parent or CareGiver Login</a>
+    <a href="/register">Register as a parent or CareGiver</a>
+    <a href="/login-teacher">Login to Teacher/Admin Portal</a>
 {% endif %}
 
 <hr>

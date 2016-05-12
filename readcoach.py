@@ -25,6 +25,12 @@ def get_reader_by_coach_id(coach):
     return Reader.query.filter_by(coach_id=coach).first()
 
 
+def get_teacher_by_email(email):
+    """Given an email address, return a Teacher object"""
+
+    return Teacher.query.filter_by(email=email).first()
+
+
 def get_message_by_day(num):
     """Given an integer, retrieve the message_text for that message_id"""
 
@@ -35,6 +41,21 @@ def get_all_logs_for_reader(reader_id):
     """Given a reader_id, return all reading logs"""
 
     return ReadingLog.query.filter_by(reader_id=reader_id).all()
+
+
+def get_all_logs_for_teacher(email):
+    """Given a Teacher's email address, return all reading logs"""
+
+    teacher = Teacher.query.filter_by(email=email).first()
+    students = Reader.query.filter_by(teacher_id=teacher.teacher_id)
+    
+    student_logs = []
+    for student in students:
+       logs = ReadingLog.query.filter_by(reader_id=student.reader_id).all()
+       for log in logs:
+            student_logs.append(log)
+
+    return student_logs
 
 
 def add_coach_to_db(user_id, password, email):
