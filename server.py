@@ -190,7 +190,7 @@ def show_dashboard():
 
         return render_template("dashboard.html", coach=coach)
     else:
-        flash("You must be logged in to record reading minutes")
+        flash("You must be logged in to view progress charts")
         return redirect("/login")
 
 
