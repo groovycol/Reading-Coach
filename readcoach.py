@@ -1,5 +1,8 @@
 
 from datetime import datetime
+from sqlalchemy.orm.exc import NoResultFound
+from sqlalchemy.orm.exc import MultipleResultsFound
+
 from model import *
 
 
@@ -15,20 +18,42 @@ def get_day_index(start_date):
 
 def get_coach_by_phone(phone):
     """Given a phone number, return a Coach object"""
-
-    return Coach.query.filter_by(phone=phone).one()
+    try:
+        coach = Coach.query.filter_by(phone=phone).one()
+    except NoResultFound:
+        coach = None
+    except MultipleResultsFound:
+        coach = "error" 
+    except:
+        coach =  "error"
+    return coach
 
 
 def get_teacher_by_email(email):
     """Given an email address, return a Teacher object"""
-
-    return Teacher.query.filter_by(email=email).one()
+    try:
+        teacher = Teacher.query.filter_by(email=email).one()
+    except NoResultFound:
+        teacher = None
+    except MultipleResultsFound:
+        teacher = "error"
+    except:
+        teacher = "error"
+    return teacher
 
 
 def get_message_by_day(num):
     """Given an integer, retrieve the message_text for that message_id"""
 
-    return Message.query.filter_by(message_id=num).one()
+    try:
+        message = Message.query.filter_by(message_id=num).one()
+    except NoResultFound:
+        message = None
+    except MultipleResultsFound:
+        message = "error"
+    except:
+        message = "error"
+    return message
 
 
 def add_coach_to_db(user_id, password, email):

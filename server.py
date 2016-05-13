@@ -2,7 +2,6 @@
 from flask import Flask, render_template, request, flash, redirect, session
 from jinja2 import StrictUndefined
 from flask_debugtoolbar import DebugToolbarExtension
-import json
 
 from twilio_api import send_message
 from model import *
@@ -10,6 +9,8 @@ from readcoach import *
 
 app = Flask(__name__)
 app.secret_key = "secret"
+
+ERR_MSG = "The database did not return expected results. Please try again."
 
 # Force jinja to raise an error
 app.jinja_env.undefined = StrictUndefined
@@ -46,6 +47,8 @@ def login_process():
     if not user:
         flash("No such user")
         return redirect("/login")
+    elif user == "error":
+        return render_template("error.html", err_msg=ERR_MSG)
 
     if user.password != password:
         #if password doesn't match, back to /login rte w/msg
@@ -70,6 +73,8 @@ def process_teach_login():
     if not user:
         flash("No such user")
         return redirect("/login-teacher")
+    elif user == "error":
+        return render_template("error.html", err_msg=ERR_MSG)
 
     if user.password != password:
         #if password doesn't match, back to /login rte w/msg
@@ -99,9 +104,8 @@ def logout():
 def register():
     """Add a new user to the database"""
     teachers = Teacher.query.all()
-    titles = NameTitle.query.all()
 
-    return render_template("register.html", teachers=teachers, titles=titles)
+    return render_template("register.html", teachers=teachers)
 
 
 @app.route('/register_process', methods=['POST'])
@@ -123,26 +127,25 @@ def register_process():
 
         #Now, we need the id of the coach just added to the dbase
         coach = get_coach_by_phone(user_id)
-        if coach:
-            #add a new reader to the db
-            add_reader_to_db(first_name, 
-                        coach.coach_id, 
-                        teacher)
 
-            #Give the user a confirmation message about being registered.
-            flash(user_id + " is now registered to receive text message reminders")
-            #Add the new user_id to the session to keep user logged in.
-            session["user_id"] = user_id
-        else:
-            #problem adding Coach to dbase as there is not a matching user now.
-            flash("ERROR, problem adding new registration to the dbase")
-            return redirect("/register")
+        #make sure the database returned a real result
+        if coach is None or coach == "error":
+            return render_template("error.html", err_msg=ERR_MSG)
+
+        #add a new reader to the db
+        add_reader_to_db(first_name,
+                    coach.coach_id,
+                    teacher)
+
+        #Give the user a confirmation message about being registered.
+        flash(user_id + " is now registered to receive text message reminders")
+        #Add the new user_id to the session to keep user logged in.
+        session["user_id"] = user_id
+        return render_template("new-user-info.html")
     else:
         #already in the dbase, redirect to login page
         flash(user_id + " is already registered")
         return redirect("/login")
-
-    return render_template("new-user-info.html")
 
 
 #Routes to manage user input and displaying user data
@@ -153,6 +156,10 @@ def record_mins():
     #make sure user is logged in
     if "user_id" in session:
         coach = get_coach_by_phone(session["user_id"])
+
+        #make sure the database retrieved something real
+        if coach is None or coach == "error":
+            return render_template("error.html", err_msg=ERR_MSG)
 
         #find the day and message to display:
         day_index = get_day_index(coach.start_date)
@@ -188,7 +195,13 @@ def show_dashboard():
     if "user_id" in session:
         coach = get_coach_by_phone(session["user_id"])
 
+        #make sure the database returned something real
+        if coach is None or coach == "error":
+            return render_template("error.html", err_msg=ERR_MSG)
+
+        #otherwise render the page for this route
         return render_template("dashboard.html", coach=coach)
+
     else:
         flash("You must be logged in to view progress charts")
         return redirect("/login")
@@ -202,7 +215,13 @@ def show_progress():
     if "admin" in session:
         teacher = get_teacher_by_email(session["admin"])
 
+        #make sure the database retrieved something real
+        if teacher is None or teacher == "error":
+            return render_template("error.html", err_msg=ERR_MSG)
+
+        #otherwise render the page for this route
         return render_template("progress-view.html", teacher=teacher)
+
     else:
         flash("You must be logged in to view progress")
         return redirect("/login-teacher")
@@ -215,6 +234,13 @@ def send_sms_message(phone):
     send_message(phone)
 
     return redirect("/record")
+
+
+@app.route("/error")
+def error_page():
+    """Displays an error page"""
+
+    return render_template("error.html", err_msg=ERR_MSG)
 
 
 if __name__ == "__main__":

@@ -23,13 +23,10 @@ def send_message(phone_number):
     #format message to send
     msg_body = "ReadingCoach reminder: " + msg.message_text + " Log progress now! http://goo.gl/dEA6eq"
 
-    print phone_number
-    print msg_body
-
     client = TwilioRestClient(ACCOUNT_SID, AUTH_TOKEN)
     client.messages.create(to=phone_number,
                             from_ =FROM_ACCOUNT,
-                            body=msg_body )
+                            body=msg_body)
 
 
 if __name__ == '__main__':
