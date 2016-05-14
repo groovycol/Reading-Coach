@@ -15,10 +15,10 @@ def example_data():
     Message.query.delete()
 
     # Add sample Coaches
-    c1 = Coach(phone="5103848508", password='MyPassword', email='groovycol@gmail.com', start_date="2016-05-09 10:34:09")
-    c2 = Coach(phone="5106581353", password='MyPassword', start_date="2016-05-10 10:34:09")
-    c3 = Coach(phone="4106323222", password='MyPassword', email='adfoodie@gmail.com', start_date="2016-05-11 10:34:09")
-    c4 = Coach(phone="4106513757", password='MyPassword', start_date="2016-05-12 10:34:09")
+    c1 = Coach(phone="510-384-8508", password='MyPassword', email='groovycol@gmail.com', start_date="2016-05-09 10:34:09")
+    c2 = Coach(phone="510-658-1353", password='MyPassword', start_date="2016-05-10 10:34:09")
+    c3 = Coach(phone="410-632-3222", password='MyPassword', email='adfoodie@gmail.com', start_date="2016-05-11 10:34:09")
+    c4 = Coach(phone="410-651-3757", password='MyPassword', start_date="2016-05-12 10:34:09")
 
     # Add sample Titles
     prefix1 = NameTitle(title='Ms.')

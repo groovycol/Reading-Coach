@@ -2,7 +2,7 @@
 
 import unittest
 from server import app
-from flask.ext.sqlalchemy import SQLAlchemy
+# from flask.ext.sqlalchemy import SQLAlchemy
 
 from model import *
 from sample_data import *
@@ -57,7 +57,7 @@ class FlaskTestsDatabase(unittest.TestCase):
         """Test login page."""
 
         result = self.client.post("/login",
-                                  data={"user_id": "5103848508", "password": "MyPassword"},
+                                  data={"user_id": "510-384-8508", "password": "MyPassword"},
                                   follow_redirects=True)
         self.assertIn("Number of minutes read:", result.data)
 
@@ -96,8 +96,9 @@ class FlaskTestsTeacherLoggedIn(unittest.TestCase):
         """Test record minutes page."""
 
         result = self.client.get("/progress-view")
-        self.assertIn("Student Reading Progress", result.data)
+        self.assertIn("Reader Report", result.data)
         self.assertIn("Enzo", result.data)
+
 
 class FlaskTestsCoachLoggedIn(unittest.TestCase):
     """Flask tests with user type coach logged in to session."""
@@ -110,7 +111,7 @@ class FlaskTestsCoachLoggedIn(unittest.TestCase):
 
         with self.client as c:
             with c.session_transaction() as sess:
-                sess['user_id'] = "5103848508"
+                sess['user_id'] = "510-384-8508"
 
          # Connect to test database
         connect_to_db(app, "postgresql:///testdb")
