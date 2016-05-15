@@ -86,14 +86,14 @@ def load_admins():
     db.session.commit()
 
 
-def load_readinglogs():
+def load_readlogs():
     """Load admins from d.readinglogs into database."""
 
     print "ReadingLogs"
 
     for i, row in enumerate(open("seed_data/d.readinglogs")):
         row = row.rstrip()
-        reader_id, minutes_read, date_time, title = row.split("|")
+        reader_id, minutes_read, date_time, title = row.split(",")
 
         readlog = ReadingLog(reader_id=reader_id,
                     minutes_read=minutes_read,
@@ -115,7 +115,7 @@ def load_messages():
     for i, row in enumerate(open("seed_data/d.messages")):
         row = row.rstrip()
 
-        message = Message(message_text=message_text)
+        message = Message(message_text=row)
 
         #add entry to the session
         db.session.add(message)
@@ -129,7 +129,7 @@ if __name__ == "__main__":
     db.create_all()
 
     load_coaches()
-    load_prefix()
+    load_prefixes()
     load_admins()
     load_readers()
     load_readlogs()

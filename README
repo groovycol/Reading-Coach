@@ -1,6 +1,4 @@
-
 READCOACH App. 
-
 *********************************************************
 To get the app working:
 
@@ -13,17 +11,8 @@ Go to: localhost:5000
 
 *********************************************************
 To recreate the sample data:
-
-dropdb readcoachdb
-createdb readcoachdb
-
-uncomment the last 3 lines in model.py
-python -i model.py
-then comment out those lines again
+./regen_seed_data.sh
 
 *********************************************************
 To run the flask tests:
-
-dropdb testdb
-createdb testdb
-python tests.py
+./runtests.sh
