@@ -62,8 +62,8 @@ class FlaskTestsDatabase(unittest.TestCase):
         self.assertIn("Number of minutes read:", result.data)
 
 
-class FlaskTestsTeacherLoggedIn(unittest.TestCase):
-    """Flask tests with user type teacher logged in to session."""
+class FlaskTestsAdminLoggedIn(unittest.TestCase):
+    """Flask tests with user type admin logged in to session."""
 
     def setUp(self):
         """Stuff to do before every test."""

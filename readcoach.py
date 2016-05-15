@@ -29,17 +29,17 @@ def get_coach_by_phone(phone):
     return coach
 
 
-def get_teacher_by_email(email):
-    """Given an email address, return a Teacher object"""
+def get_admin_by_email(email):
+    """Given an email address, return a Admin object"""
     try:
-        teacher = Teacher.query.filter_by(email=email).one()
+        admin = Admin.query.filter_by(email=email).one()
     except NoResultFound:
-        teacher = None
+        admin = None
     except MultipleResultsFound:
-        teacher = "error"
+        admin = "error"
     except:
-        teacher = "error"
-    return teacher
+        admin = "error"
+    return admin
 
 
 def get_message_by_day(num):
@@ -67,12 +67,12 @@ def add_coach_to_db(user_id, password, email):
     db.session.commit()
 
 
-def add_reader_to_db(first_name, coach_id, teacher):
+def add_reader_to_db(first_name, coach_id, admin):
     """Add a new reader to the database"""
 
     new_reader = Reader(first_name=first_name,
                      coach_id=coach_id,
-                     teacher_id=teacher)
+                     admin_id=admin)
     db.session.add(new_reader)
     db.session.commit()
 

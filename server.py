@@ -29,10 +29,10 @@ def login_form():
     return render_template("login.html")
 
 
-@app.route('/login-teacher')
-def login_teacher():
-    """Show login form for Teacher portal"""
-    return render_template("login-teacher.html")
+@app.route('/login-admin')
+def login_admin():
+    """Show login form for Admin portal"""
+    return render_template("login-admin.html")
 
 
 @app.route('/login', methods=['POST'])
@@ -60,26 +60,26 @@ def login_process():
         return redirect("/record")
 
 
-@app.route('/process_teach_login', methods=['POST'])
-def process_teach_login():
-    """Process login for teacher."""
+@app.route('/process_admin_login', methods=['POST'])
+def process_admin_login():
+    """Process login for admin."""
 
     email = request.form["email"]
     password = request.form["password"]
 
     #make sure this email and password match in the database
-    user = get_teacher_by_email(email)
+    user = get_admin_by_email(email)
 
     if not user:
         flash("No such user")
-        return redirect("/login-teacher")
+        return redirect("/login-admin")
     elif user == "error":
         return render_template("error.html", err_msg=ERR_MSG)
 
     if user.password != password:
         #if password doesn't match, back to /login rte w/msg
         flash("Incorrect password")
-        return redirect("/login-teacher")
+        return redirect("/login-admin")
     else:
         #add email to the session
         session["admin"] = email
@@ -103,9 +103,9 @@ def logout():
 @app.route('/register')
 def register():
     """Add a new user to the database"""
-    teachers = Teacher.query.all()
+    admins = Admin.query.all()
 
-    return render_template("register.html", teachers=teachers)
+    return render_template("register.html", admins=admins)
 
 
 @app.route('/register_process', methods=['POST'])
@@ -116,7 +116,7 @@ def register_process():
     password = request.form["password"]
     email = request.form["email"]
     first_name = request.form["first_name"]
-    teacher = request.form["teacher_id"]
+    admin = request.form["admin_id"]
 
     #make sure this user_id isn't already in use
     user = get_coach_by_phone(user_id)
@@ -135,7 +135,7 @@ def register_process():
         #add a new reader to the db
         add_reader_to_db(first_name,
                     coach.coach_id,
-                    teacher)
+                    admin)
 
         #Give the user a confirmation message about being registered.
         flash(user_id + " is now registered to receive text message reminders")
@@ -209,22 +209,22 @@ def show_dashboard():
 
 @app.route("/progress-view")
 def show_progress():
-    """Allows logged in teacher to view progress charts"""
+    """Allows logged in admin to view progress charts"""
 
     #make sure user is logged in
     if "admin" in session:
-        teacher = get_teacher_by_email(session["admin"])
+        admin_user = get_admin_by_email(session["admin"])
 
         #make sure the database retrieved something real
-        if teacher is None or teacher == "error":
+        if admin_user is None or admin_user == "error":
             return render_template("error.html", err_msg=ERR_MSG)
 
         #otherwise render the page for this route
-        return render_template("progress-view.html", teacher=teacher)
+        return render_template("progress-view.html", admin=admin_user)
 
     else:
         flash("You must be logged in to view progress")
-        return redirect("/login-teacher")
+        return redirect("/login-admin")
 
 
 @app.route("/send-message/<phone>")

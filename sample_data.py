@@ -9,8 +9,8 @@ def example_data():
     # In case this is run more than once, empty out existing data
     Coach.query.delete()
     Reader.query.delete()
-    Teacher.query.delete()
-    NameTitle.query.delete()
+    Admin.query.delete()
+    Prefix.query.delete()
     ReadingLog.query.delete()
     Message.query.delete()
 
@@ -20,22 +20,24 @@ def example_data():
     c3 = Coach(phone="410-632-3222", password='MyPassword', email='adfoodie@gmail.com', start_date="2016-05-11 10:34:09")
     c4 = Coach(phone="410-651-3757", password='MyPassword', start_date="2016-05-12 10:34:09")
 
-    # Add sample Titles
-    prefix1 = NameTitle(title='Ms.')
-    prefix2 = NameTitle(title='Mr.')
-    prefix3 = NameTitle(title='Miss')
-    prefix4 = NameTitle(title='Mrs.')
-    prefix5 = NameTitle(title='Teacher')
+    # Add sample Name Prefixes
+    prefix1 = Prefix(prefix='Ms.')
+    prefix2 = Prefix(prefix='Mr.')
+    prefix3 = Prefix(prefix='Miss')
+    prefix4 = Prefix(prefix='Mrs.')
+    prefix5 = Prefix(prefix='Teacher')
+    prefix6 = Prefix(prefix='Organization')
 
-    # Add sample Teachers
-    t1 = Teacher(last_name="Smith", title="1", email="teach@gmail.com", password="MyPassword")
-    t2 = Teacher(last_name="Jones", title="2", email="groovycol@gmail.com", password="MyPassword")
+    # Add sample Admins
+    t1 = Admin(name="Smith", prefix="1", email="teach@gmail.com", password="MyPassword")
+    t2 = Admin(name="Jones", prefix="2", email="groovycol@gmail.com", password="MyPassword")
+    t3 = Admin(name="Oakland Public Library", prefix="6", email="librarian@opl.org", password="MyPassword")
 
     # Add sample Readers
-    r1 = Reader(first_name="Enzo", coach_id="1", teacher_id="1")
-    r2 = Reader(first_name="Luke", coach_id="2", teacher_id="2")
-    r3 = Reader(first_name="Cora", coach_id="3", teacher_id="1")
-    r4 = Reader(first_name="Kallie", coach_id="4", teacher_id="2")
+    r1 = Reader(first_name="Enzo", coach_id="1", admin_id="1")
+    r2 = Reader(first_name="Luke", coach_id="2", admin_id="2")
+    r3 = Reader(first_name="Cora", coach_id="3", admin_id="1")
+    r4 = Reader(first_name="Kallie", coach_id="4", admin_id="3")
 
     # Add sample reading log entries
     logentry1 = ReadingLog(reader_id=1, minutes_read=10, date_time='2016-05-09 10:34:09', title="The Penderwicks")
@@ -69,8 +71,10 @@ def example_data():
                         prefix3,
                         prefix4,
                         prefix5,
+                        prefix6,
                         t1,
                         t2,
+                        t3,
                         r1,
                         r2,
                         r3,

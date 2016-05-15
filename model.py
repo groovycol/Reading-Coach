@@ -2,7 +2,6 @@
 
 from flask.ext.sqlalchemy import SQLAlchemy
 
-
 db = SQLAlchemy()
 
 
@@ -24,48 +23,48 @@ class Coach(db.Model):
 
 
 class Reader(db.Model):
-    """Readers have one Coach and one Teacher"""
+    """Readers have one Coach and one Admin"""
 
     __tablename__ = "readers"
 
     reader_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     first_name = db.Column(db.String(25), nullable=False)
     coach_id = db.Column(db.Integer, db.ForeignKey('coaches.coach_id'))
-    teacher_id = db.Column(db.Integer, db.ForeignKey('teachers.teacher_id'))
+    admin_id = db.Column(db.Integer, db.ForeignKey('admins.admin_id'))
 
     coach = db.relationship('Coach')
-    teacher = db.relationship('Teacher')
+    admin = db.relationship('Admin')
     logs = db.relationship('ReadingLog')
 
     def __repr__(self):
         return "<Reader reader_id=%s name=%s>" % (self.reader_id, self.first_name)
 
 
-class NameTitle(db.Model):
-    """Controls title data for Teachers via foreign key """
+class Prefix(db.Model):
+    """Controls prefix data for Admins via foreign key """
 
-    __tablename__ = "titles"
+    __tablename__ = "prefixes"
 
-    title_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    title = db.Column(db.String(20), nullable=False, unique=True)
+    prefix_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    prefix = db.Column(db.String(20), nullable=False, unique=True)
 
 
-class Teacher(db.Model):
+class Admin(db.Model):
     """Teacher or other Admin, one to many relationship with Readers"""
 
-    __tablename__ = "teachers"
+    __tablename__ = "admins"
 
-    teacher_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    last_name = db.Column(db.String, nullable=False, unique=True)
-    title = db.Column(db.Integer, db.ForeignKey('titles.title_id'))
+    admin_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    name = db.Column(db.String(50), nullable=False, unique=True)
+    prefix = db.Column(db.Integer, db.ForeignKey('prefixes.prefix_id'))
     email = db.Column(db.String(35), nullable=True, unique=True)
     password = db.Column(db.String(25), nullable=False)
 
     readers = db.relationship('Reader')
-    nametitle = db.relationship('NameTitle')
+    nameprefix = db.relationship('Prefix')
 
     def __repr__(self):
-        return "<Teacher teacher_id=%d last_name=%s>" % (self.teacher_id, self.last_name)
+        return "<Admin admin_id=%d name=%s>" % (self.admin_id, self.name)
 
 
 class ReadingLog(db.Model):
@@ -114,6 +113,6 @@ if __name__ == '__main__':
     print "Connected to DB."
 
     # uncomment as needed after dropdb/createdb to regen sample data.
-    # db.create_all()
-    # example_data()
-    # print "Sample Data created"
+    db.create_all()
+    example_data()
+    print "Sample Data created"

@@ -4,7 +4,7 @@
  <form action="/register_process" method="POST">
 
     <div>
-        <label for="phone">Phone number:
+        <label for="phone">Phone number xxx-xxx-xxxx:
             <input type="text" name="user_id" required>
         </label>
         <div class="information">
@@ -26,10 +26,10 @@
     </div>
     <br>
     <div>
-        <label>Your child's Teacher's name:
-            <select name="teacher_id" id="teacher_id">
-                {% for teacher in teachers%}
-                    <option value="{{teacher.teacher_id}}">{{teacher.nametitle.title}} {{teacher.last_name}}</option>
+        <label>Show progress to what entity:
+            <select name="admin_id" id="admin_id">
+                {% for admin in admins %}
+                    <option value="{{admin.admin_id}}">{{admin.nameprefix.prefix}} {{admin.name}}</option>
                 {%endfor%}
                 </select>
             

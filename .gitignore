@@ -1,4 +1,5 @@
 env
+seeddata
 *.pyc
 secrets.sh
 TODO
