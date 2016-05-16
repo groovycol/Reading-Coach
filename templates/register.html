@@ -1,53 +1,92 @@
 {% extends 'base.html' %}
 {% block content %} 
 
- <form action="/register_process" method="POST">
+
+    <script src="https://code.jquery.com/jquery.js"></script>
+    <form action="/register_process" method="POST">
 
     <div>
-        <label for="phone">Phone number xxx-xxx-xxxx:
-            <input type="text" name="user_id" required>
+        <script>
+            // Show helpful info about the phone number entry
+            $(document).ready(function() {
+                $('#phone_msg').hide();
+                $('#phone_num').on('mouseover', function(){
+                $('#phone_msg').toggle(); });
+            });
+
+
+            // Prevent form submission until phone number matches xxx-xxx-xxx pattern
+           $("form").submit( function(evt) {
+                var phone_string = $('#phone_num').val(); 
+                if (! /^[0-9]{3}-[0-9]{3}-[0-9]{4}$/.test(phone_string)) {
+                    evt.preventDefault();
+                    alert("Please enter a telephone number in the format xxx-xxx-xxxx");
+                }
+            });
+
+        </script>
+        <label for="phone">Phone number:
+            <input type="text" name="user_id" id="phone_num" placeholder="xxx-xxx-xxxx" required> 
+            <div id="phone_msg" >xxx-xxx-xxxx format. US numbers only. This must be a text message enabled phone. You'll receive daily text message (sms) reminders to log your child's reading progress on this phone.</div>
+        
         </label>
-        <div class="information">
-            This must be a text message enabled phone. You'll receive daily text message (sms) reminders to log your child's reading progress on this phone. 
-        </div>
     </div>
     <br>
     <div>
+        <script>
+            // SHow a message about password format
+            $(document).ready(function() {
+                $('#password_msg').hide();
+                $('#password').on('mouseover', function(){
+                $('#password_msg').toggle(); });
+            });
+        </script>
         <label>Password:
-            <input type="password" name="password" required>
+            <input type="password" name="password" id="password" required>
         </label>
-        <div class="information">It's easier to remember a password phrase, so put something in you'll remember easily. Minimum 10 characters. Max 25 characters.</div>
+        <div id="password_msg">Password or Phrase (alpha, numeric, spaces and special characters allowed). Minimum 6 characters. Max 25 characters.</div>
     </div>
     <br>
     <div>
         <label>Child's First name:
-            <input type="text" name="first_name">
+            <input type="text" name="first_name" required>
         </label>
     </div>
     <br>
     <div>
-        <label>Show progress to what entity:
+        <label>Share progress with Teacher or Organization:
             <select name="admin_id" id="admin_id">
                 {% for admin in admins %}
-                    <option value="{{admin.admin_id}}">{{admin.nameprefix.prefix}} {{admin.name}}</option>
-                {%endfor%}
+                    {% if admin.nameprefix.prefix == "Organization" %}
+                        <option value="{{admin.admin_id}}"> {{admin.name}}</option>
+                    {% else %}
+                        <option value="{{admin.admin_id}}">{{admin.nameprefix.prefix}} {{admin.name}}</option>
+                    {% endif %}
+                {% endfor %}
                 </select>
-            
         </label>
     </div>
     <br>
     <div>
+        <script>
+            // Show information about what the email might be used for
+            $(document).ready(function() {
+                $('#email_msg').hide();
+                $('#email').on('mouseover', function(){
+                $('#email_msg').toggle(); });
+            });
+        </script>
         <label>Email address (optional):
-            <input type="text" name="email">
+            <input type="text" name="email" id="email">
         </label>
-        <div class="information">
+        <div id="email_msg">
             We'll use this only for application notifications or to reset your password.
         </div>
     </div>
     <div>
-        <input type="submit" value="Register">
+        <input type="submit" id="submit" value="Register">
     </div>
+    </form>
 
-</form>
 
 {% endblock %}

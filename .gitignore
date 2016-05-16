@@ -1,4 +1,5 @@
 env
+logs/*
 *.pyc
 secrets.sh
 TODO
