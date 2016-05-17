@@ -2,6 +2,7 @@
 from flask import Flask, render_template, request, flash, redirect, session
 from jinja2 import StrictUndefined
 from flask_debugtoolbar import DebugToolbarExtension
+from flask import jsonify
 
 from twilio_api import send_message
 from model import *
@@ -234,6 +235,28 @@ def send_sms_message(phone):
     send_message(phone)
 
     return redirect("/record")
+
+
+@app.route('/reader-progress.json')
+def reader_progress_data():
+    """Return chart data about Reader Progress"""
+
+    chart_data = {
+        "labels": ["May 10", "May 11", "May 12", "May 13", "May 14", "May 15", "May 16"],
+        "datasets": [
+            {
+            "label": "Enzo's Reading Progress",
+            "backgroundColor": "rgba(255,99,132,0.2)",
+            "borderColor": "rgba(255,99,132,1)",
+            "borderWidth": 1,
+            "hoverBackgroundColor": "rgba(255,99,132,0.4)",
+            "hoverBorderColor": "rgba(255,99,132,1)",
+            "data": [45, 20, 30, 32, 25, 40, 33, 10],
+            }
+        ]
+    }
+
+    return jsonify(chart_data)
 
 
 @app.route("/error")

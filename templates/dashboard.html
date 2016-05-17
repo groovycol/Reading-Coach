@@ -2,18 +2,24 @@
 {% block content %}
 
 <!-- implement to show progress charts -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.js"> </script>
+<script src="https://code.jquery.com/jquery.js"></script>
 
-<body>
     <h1>Reading Progress</h1>
-    <br>
-    {% for reader in coach.readers %}
-         <h2>{{ reader.first_name }}</h2>
-         {% for log in reader.logs %}
-         <ul>
-            <li>Date: {{ log.date_time }} Minutes read: {{ log.minutes_read }} Title: {{ log.title }}
-         </ul>
-         {% endfor %}
-    {% endfor %}
-</body>
+        <div class="reader-progress-chart">
+        <canvas id="barChart"></canvas>
+        <div id="barLegend" class="chart-legend"></div>
+        <script>
+
+            var options = { responsive: true };
+
+            var ctx_bar = $("#barChart").get(0).getContext("2d");
+
+            $.get("/reader-progress.json", function (data) {
+                var myBarChart = new Chart(ctx_bar).Bar(data,
+                                                     options);
+            });
+        </script>
+
 
 {% endblock %}
