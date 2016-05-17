@@ -241,24 +241,32 @@ def send_sms_message(phone):
 def reader_progress_data():
     """Return chart data about Reader Progress"""
 
-    date_labels = get_last_seven_dates()
-
     reader_id = request.args.get("reader_id")
-    # reader = Reader.query.get(reader_id)
 
-    for logs in reader.logs:
+    #retrieve last 7 days of reader log data
+    log_data = get_reader_logs(reader_id, "week")
+
+    #date_labels are the sorted keys of the log_data dictionary
+    date_labels = sorted(log_data.keys())
+    print date_labels
+
+    #make a list to append minute data to
+    minutes_data = []
+    for date in date_labels:
+        minutes_data.append(log_data[date])
 
     chart_data = {
-        "labels": date_labels
-        "datasets": [
+        "labels": date_labels,
+        "datasets":
+        [
             {
-            "label": "Enzo's Reading Progress",
+            "label": "Reading Progress",
             "backgroundColor": "rgba(255,0,0,0.2)",
             "borderColor": "rgba(255,0,0,1)",
             "borderWidth": 1,
             "hoverBackgroundColor": "rgba(255,99,132,0.4)",
             "hoverBorderColor": "rgba(255,99,132,1)",
-            "data": log_data
+            "data": minutes_data
             }
         ]
     }

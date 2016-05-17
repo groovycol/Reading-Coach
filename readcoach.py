@@ -16,15 +16,46 @@ def get_day_index(start_date):
     return delta.days + 1
 
 
-def get_last_seven_days():
-    """based on today's date, return a list of the last 7 days, string formatted"""
+def get_start_date(reader):
+    """Given a reader object, return the date they signed up"""
 
-    seven_days = []
-    for x in range(6, -1, -1):
-        day = date.today() - timedelta(days=x)
-        day.strftime("%b %d").append(seven_days)
+    coach = reader.coach
+    return coach.start_date
 
-    return seven_days
+
+# def get_formatted_dates(elapsed_days):
+#     """based on today's date, return a list of the days, string formatted"""
+
+#     day_labels = []
+#     for x in range(elapsed_days, -1, -1):
+#         day = date.today() - timedelta(days=x)
+#         day_labels.append(day.strftime("%b %d"))
+
+#     return day_labels
+
+
+def get_reader_logs(reader_id, history_len):
+    """Given a reader_id and a parameter of either "week" or "all"
+    return a list of either last 7 days or all reading logs """
+
+    #retrieve the reader object 
+    reader = Reader.query.get(reader_id)
+
+    if history_len == "week":
+        sdate = date.today() - timedelta(days=6)
+        start_date = sdate.strftime("%b %d")
+    else:
+        start_date = get_start_date(reader)
+
+    #setup an empty dictionary
+    entries = {}
+
+    #iterate through the logs and format
+    for log_entry in reader.logs:
+        log_date = log_entry.date_time.date().strftime("%b %d")
+        if log_date >= start_date:
+            entries[log_date] = entries.get(log_date, 0) + log_entry.minutes_read
+    return entries
 
 
 def get_coach_by_phone(phone):

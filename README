@@ -4,6 +4,7 @@ To get the app working:
 
 source env/bin/activate
 source secrets.sh
+mkdir logs
 
 python server.py
 

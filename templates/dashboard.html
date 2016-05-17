@@ -19,7 +19,6 @@
             $.get("/reader-progress.json", {"reader_id": $("#reader_id").val()}, function (data) {
                 var myBarChart = new Chart(ctx_bar).Bar(data,
                                                      options);
-            $('#barLegend').html(myBarChart.generateLegend());
             });
 
         </script>
