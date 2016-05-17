@@ -1,5 +1,5 @@
 
-from datetime import datetime
+from datetime import datetime, date, timedelta
 from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy.orm.exc import MultipleResultsFound
 
@@ -14,6 +14,17 @@ def get_day_index(start_date):
     delta = datetime.now() - start_date
     #plus one because msg 1=day 0
     return delta.days + 1
+
+
+def get_last_seven_days():
+    """based on today's date, return a list of the last 7 days, string formatted"""
+
+    seven_days = []
+    for x in range(6, -1, -1):
+        day = date.today() - timedelta(days=x)
+        day.strftime("%b %d").append(seven_days)
+
+    return seven_days
 
 
 def get_coach_by_phone(phone):

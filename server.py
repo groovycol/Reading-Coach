@@ -241,17 +241,24 @@ def send_sms_message(phone):
 def reader_progress_data():
     """Return chart data about Reader Progress"""
 
+    date_labels = get_last_seven_dates()
+
+    reader_id = request.args.get("reader_id")
+    # reader = Reader.query.get(reader_id)
+
+    for logs in reader.logs:
+
     chart_data = {
-        "labels": ["May 10", "May 11", "May 12", "May 13", "May 14", "May 15", "May 16"],
+        "labels": date_labels
         "datasets": [
             {
             "label": "Enzo's Reading Progress",
-            "backgroundColor": "rgba(255,99,132,0.2)",
-            "borderColor": "rgba(255,99,132,1)",
+            "backgroundColor": "rgba(255,0,0,0.2)",
+            "borderColor": "rgba(255,0,0,1)",
             "borderWidth": 1,
             "hoverBackgroundColor": "rgba(255,99,132,0.4)",
             "hoverBorderColor": "rgba(255,99,132,1)",
-            "data": [45, 20, 30, 32, 25, 40, 33, 10],
+            "data": log_data
             }
         ]
     }

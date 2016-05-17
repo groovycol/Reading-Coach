@@ -1,25 +1,27 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<!-- implement to show progress charts -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.js"> </script>
 <script src="https://code.jquery.com/jquery.js"></script>
 
-    <h1>Reading Progress</h1>
+    {% for reader in coach.readers %}
+        <h1>{{ reader.first_name }}'s Reading Progress</h1>
+        <input type="hidden" name="reader_id" id="reader_id" value="{{reader.reader_id}}">
         <div class="reader-progress-chart">
-        <canvas id="barChart"></canvas>
+        <canvas id="barChart" width="1200" height="600"></canvas>
         <div id="barLegend" class="chart-legend"></div>
         <script>
 
-            var options = { responsive: true };
+            var options = { responsive: false, maintainAspectRatio: true};
 
             var ctx_bar = $("#barChart").get(0).getContext("2d");
-
-            $.get("/reader-progress.json", function (data) {
+            
+            $.get("/reader-progress.json", {"reader_id": $("#reader_id").val()}, function (data) {
                 var myBarChart = new Chart(ctx_bar).Bar(data,
                                                      options);
+            $('#barLegend').html(myBarChart.generateLegend());
             });
+
         </script>
-
-
+    {% endfor %}
 {% endblock %}
