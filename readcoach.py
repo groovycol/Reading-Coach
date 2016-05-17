@@ -23,38 +23,42 @@ def get_start_date(reader):
     return coach.start_date
 
 
-# def get_formatted_dates(elapsed_days):
-#     """based on today's date, return a list of the days, string formatted"""
+def get_formatted_dates(elapsed_days):
+    """based on today's date, return a list of the days, string formatted"""
 
-#     day_labels = []
-#     for x in range(elapsed_days, -1, -1):
-#         day = date.today() - timedelta(days=x)
-#         day_labels.append(day.strftime("%b %d"))
+    day_labels = []
+    for x in range(elapsed_days, -1, -1):
+        day = date.today() - timedelta(days=x)
+        day_labels.append(day.strftime("%b %d"))
 
-#     return day_labels
+    return day_labels
 
 
 def get_reader_logs(reader_id, history_len):
     """Given a reader_id and a parameter of either "week" or "all"
     return a list of either last 7 days or all reading logs """
 
-    #retrieve the reader object 
+    #retrieve the reader object
     reader = Reader.query.get(reader_id)
 
     if history_len == "week":
-        sdate = date.today() - timedelta(days=6)
-        start_date = sdate.strftime("%b %d")
+        dates = get_formatted_dates(6)
     else:
-        start_date = get_start_date(reader)
+        sdate = get_start_date(reader)
+        num_days = int((date.today() - sdate.date()).days)
+        dates = get_formatted_dates(num_days)
 
     #setup an empty dictionary
     entries = {}
 
-    #iterate through the logs and format
+    for day in dates:
+        entries[day] = 0
+
+    #iterate through the logs and add minutes read for days that match
     for log_entry in reader.logs:
         log_date = log_entry.date_time.date().strftime("%b %d")
-        if log_date >= start_date:
-            entries[log_date] = entries.get(log_date, 0) + log_entry.minutes_read
+        if log_date in entries:
+            entries[log_date] = entries[log_date] + log_entry.minutes_read
     return entries
 
 

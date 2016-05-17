@@ -242,13 +242,13 @@ def reader_progress_data():
     """Return chart data about Reader Progress"""
 
     reader_id = request.args.get("reader_id")
+    time_period = request.args.get("time_period")
 
     #retrieve last 7 days of reader log data
-    log_data = get_reader_logs(reader_id, "week")
+    log_data = get_reader_logs(reader_id, time_period)
 
     #date_labels are the sorted keys of the log_data dictionary
     date_labels = sorted(log_data.keys())
-    print date_labels
 
     #make a list to append minute data to
     minutes_data = []
