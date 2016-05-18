@@ -22,6 +22,7 @@
             $.get("/admin-progress.json", {"admin_id": $("#admin_id").val() }, function (data) {
                 var myBarChart = new Chart(ctx_bar).Bar(data,
                                                      options);
+                $('#barLegend').html(myBarChart.generateLegend());
 
                 $("#barChart").click( function(evt) {
                     var activePoints = myBarChart.getBarsAtEvent(evt);

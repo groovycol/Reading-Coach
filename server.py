@@ -332,7 +332,7 @@ def admin_progress_data():
         "datasets":
         [
             {
-            "label": "Reading Progress",
+            "label": "Average daily minutes per reader",
             "backgroundColor": "rgba(255,0,0,0.2)",
             "borderColor": "rgba(255,0,0,1)",
             "borderWidth": 1,
