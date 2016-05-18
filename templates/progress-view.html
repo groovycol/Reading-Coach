@@ -3,7 +3,11 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.js"> </script>
 <script src="https://code.jquery.com/jquery.js"></script>
-    <h1> {{ admin.nameprefix.prefix }} {{ admin.name}} Readers Report</h1>
+    {% if admin.nameprefix.prefix == "Organization" %}
+        <h1> {{admin.name}} Readers Report</h1>
+    {% else %}
+        <h1> {{admin.nameprefix.prefix}} {{admin.name}} Readers Report</h1>
+    {% endif %}
         <input type="hidden" id="admin_id" value="{{admin.admin_id}}">
         <div class="admin-progress-chart">
         <canvas id="barChart" width="1200" height="600"></canvas>
