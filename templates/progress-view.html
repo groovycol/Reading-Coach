@@ -1,20 +1,23 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<!-- implement to show progress charts -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.js"> </script>
+<script src="https://code.jquery.com/jquery.js"></script>
+    <h1> {{ admin.nameprefix.prefix }} {{ admin.name}} Readers Report</h1>
+        <input type="hidden" id="admin_id" value="{{admin.admin_id}}">
+        <div class="admin-progress-chart">
+        <canvas id="barChart" width="1200" height="600"></canvas>
+        <script>
+            // Initialize some chart variables
+            var options = { responsive: false, maintainAspectRatio: true};
 
-<body>
-    <h1> {{ admin.nameprefix.prefix }} {{ admin.name}} Reader Report</h1>
-    <br>
-    <br>
-    {% for reader in admin.readers %}
-         {{ reader.first_name }}
-         {% for log in reader.logs %}
-         <ul>
-            <li>Date: {{ log.date_time }} Minutes read: {{ log.minutes_read }} Title: {{ log.title }}
-         </ul>
-         {% endfor %}
-    {% endfor %}
-</body>
+            var ctx_bar = $("#barChart").get(0).getContext("2d");
 
+            // chart display
+            $.get("/admin-progress.json", {"admin_id": $("#admin_id").val() }, function (data) {
+                var myBarChart = new Chart(ctx_bar).Bar(data,
+                                                     options);
+            });
+
+        </script>
 {% endblock %}

@@ -34,19 +34,55 @@ def get_formatted_dates(elapsed_days):
     return day_labels
 
 
-def get_reader_logs(reader_id, history_len):
+def get_total_mins(reader):
+    """Given a reader object, return the total number of minutes read from ReadingLog table"""
+
+    total_mins = 0
+    for log in reader.logs:
+        total_mins += log.minutes_read
+
+    return total_mins
+
+
+def get_elapsed_days(date_obj):
+    """given a date object, return an integer of elapsed days"""
+
+    return int((date.today() - date_obj.date()).days)
+
+
+def get_admin_logs(admin_id):
+    """
+    Given an admin's id return a dictionary of name keys
+    and the avg num minutes read as values
+    """
+    #retrieve the admin object
+    admin = Admin.query.get(admin_id)
+
+    #initialize an empty dictionary
+    reader_data = {}
+
+    #generate a list of names
+    for reader in admin.readers:
+        num_days = get_elapsed_days(get_start_date(reader))
+        total_mins = get_total_mins(reader)
+        avg_minutes = total_mins / num_days
+        reader_data[reader.first_name] = avg_minutes
+
+    return reader_data
+
+
+def get_reader_logs(reader_id, time_period):
     """Given a reader_id and a parameter of either "week" or "all"
-    return a list of either last 7 days or all reading logs """
+    return a dictionary of date keys and num minutes read as values """
 
     #retrieve the reader object
     reader = Reader.query.get(reader_id)
 
-    if history_len == "week":
+    if time_period == "week":
         dates = get_formatted_dates(6)
     else:
         sdate = get_start_date(reader)
-        num_days = int((date.today() - sdate.date()).days)
-        dates = get_formatted_dates(num_days)
+        dates = get_formatted_dates(get_elapsed_days(sdate))
 
     #setup an empty dictionary
     entries = {}

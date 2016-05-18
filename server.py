@@ -274,6 +274,40 @@ def reader_progress_data():
     return jsonify(chart_data)
 
 
+@app.route('/admin-progress.json')
+def admin_progress_data():
+    """Return chart data for all readers associated with an Admin"""
+
+    admin_id = request.args.get("admin_id")
+
+    #get reader's log data in the form of a dictionary
+    log_data = get_admin_logs(admin_id)
+
+    #date_labels are the sorted keys of the log_data dictionary
+    name_labels = log_data.keys()
+
+    #make a list to append minute data to
+    avg_minutes_data = log_data.values()
+
+    chart_data = {
+        "labels": name_labels,
+        "datasets":
+        [
+            {
+            "label": "Reading Progress",
+            "backgroundColor": "rgba(255,0,0,0.2)",
+            "borderColor": "rgba(255,0,0,1)",
+            "borderWidth": 1,
+            "hoverBackgroundColor": "rgba(255,99,132,0.4)",
+            "hoverBorderColor": "rgba(255,99,132,1)",
+            "data": avg_minutes_data
+            }
+        ]
+    }
+
+    return jsonify(chart_data)
+
+
 @app.route("/error")
 def error_page():
     """Displays an error page"""
