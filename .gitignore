@@ -1,5 +1,6 @@
 env
 logs/*
 *.pyc
+.coverage
 secrets.sh
 TODO

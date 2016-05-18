@@ -96,8 +96,7 @@ class FlaskTestsAdminLoggedIn(unittest.TestCase):
         """Test record minutes page."""
 
         result = self.client.get("/progress-view")
-        self.assertIn("Reader Report", result.data)
-        self.assertIn("Enzo", result.data)
+        self.assertIn("Readers Report", result.data)
 
 
 class FlaskTestsCoachLoggedIn(unittest.TestCase):
