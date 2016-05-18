@@ -71,6 +71,7 @@ def get_admin_logs(admin_id):
     return reader_data
 
 
+
 def get_reader_logs(reader_id, time_period):
     """Given a reader_id and a parameter of either "week" or "all"
     return a dictionary of date keys and num minutes read as values """
@@ -122,6 +123,13 @@ def get_admin_by_email(email):
     except:
         admin = "error"
     return admin
+
+
+def get_reader_id_by_name(first_name):
+    """Given a reader's name, return their reader_id"""
+
+    reader = Reader.query.filter_by(first_name=first_name).one()
+    return reader.reader_id
 
 
 def get_message_by_day(num):

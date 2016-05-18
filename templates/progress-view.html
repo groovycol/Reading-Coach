@@ -9,8 +9,9 @@
         <h1> {{admin.nameprefix.prefix}} {{admin.name}} Readers Report</h1>
     {% endif %}
         <input type="hidden" id="admin_id" value="{{admin.admin_id}}">
-        <div class="admin-progress-chart">
-        <canvas id="barChart" width="1200" height="600"></canvas>
+        <div class="admin-progress-chart"></div>
+        <div id="barLegend" class="chart-legend"></div>
+        <canvas id="barChart" width="1000" height="500"></canvas>
         <script>
             // Initialize some chart variables
             var options = { responsive: false, maintainAspectRatio: true};
@@ -21,6 +22,16 @@
             $.get("/admin-progress.json", {"admin_id": $("#admin_id").val() }, function (data) {
                 var myBarChart = new Chart(ctx_bar).Bar(data,
                                                      options);
+
+                $("#barChart").click( function(evt) {
+                    var activePoints = myBarChart.getBarsAtEvent(evt);
+                    var reader = activePoints[0].label;
+                    $.get("/admin-reader-detail.json", {"reader": reader}, function (data){
+                        var myBarChart = new Chart(ctx_bar).Bar(data, options);
+
+                        $('#barLegend').html(myBarChart.generateLegend());
+                    })
+                })
             });
 
         </script>

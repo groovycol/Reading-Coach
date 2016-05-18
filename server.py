@@ -274,6 +274,44 @@ def reader_progress_data():
     return jsonify(chart_data)
 
 
+@app.route('/admin-reader-detail.json')
+def admin_reader_detail():
+    """Return chart data for a specific reader"""
+
+    first_name = request.args.get("reader")
+    reader_id = get_reader_id_by_name(first_name)
+    time_period = "all"
+
+    #retrieve reader log data
+    log_data = get_reader_logs(reader_id, time_period)
+
+    #date_labels are the sorted keys of the log_data dictionary
+    date_labels = sorted(log_data.keys())
+
+    #make a list to append minute data to
+    minutes_data = []
+    for date in date_labels:
+        minutes_data.append(log_data[date])
+
+    chart_data = {
+        "labels": date_labels,
+        "datasets":
+        [
+            {
+            "label": first_name,
+            "backgroundColor": "rgba(255,0,0,0.2)",
+            "borderColor": "rgba(255,0,0,1)",
+            "borderWidth": 1,
+            "hoverBackgroundColor": "rgba(255,99,132,0.4)",
+            "hoverBorderColor": "rgba(255,99,132,1)",
+            "data": minutes_data
+            }
+        ]
+    }
+
+    return jsonify(chart_data)
+
+
 @app.route('/admin-progress.json')
 def admin_progress_data():
     """Return chart data for all readers associated with an Admin"""
