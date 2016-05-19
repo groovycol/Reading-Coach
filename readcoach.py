@@ -65,7 +65,6 @@ def get_admin_logs(admin_id):
     return reader_data
 
 
-
 def get_reader_logs(reader_id, time_period):
     """Given a reader_id and a parameter of either "week" or "all"
     return a dictionary of date keys and num minutes read as values """
@@ -161,13 +160,18 @@ def add_reader_to_db(first_name, coach_id, admin):
     db.session.commit()
 
 
-def add_logentry_to_db(reader_id, minutes, title):
+def add_logentry_to_db(reader_id, minutes, title, date):
     """Add a ReadingLog entry to the db"""
 
+    date_str = date + " 2016  12:01PM"
+    date_time = datetime.strptime(date_str, '%b %d %Y %I:%M%p')
+
+    #prepare entry for database insert
     logentry = ReadingLog(reader_id=reader_id,
                         minutes_read=minutes,
-                        date_time=datetime.strftime(datetime.now(), '%Y-%m-%d %H:%M:%S'),
+                        date_time=date_time,
                         title=title)
 
+    #add & commit entry to the session
     db.session.add(logentry)
     db.session.commit()

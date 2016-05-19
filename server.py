@@ -167,7 +167,7 @@ def record_mins():
         dates = get_formatted_dates(day_index)
         msg = get_message_by_day(day_index)
 
-        return render_template("record.html", coach=coach, msg=msg, dates=dates)
+        return render_template("record.html", coach=coach, msg=msg, dates=dates[::-1])
 
     #if not logged in, return user to the /login screen
     else:
@@ -182,8 +182,9 @@ def log_minutes():
     minutes = request.form["minutes_read"]
     title = request.form["title"]
     reader_id = request.form["reader_id"]
+    date = request.form["date"]
 
-    add_logentry_to_db(reader_id, minutes, title)
+    add_logentry_to_db(reader_id, minutes, title, date)
 
     flash(minutes + " minutes recorded")
     return redirect("/record")
