@@ -1,8 +1,9 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<!-- implement form to log reading minutes -->
-<body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.js"> </script>
+<script src="https://code.jquery.com/jquery.js"></script>
+
     <h1> Record Reading Minutes</h1>
     <br>
     {% for reader in coach.readers %}
@@ -11,6 +12,15 @@
     <form action="/log_minutes" method="POST">
         <input type="hidden" name="reader_id" value="{{reader.reader_id}}">
         <br>
+        {% if dates %}
+        <label>Date:</label>
+            <select name="date" id="date">
+            {% for date in dates %}
+                <option value="{{ date }}">{{ date }}</option>
+            {% endfor %}
+            </select>
+        {% endif %}
+        <br> 
         <label>Number of minutes read:
             <input type="text" name="minutes_read">
         </label>
@@ -23,6 +33,5 @@
     </div>
     {% endfor %}
 </form>
-</body>
 
 {% endblock %}

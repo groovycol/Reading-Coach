@@ -6,8 +6,8 @@ from sqlalchemy.orm.exc import MultipleResultsFound
 from model import *
 
 
-def get_day_index(start_date):
-    """Given a date, calculate the number of elapsed days
+def get_elapsed_days(start_date):
+    """Given a date, return an integer for the number of elapsed days
     """
 
     #gets the number of days since start date
@@ -42,12 +42,6 @@ def get_total_mins(reader):
         total_mins += log.minutes_read
 
     return total_mins
-
-
-def get_elapsed_days(date_obj):
-    """given a date object, return an integer of elapsed days"""
-
-    return int((date.today() - date_obj.date()).days)
 
 
 def get_admin_logs(admin_id):

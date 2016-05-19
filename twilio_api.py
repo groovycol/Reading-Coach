@@ -17,7 +17,7 @@ def send_message(phone_number):
     recipient = get_coach_by_phone(phone_number)
 
     #determine the message of the day to send
-    day = get_day_index(recipient.start_date)
+    day = get_elapsed_days(recipient.start_date)
     msg = get_message_by_day(day)
 
     #format message to send

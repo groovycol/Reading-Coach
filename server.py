@@ -163,10 +163,11 @@ def record_mins():
             return render_template("error.html", err_msg=ERR_MSG)
 
         #find the day and message to display:
-        day_index = get_day_index(coach.start_date)
+        day_index = get_elapsed_days(coach.start_date)
+        dates = get_formatted_dates(day_index)
         msg = get_message_by_day(day_index)
 
-        return render_template("record.html", coach=coach, msg=msg)
+        return render_template("record.html", coach=coach, msg=msg, dates=dates)
 
     #if not logged in, return user to the /login screen
     else:
