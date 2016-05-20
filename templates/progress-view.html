@@ -11,26 +11,54 @@
         <input type="hidden" id="admin_id" value="{{admin.admin_id}}">
         <div class="admin-progress-chart"></div>
         <div id="barLegend" class="chart-legend"></div>
-        <canvas id="barChart" width="1000" height="500"></canvas>
+        <div id="canvas"></div>
+        <form action="/progress-view">
+            <input type="submit" id="showbutton" value="Return to All Students View" hidden>
+        </form>
         <script>
             // Initialize some chart variables
+            var canvas_tag = '<canvas id="barChart" width="1000" height="500"></canvas>'
+
             var options = { responsive: false, maintainAspectRatio: true};
 
-            var ctx_bar = $("#barChart").get(0).getContext("2d");
-
-            // chart display
+            // initial chart display
             $.get("/admin-progress.json", {"admin_id": $("#admin_id").val() }, function (data) {
+
+                // clear the canvas
+                $("#barChart").remove()
+                $("#canvas").append(canvas_tag)
+
+                // initialize chart
+                var ctx_bar = $("#barChart").get(0).getContext("2d");
+
+                // draw chart
                 var myBarChart = new Chart(ctx_bar).Bar(data,
                                                      options);
+
+                // add a legend
                 $('#barLegend').html(myBarChart.generateLegend());
 
+                // event handler for clicking on a data bar in the chart
                 $("#barChart").click( function(evt) {
                     var activePoints = myBarChart.getBarsAtEvent(evt);
                     var reader = activePoints[0].label;
+
+                    // clear the canvas
+                    $("#barChart").remove()
+                    $("#canvas").append(canvas_tag)
+
+                    // re-initialize chart
+                    var ctx_bar = $("#barChart").get(0).getContext("2d");
+
+                    //draw new chart
                     $.get("/admin-reader-detail.json", {"reader": reader}, function (data){
                         var myBarChart = new Chart(ctx_bar).Bar(data, options);
 
+                        // add a chart legend
                         $('#barLegend').html(myBarChart.generateLegend());
+
+                        // show button to return to all students view
+                        $('#showbutton').show()
                     })
                 })
             });
