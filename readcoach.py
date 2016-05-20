@@ -12,8 +12,7 @@ def get_elapsed_days(start_date):
 
     #gets the number of days since start date
     delta = datetime.now() - start_date
-    #plus one because msg 1=day 0
-    return delta.days + 1
+    return delta.days
 
 
 def get_start_date(reader):
@@ -128,8 +127,12 @@ def get_reader_id_by_name(first_name):
 def get_message_by_day(num):
     """Given an integer, retrieve the message_text for that message_id"""
 
+    #add one to the number passed in because day 0 will need to retrieve msg 1
+    num += 1
+
+    #retrieve the message by id and handle errors
     try:
-        message = Message.query.filter_by(message_id=num).one()
+        message = Message.query.get(num)
     except NoResultFound:
         message = None
     except MultipleResultsFound:

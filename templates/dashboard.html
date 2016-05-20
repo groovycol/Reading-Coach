@@ -8,39 +8,42 @@
         <h1>{{ reader.first_name }}'s Reading Progress</h1>
         <input type="hidden" name="reader_id" id="reader_id" value="{{reader.reader_id}}">
         <div class="reader-progress-chart">
-        <canvas id="barChart" width="1200" height="600"></canvas>
-        <button id="time_period">Show all</button>
+        <div id="canvas"></canvas></div>
+        <button id="time_period" value="week">Show all</button>
         <script>
             // Initialize some chart variables
+            var canvas_tag = '<canvas id="barChart" width="1200" height="600">'
+
             var options = { responsive: false, maintainAspectRatio: true};
 
-            var ctx_bar = $("#barChart").get(0).getContext("2d");
+            // initial chart display last 7 days
+            function draw_chart() { 
+                $("#barChart").remove()
+                $("#canvas").append(canvas_tag)
+                var ctx_bar = $("#barChart").get(0).getContext("2d");
+                $.get("/reader-progress.json", {"reader_id": $("#reader_id").val(), "time_period": $('#time_period').val() }, function (data) {
+                        var myBarChart = new Chart(ctx_bar).Bar(data, options);
+            });}
 
             // function toggles chart display and button text
             function toggleDataDisplay(evt) {
                 if ($('#time_period').text() === "Show all"){
-                    $('#time_period').text("Show this week")
-                    $.get("/reader-progress.json", {"reader_id": $("#reader_id").val(), "time_period": "all" }, function (data) {
-                             var myBarChart = new Chart(ctx_bar).Bar(data,
-                                                     options);
-                    });
+                    $('#time_period').text("Show this week");
+                    $('#time_period').val("all");
                 } else {
-                    $('#time_period').text("Show all")
-                    $.get("/reader-progress.json", {"reader_id": $("#reader_id").val(), "time_period": "week" }, function (data) {
-                             var myBarChart = new Chart(ctx_bar).Bar(data,
-                                                     options);
-                    });
+                    $('#time_period').text("Show all");
+                    $('#time_period').val("week");
                 }
+
+                //redraw the chart
+                draw_chart();
             }
+
+            //initial chart display
+            draw_chart();
 
             // evt handler for button click to toggle chart data display
             $('#time_period').click(toggleDataDisplay)
-
-            // initial chart display last 7 days
-            $.get("/reader-progress.json", {"reader_id": $("#reader_id").val(), "time_period": "week" }, function (data) {
-                var myBarChart = new Chart(ctx_bar).Bar(data,
-                                                     options);
-            });
 
         </script>
     {% endfor %}

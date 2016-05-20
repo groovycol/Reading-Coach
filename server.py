@@ -164,8 +164,9 @@ def record_mins():
 
         #find the day and message to display:
         day_index = get_elapsed_days(coach.start_date)
-        dates = get_formatted_dates(day_index)
         msg = get_message_by_day(day_index)
+        #get a list of formatted dates to populate dropdown menu
+        dates = get_formatted_dates(day_index)
 
         return render_template("record.html", coach=coach, msg=msg, dates=dates[::-1])
 
