@@ -52,6 +52,7 @@ def login_process():
     elif coach == "error":
         return render_template("error.html", err_msg=ERR_MSG)
 
+    #check the encrypted password to see if it matches the db
     if sha256_crypt.verify(request.form["password"], coach.password):
         #add coach to the session
         session["coach"] = coach_phone

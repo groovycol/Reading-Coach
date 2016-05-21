@@ -15,10 +15,10 @@ def example_data():
     Message.query.delete()
 
     # Add sample Coaches
-    c1 = Coach(phone="510-384-8508", password='MyPassword', email='groovycol@gmail.com', start_date="2016-05-15 10:34:09")
-    c2 = Coach(phone="510-658-1353", password='MyPassword', start_date="2016-05-15 10:34:09")
-    c3 = Coach(phone="410-632-3222", password='MyPassword', email='adfoodie@gmail.com', start_date="2016-05-16 10:34:09")
-    c4 = Coach(phone="410-651-3757", password='MyPassword', start_date="2016-05-16 10:34:09")
+    c1 = Coach(phone="510-384-8508", password='$5$rounds=535000$wjufdSNVsChPA256$iiuJn6aXCGk1BqV2Sn2YNgbGM9R/Q46Cex51tAFcSBA', email='groovycol@gmail.com', start_date="2016-05-15 10:34:09")
+    c2 = Coach(phone="510-658-1353", password='$5$rounds=535000$wjufdSNVsChPA256$iiuJn6aXCGk1BqV2Sn2YNgbGM9R/Q46Cex51tAFcSBA', start_date="2016-05-15 10:34:09")
+    c3 = Coach(phone="410-632-3222", password='$5$rounds=535000$wjufdSNVsChPA256$iiuJn6aXCGk1BqV2Sn2YNgbGM9R/Q46Cex51tAFcSBA', email='adfoodie@gmail.com', start_date="2016-05-16 10:34:09")
+    c4 = Coach(phone="410-651-3757", password='$5$rounds=535000$wjufdSNVsChPA256$iiuJn6aXCGk1BqV2Sn2YNgbGM9R/Q46Cex51tAFcSBA', start_date="2016-05-16 10:34:09")
 
     # Add sample Name Prefixes
     prefix1 = Prefix(prefix='Ms.')
@@ -29,9 +29,9 @@ def example_data():
     prefix6 = Prefix(prefix='Organization')
 
     # Add sample Admins
-    t1 = Admin(name="Smith", prefix="1", email="teach@gmail.com", password="MyPassword")
-    t2 = Admin(name="Jones", prefix="2", email="groovycol@gmail.com", password="MyPassword")
-    t3 = Admin(name="Oakland Public Library", prefix="6", email="librarian@opl.org", password="MyPassword")
+    t1 = Admin(name="Smith", prefix="1", email="teach@gmail.com", password="$5$rounds=535000$wjufdSNVsChPA256$iiuJn6aXCGk1BqV2Sn2YNgbGM9R/Q46Cex51tAFcSBA")
+    t2 = Admin(name="Jones", prefix="2", email="groovycol@gmail.com", password="$5$rounds=535000$wjufdSNVsChPA256$iiuJn6aXCGk1BqV2Sn2YNgbGM9R/Q46Cex51tAFcSBA")
+    t3 = Admin(name="Oakland Public Library", prefix="6", email="librarian@opl.org", password="$5$rounds=535000$wjufdSNVsChPA256$iiuJn6aXCGk1BqV2Sn2YNgbGM9R/Q46Cex51tAFcSBA")
 
     # Add sample Readers
     r1 = Reader(first_name="Enzo", coach_id="1", admin_id="1")

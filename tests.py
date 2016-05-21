@@ -57,7 +57,7 @@ class FlaskTestsDatabase(unittest.TestCase):
         """Test login page."""
 
         result = self.client.post("/login",
-                                  data={"coach_phone": "510-384-8508", "password": "MyPassword"},
+                                  data={"coach_phone": "510-384-8508", "password": "MyPassword" },
                                   follow_redirects=True)
         self.assertIn("Number of minutes read:", result.data)
 
