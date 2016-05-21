@@ -5,11 +5,11 @@
 </head>
 <body>
 
-{% if "user_id" in session %}
+{% if "coach" in session %}
     <a href="/logout">Logout</a>
     <a href="/record">Record reading minutes</a>
     <a href="/dashboard">View your reader's progress</a>
-    {{ session["user_id"] }}
+    {{ session["coach"] }}
 {% elif "admin" in session %}
     <a href="/logout">Logout</a>
     {{ session["admin"] }}

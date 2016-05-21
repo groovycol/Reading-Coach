@@ -13,7 +13,7 @@ class Coach(db.Model):
     coach_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     phone = db.Column(db.String(15), nullable=False, unique=True)
     email = db.Column(db.String(35), nullable=True)
-    password = db.Column(db.String(25), nullable=False)
+    password = db.Column(db.String(150), nullable=False)
     start_date = db.Column(db.DateTime, nullable=False)
 
     readers = db.relationship('Reader')
@@ -58,7 +58,7 @@ class Admin(db.Model):
     name = db.Column(db.String(50), nullable=False, unique=True)
     prefix = db.Column(db.Integer, db.ForeignKey('prefixes.prefix_id'))
     email = db.Column(db.String(35), nullable=True, unique=True)
-    password = db.Column(db.String(25), nullable=False)
+    password = db.Column(db.String(150), nullable=False)
 
     readers = db.relationship('Reader')
     nameprefix = db.relationship('Prefix')

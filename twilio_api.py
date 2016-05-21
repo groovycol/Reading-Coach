@@ -29,6 +29,30 @@ def send_message(phone_number):
                             body=msg_body)
 
 
+def send_message_from_admin(first_name, admin_email, message):
+    """send a real-time sms message from the admin to the coach/reader"""
+
+    #get the admin name
+    admin = get_admin_by_email(admin_email)
+    if admin.nameprefix.prefix == "Organization":
+        admin_name = admin.name
+    else:
+        admin_name = admin.nameprefix.prefix + " " + admin.name
+
+    #get the coach's phone number
+    reader = get_reader_by_name(first_name)
+    coach = reader.coach
+    phone_number = coach.phone
+
+    #prepare the message to send
+    msg_body = "ReadingCoach message from " + admin_name + ": " + message
+
+    client = TwilioRestClient(ACCOUNT_SID, AUTH_TOKEN)
+    client.messages.create(to=phone_number,
+                            from_ =FROM_ACCOUNT,
+                            body=msg_body)
+
+
 if __name__ == '__main__':
     from flask.ext.sqlalchemy import SQLAlchemy
 

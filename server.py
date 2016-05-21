@@ -3,8 +3,9 @@ from flask import Flask, render_template, request, flash, redirect, session
 from jinja2 import StrictUndefined
 from flask_debugtoolbar import DebugToolbarExtension
 from flask import jsonify
+from passlib.hash import sha256_crypt
 
-from twilio_api import send_message
+from twilio_api import send_message, send_message_from_admin
 from model import *
 from readcoach import *
 
@@ -39,26 +40,26 @@ def login_admin():
 @app.route('/login', methods=['POST'])
 def login_process():
     """Process login."""
-    user_id = request.form["user_id"]
-    password = request.form["password"]
 
-    #make sure this user_id and password match in the database
-    user = get_coach_by_phone(user_id)
+    coach_phone = request.form["coach_phone"]
 
-    if not user:
-        flash("No such user")
+    #make sure this coach phone and password match in the database
+    coach = get_coach_by_phone(coach_phone)
+
+    if not coach:
+        flash("Phone number doesn't match")
         return redirect("/login")
-    elif user == "error":
+    elif coach == "error":
         return render_template("error.html", err_msg=ERR_MSG)
 
-    if user.password != password:
+    if sha256_crypt.verify(request.form["password"], coach.password):
+        #add coach to the session
+        session["coach"] = coach_phone
+        return redirect("/record")
+    else:
         #if password doesn't match, back to /login rte w/msg
         flash("Incorrect password")
         return redirect("/login")
-    else:
-        #add user_id to the session
-        session["user_id"] = user_id
-        return redirect("/record")
 
 
 @app.route('/process_admin_login', methods=['POST'])
@@ -66,33 +67,32 @@ def process_admin_login():
     """Process login for admin."""
 
     email = request.form["email"]
-    password = request.form["password"]
 
     #make sure this email and password match in the database
-    user = get_admin_by_email(email)
+    admin = get_admin_by_email(email)
 
-    if not user:
-        flash("No such user")
+    if not admin:
+        flash("email doesn't match an entry in our database")
         return redirect("/login-admin")
-    elif user == "error":
+    elif admin == "error":
         return render_template("error.html", err_msg=ERR_MSG)
 
-    if user.password != password:
-        #if password doesn't match, back to /login rte w/msg
-        flash("Incorrect password")
-        return redirect("/login-admin")
-    else:
+    if sha256_crypt.verify(request.form["password"], admin.password):
         #add email to the session
         session["admin"] = email
         return redirect("/progress-view")
+    else:
+        #if password doesn't match, back to /login rte w/msg
+        flash("Incorrect password")
+        return redirect("/login-admin")
 
 
 @app.route("/logout")
 def logout():
-    """User must be logged in."""
+    """ Remove values from the session"""
 
-    user_info = session.keys()
-    for key in user_info:
+    login_info = session.keys()
+    for key in login_info:
         del session[key]
 
     flash("You have logged out.")
@@ -100,10 +100,12 @@ def logout():
     return redirect("/login")
 
 
-#Manage new user registrations
+#Manage new registrations
 @app.route('/register')
 def register():
-    """Add a new user to the database"""
+    """Return a registration form"""
+
+    #get a list of admins to supply in dropdown menu
     admins = Admin.query.all()
 
     return render_template("register.html", admins=admins)
@@ -113,50 +115,46 @@ def register():
 def register_process():
     """Process registration."""
 
-    user_id = request.form["user_id"]
-    password = request.form["password"]
+    #retrieve values from the form
+    coach_phone = request.form["coach_phone"]
     email = request.form["email"]
     first_name = request.form["first_name"]
     admin = request.form["admin_id"]
 
-    #make sure this user_id isn't already in use
-    user = get_coach_by_phone(user_id)
+    #hash the password
+    hash = sha256_crypt.encrypt(request.form["password"])
 
-    if not user:
-        #Add new user_id to the database
-        add_coach_to_db(user_id, password, email)
+    #make sure this phone number isn't already in use
+    coach = get_coach_by_phone(coach_phone)
 
-        #Now, we need the id of the coach just added to the dbase
-        coach = get_coach_by_phone(user_id)
-
-        #make sure the database returned a real result
-        if coach is None or coach == "error":
-            return render_template("error.html", err_msg=ERR_MSG)
+    if not coach:
+        #Add new coach to the database
+        coach_id = add_coach_to_db(coach_phone, hash, email)
 
         #add a new reader to the db
         add_reader_to_db(first_name,
-                    coach.coach_id,
+                    coach_id,
                     admin)
 
-        #Give the user a confirmation message about being registered.
-        flash(user_id + " is now registered to receive text message reminders")
-        #Add the new user_id to the session to keep user logged in.
-        session["user_id"] = user_id
-        return render_template("new-user-info.html")
+        #Give the coach a confirmation message about being registered.
+        flash(coach_phone + " is now registered to receive text message reminders")
+        #Add the new phone to the session to keep coach logged in.
+        session["coach"] = coach_phone
+        return render_template("new-coach-info.html")
     else:
         #already in the dbase, redirect to login page
-        flash(user_id + " is already registered")
+        flash(coach_phone + " is already registered")
         return redirect("/login")
 
 
-#Routes to manage user input and displaying user data
+#Routes to manage input and displaying data
 @app.route("/record")
 def record_mins():
-    """Allows logged in user to record minutes read"""
+    """Allows logged in coach to record minutes read"""
 
-    #make sure user is logged in
-    if "user_id" in session:
-        coach = get_coach_by_phone(session["user_id"])
+    #make sure coach is logged in
+    if "coach" in session:
+        coach = get_coach_by_phone(session["coach"])
 
         #make sure the database retrieved something real
         if coach is None or coach == "error":
@@ -165,12 +163,13 @@ def record_mins():
         #find the day and message to display:
         day_index = get_elapsed_days(coach.start_date)
         msg = get_message_by_day(day_index)
+
         #get a list of formatted dates to populate dropdown menu
         dates = get_formatted_dates(day_index)
 
         return render_template("record.html", coach=coach, msg=msg, dates=dates[::-1])
 
-    #if not logged in, return user to the /login screen
+    #if not logged in, return coach to the /login screen
     else:
         flash("You must be logged in to record reading minutes")
         return redirect("/login")
@@ -193,11 +192,11 @@ def log_minutes():
 
 @app.route("/dashboard")
 def show_dashboard():
-    """Allows logged in user to view progress charts"""
+    """shows progress charts"""
 
-    #make sure user is logged in
-    if "user_id" in session:
-        coach = get_coach_by_phone(session["user_id"])
+    #make sure coach is logged in
+    if "coach" in session:
+        coach = get_coach_by_phone(session["coach"])
 
         #make sure the database returned something real
         if coach is None or coach == "error":
@@ -215,16 +214,16 @@ def show_dashboard():
 def show_progress():
     """Allows logged in admin to view progress charts"""
 
-    #make sure user is logged in
+    #make sure admin is logged in
     if "admin" in session:
-        admin_user = get_admin_by_email(session["admin"])
+        admin = get_admin_by_email(session["admin"])
 
         #make sure the database retrieved something real
-        if admin_user is None or admin_user == "error":
+        if admin is None or admin == "error":
             return render_template("error.html", err_msg=ERR_MSG)
 
         #otherwise render the page for this route
-        return render_template("progress-view.html", admin=admin_user)
+        return render_template("progress-view.html", admin=admin)
 
     else:
         flash("You must be logged in to view progress")
@@ -233,11 +232,27 @@ def show_progress():
 
 @app.route("/send-message/<phone>")
 def send_sms_message(phone):
-    """Sends an SMS message to the user via the Twilio API"""
+    """Sends an SMS message via the Twilio API"""
 
     send_message(phone)
 
     return redirect("/record")
+
+
+@app.route("/send-sms-from-admin.json")
+def send_sms_from_admin():
+    """Sends an SMS message to the coach from the admin via the Twilio API"""
+
+    first_name = request.args.get("reader")
+    print first_name
+    message = request.args.get("message_txt")
+    admin = session["admin"]
+
+    #send the message, and return a string about status 
+    if send_message_from_admin(first_name, admin, message):
+        return "message sent to " + first_name + "'s Reading Coach"
+    else:
+        return "message send failure. Try again later"
 
 
 @app.route('/reader-progress.json')
@@ -247,7 +262,7 @@ def reader_progress_data():
     reader_id = request.args.get("reader_id")
     time_period = request.args.get("time_period")
 
-    #retrieve last 7 days of reader log data
+    #retrieve reader log data
     log_data = get_reader_logs(reader_id, time_period)
 
     #date_labels are the sorted keys of the log_data dictionary
@@ -282,11 +297,11 @@ def admin_reader_detail():
     """Return chart data for a specific reader"""
 
     first_name = request.args.get("reader")
-    reader_id = get_reader_id_by_name(first_name)
+    reader = get_reader_by_name(first_name)
     time_period = "all"
 
     #retrieve reader log data
-    log_data = get_reader_logs(reader_id, time_period)
+    log_data = get_reader_logs(reader.reader_id, time_period)
 
     #date_labels are the sorted keys of the log_data dictionary
     date_labels = sorted(log_data.keys())

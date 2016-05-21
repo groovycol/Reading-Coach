@@ -8,11 +8,11 @@
         <h1>{{ reader.first_name }}'s Reading Progress</h1>
         <input type="hidden" name="reader_id" id="reader_id" value="{{reader.reader_id}}">
         <div class="reader-progress-chart">
-        <div id="canvas"></canvas></div>
+        <div id="canvas"></div>
         <button id="time_period" value="week">Show all</button>
         <script>
             // Initialize some chart variables
-            var canvas_tag = '<canvas id="barChart" width="1200" height="600">'
+            var canvas_tag = '<canvas id="barChart" width="1200" height="600"></canvas>'
 
             var options = { responsive: false, maintainAspectRatio: true};
 

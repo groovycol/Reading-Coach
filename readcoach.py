@@ -117,11 +117,11 @@ def get_admin_by_email(email):
     return admin
 
 
-def get_reader_id_by_name(first_name):
-    """Given a reader's name, return their reader_id"""
+def get_reader_by_name(name):
+    """Given a reader's name, return the reader object"""
 
-    reader = Reader.query.filter_by(first_name=first_name).one()
-    return reader.reader_id
+    reader = Reader.query.filter_by(first_name=name).one()
+    return reader
 
 
 def get_message_by_day(num):

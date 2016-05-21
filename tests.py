@@ -57,13 +57,13 @@ class FlaskTestsDatabase(unittest.TestCase):
         """Test login page."""
 
         result = self.client.post("/login",
-                                  data={"user_id": "510-384-8508", "password": "MyPassword"},
+                                  data={"coach_phone": "510-384-8508", "password": "MyPassword"},
                                   follow_redirects=True)
         self.assertIn("Number of minutes read:", result.data)
 
 
 class FlaskTestsAdminLoggedIn(unittest.TestCase):
-    """Flask tests with user type admin logged in to session."""
+    """Flask tests with admin logged in to session."""
 
     def setUp(self):
         """Stuff to do before every test."""
@@ -93,14 +93,14 @@ class FlaskTestsAdminLoggedIn(unittest.TestCase):
         db.drop_all()
 
     def test_view_progress(self):
-        """Test record minutes page."""
+        """Test view progress page."""
 
         result = self.client.get("/progress-view")
         self.assertIn("Readers Report", result.data)
 
 
 class FlaskTestsCoachLoggedIn(unittest.TestCase):
-    """Flask tests with user type coach logged in to session."""
+    """Flask tests with coach logged in to session."""
 
     def setUp(self):
         """Stuff to do before every test."""
@@ -110,7 +110,7 @@ class FlaskTestsCoachLoggedIn(unittest.TestCase):
 
         with self.client as c:
             with c.session_transaction() as sess:
-                sess['user_id'] = "510-384-8508"
+                sess['coach'] = "510-384-8508"
 
          # Connect to test database
         connect_to_db(app, "postgresql:///testdb")
@@ -143,7 +143,7 @@ class FlaskTestsCoachLoggedIn(unittest.TestCase):
 
 
 class FlaskTestsLoggedOut(unittest.TestCase):
-    """Flask tests with user logged in to session."""
+    """Flask tests when logged out of the session."""
 
     def setUp(self):
         """Stuff to do before every test."""
@@ -152,21 +152,21 @@ class FlaskTestsLoggedOut(unittest.TestCase):
         self.client = app.test_client()
 
     def test_record_page(self):
-        """Test that user can't see record page when logged out."""
+        """Test that coach role can't see record page when logged out."""
 
         result = self.client.get("/record", follow_redirects=True)
         self.assertNotIn("Record Reading Minutes", result.data)
         self.assertIn("You must be logged in to record reading minutes", result.data)
 
     def test_dashboard_page(self):
-        """Test that user can't see dashboard page when logged out."""
+        """Test that the dashboard page won't load when logged out."""
 
         result = self.client.get("/dashboard", follow_redirects=True)
         self.assertNotIn("Reading Progress", result.data)
         self.assertIn("You must be logged in to view progress charts", result.data)
 
     def test_view_progress_page(self):
-        """Test that user can't see view progress page when logged out."""
+        """Test that view progress page won't load when logged out."""
 
         result = self.client.get("/progress-view", follow_redirects=True)
         self.assertNotIn("Student Reading Progress", result.data)

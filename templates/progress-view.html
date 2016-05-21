@@ -12,8 +12,14 @@
         <div class="admin-progress-chart"></div>
         <div id="barLegend" class="chart-legend"></div>
         <div id="canvas"></div>
-        <form action="/progress-view">
-            <input type="submit" id="showbutton" value="Return to All Students View" hidden>
+        <button type="button" id="showbutton" onclick="location='/progress-view'" hidden>Return to All Students View</button>
+        <br>
+        <br>
+        <form action="/send-sms-from-admin.json">
+            <input type="text" style="height:100px;width:400px;font-size:12pt;" id="messagebox" placeholder="Keep up the great work!" hidden>
+            <div>
+                <input type="submit" id="submit" value="Send a Text Message to this Reader" hidden>
+            </div>
         </form>
         <script>
             // Initialize some chart variables
@@ -59,6 +65,20 @@
 
                         // show button to return to all students view
                         $('#showbutton').show()
+
+                        // show message box and submit button
+                        $('#messagebox').show() 
+                        $('#submit').show()
+
+                        // messagebox submit event function
+                        function send_message(evt) {
+                            evt.preventDefault();
+                            $.get("/send-sms-from-admin.json", {"reader": reader, "message_txt": $('#messagebox').val }, function (data){
+                                     alert(data);
+                                });
+                        }
+                        // event listener for messagebox 
+                        $('#submit').on("submit", send_message);
                     })
                 })
             });
