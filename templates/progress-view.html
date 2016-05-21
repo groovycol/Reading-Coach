@@ -8,6 +8,7 @@
     {% else %}
         <h1> {{admin.nameprefix.prefix}} {{admin.name}} Readers Report</h1>
     {% endif %}
+        <h2 id="chart_description">Average Daily Minutes by Reader</h2>
         <input type="hidden" id="admin_id" value="{{admin.admin_id}}">
         <div class="admin-progress-chart"></div>
         <div id="barLegend" class="chart-legend"></div>
@@ -15,11 +16,9 @@
         <button type="button" id="showbutton" onclick="location='/progress-view'" hidden>Return to All Students View</button>
         <br>
         <br>
-        <form action="/send-sms-from-admin.json">
+        <form action="/send-sms-from-admin.json" id="sendmessage" method="get">
             <input type="text" style="height:100px;width:400px;font-size:12pt;" id="messagebox" placeholder="Keep up the great work!" hidden>
-            <div>
-                <input type="submit" id="submit" value="Send a Text Message to this Reader" hidden>
-            </div>
+            <input type="submit" id="submit" value="Send a Text Message to this Reader" hidden>
         </form>
         <script>
             // Initialize some chart variables
@@ -40,14 +39,15 @@
                 // draw chart
                 var myBarChart = new Chart(ctx_bar).Bar(data,
                                                      options);
-
-                // add a legend
-                $('#barLegend').html(myBarChart.generateLegend());
+           
 
                 // event handler for clicking on a data bar in the chart
                 $("#barChart").click( function(evt) {
                     var activePoints = myBarChart.getBarsAtEvent(evt);
                     var reader = activePoints[0].label;
+
+                    // change the chart heading descriptor
+                    $('#chart_description').html(reader)
 
                     // clear the canvas
                     $("#barChart").remove()
@@ -60,28 +60,30 @@
                     $.get("/admin-reader-detail.json", {"reader": reader}, function (data){
                         var myBarChart = new Chart(ctx_bar).Bar(data, options);
 
-                        // add a chart legend
-                        $('#barLegend').html(myBarChart.generateLegend());
-
                         // show button to return to all students view
                         $('#showbutton').show()
 
                         // show message box and submit button
                         $('#messagebox').show() 
                         $('#submit').show()
-
-                        // messagebox submit event function
-                        function send_message(evt) {
-                            evt.preventDefault();
-                            $.get("/send-sms-from-admin.json", {"reader": reader, "message_txt": $('#messagebox').val }, function (data){
-                                     alert(data);
-                                });
-                        }
-                        // event listener for messagebox 
-                        $('#submit').on("submit", send_message);
-                    })
-                })
+                    });
+                });
             });
+
+            // messagebox submit event function
+            function send_message(evt) {
+                evt.preventDefault();
+                console.log("here")
+
+                var formInputs = {
+                    "reader": $('#chart_description').html(),
+                    "message_txt": $('#messagebox').val()
+                };
+
+                $.get("/send-sms-from-admin.json", formInputs, function (data){ alert(data); });
+            }
+            // event listener for messagebox 
+            $('#sendmessage').on("submit", send_message);
 
         </script>
 {% endblock %}

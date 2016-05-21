@@ -247,6 +247,7 @@ def send_sms_from_admin():
     first_name = request.args.get("reader")
     print first_name
     message = request.args.get("message_txt")
+    print message
     admin = session["admin"]
 
     #send the message, and return a string about status 
