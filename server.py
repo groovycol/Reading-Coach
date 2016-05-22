@@ -245,16 +245,13 @@ def send_sms_from_admin():
     """Sends an SMS message to the coach from the admin via the Twilio API"""
 
     first_name = request.args.get("reader")
-    print first_name
     message = request.args.get("message_txt")
-    print message
     admin = session["admin"]
 
-    #send the message, and return a string about status 
-    if send_message_from_admin(first_name, admin, message):
-        return "message sent to " + first_name + "'s Reading Coach"
-    else:
-        return "message send failure. Try again later"
+    #send the message, and return a string about status
+    msg_status = send_message_from_admin(first_name, admin, message)
+
+    return msg_status
 
 
 @app.route('/reader-progress.json')

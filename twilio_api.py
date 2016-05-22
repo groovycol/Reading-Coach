@@ -13,7 +13,7 @@ FROM_ACCOUNT = os.environ['TWILIO_NUMBER']
 def send_message(phone_number):
     """Sends an SMS message to the user via the Twilio API"""
 
-    #get the recipient
+    #get the recipient's phone number
     recipient = get_coach_by_phone(phone_number)
 
     #determine the message of the day to send
@@ -23,6 +23,7 @@ def send_message(phone_number):
     #format message to send
     msg_body = "ReadingCoach reminder: " + msg.message_text + " Log progress now! http://goo.gl/dEA6eq"
 
+    #send the message via Twilio. Twilio does not return a success/failure status
     client = TwilioRestClient(ACCOUNT_SID, AUTH_TOKEN)
     client.messages.create(to=phone_number,
                             from_ =FROM_ACCOUNT,
@@ -34,6 +35,8 @@ def send_message_from_admin(first_name, admin_email, message):
 
     #get the admin name
     admin = get_admin_by_email(admin_email)
+
+    #Format the name to send
     if admin.nameprefix.prefix == "Organization":
         admin_name = admin.name
     else:
@@ -47,10 +50,15 @@ def send_message_from_admin(first_name, admin_email, message):
     #prepare the message to send
     msg_body = "ReadingCoach message from " + admin_name + ": " + message
 
+    #Send the message via Twilio
     client = TwilioRestClient(ACCOUNT_SID, AUTH_TOKEN)
     client.messages.create(to=phone_number,
                             from_ =FROM_ACCOUNT,
                             body=msg_body)
+
+    #Twilio does not return a success/failure status, but this will
+    #verify that the message send process completed
+    return "SMS message sent."
 
 
 if __name__ == '__main__':
