@@ -3,10 +3,20 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.js"> </script>
 <script src="https://code.jquery.com/jquery.js"></script>
-
-    {% for reader in coach.readers %}
-        <h1>{{ reader.first_name }}'s Reading Progress</h1>
-        <input type="hidden" name="reader_id" id="reader_id" value="{{reader.reader_id}}">
+    <h1> Reading Progress</h1>
+    <h3><label>Reader:</label></h3>
+    {% if coach.readers|length > 1 %}
+        <select name="reader_id" id="reader_id">
+        {% for reader in coach.readers %}
+            <option value="{{ reader.reader_id }}">{{ reader.first_name }}</option>
+        {% endfor %}
+        </select>
+    {% else %}
+        {% for reader in coach.readers %}
+            <h3>{{ reader.first_name }}</h3>
+            <input type="hidden" id="reader_id" name="reader_id" value="{{reader.reader_id}}">
+        {% endfor %}
+    {% endif %}
         <div class="reader-progress-chart">
         <div id="canvas"></div>
         <button id="time_period" value="week">Show all</button>
@@ -42,9 +52,11 @@
             //initial chart display
             draw_chart();
 
+            // evt handler for dropdown select of reader name
+            $('#reader_id').change(draw_chart)
+
             // evt handler for button click to toggle chart data display
             $('#time_period').click(toggleDataDisplay)
 
         </script>
-    {% endfor %}
 {% endblock %}
