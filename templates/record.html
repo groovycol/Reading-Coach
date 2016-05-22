@@ -6,11 +6,21 @@
 
     <h1> Record Reading Minutes</h1>
     <br>
-    {% for reader in coach.readers %}
-         <h2>{{ reader.first_name }}</h2>
-    <h3> {{ msg.message_text }}</h3>
+    <h2> {{ msg.message_text }}</h2>
     <form action="/log_minutes" method="POST">
-        <input type="hidden" name="reader_id" value="{{reader.reader_id}}">
+        {% if coach.readers|length > 1 %}
+            <h3><label>Reader:</label></h3>
+            <select name="reader_id">
+            {% for reader in coach.readers %}
+                <option value="{{ reader.reader_id }}">{{ reader.first_name }}</option>
+            {% endfor %}
+            </select>
+        {% else %}
+            {% for reader in coach.readers %}
+                <h3>{{ reader.first_name }}</h3>
+                <input type="hidden" name="reader_id" value="{{reader.reader_id}}">
+            {% endfor %}
+        {% endif %}
         <br>
         {% if dates %}
         <label>Date:</label>
@@ -31,7 +41,6 @@
     <div>
         <input type="submit" value="Add to Reading Log">
     </div>
-    {% endfor %}
 </form>
 
 {% endblock %}
