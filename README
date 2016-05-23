@@ -10,6 +10,11 @@ python server.py
 
 Go to: localhost:5000
 
+NOTE: to test receiving text messages to teh server, you need to get ngrok running. Locally, I have it installed in C:\Program Files\Ngrok
+windows cmd
+cd C:\Program Files\Ngrok
+ngrok http 5000
+
 *********************************************************
 To recreate the sample data:
 ./regen_seed_data.sh

@@ -163,10 +163,14 @@ def add_reader_to_db(first_name, coach_id, admin):
     db.session.commit()
 
 
-def add_logentry_to_db(reader_id, minutes, title, date):
+def add_logentry_to_db(reader_id, minutes, title, logdate):
     """Add a ReadingLog entry to the db"""
 
-    date_str = date + " 2016  12:01PM"
+    if not logdate:
+        d = date.today()
+        logdate = d.strftime("%b %d")
+
+    date_str = logdate + " 2016  12:01PM"
     date_time = datetime.strptime(date_str, '%b %d %Y %I:%M%p')
 
     #prepare entry for database insert

@@ -3,9 +3,10 @@ from flask import Flask, render_template, request, flash, redirect, session
 from jinja2 import StrictUndefined
 from flask_debugtoolbar import DebugToolbarExtension
 from flask import jsonify
+from flask import Response
 from passlib.hash import sha256_crypt
 
-from twilio_api import send_message, send_message_from_admin
+from twilio_api import send_message, send_message_from_admin, handle_incoming
 from model import *
 from readcoach import *
 
@@ -252,6 +253,15 @@ def send_sms_from_admin():
     msg_status = send_message_from_admin(first_name, admin, message)
 
     return msg_status
+
+
+@app.route('/sendlog', methods=['GET', 'POST'])
+def sendlog():
+    """Handle incoming sms messages"""
+
+    msg_received = request.form
+    response = handle_incoming(msg_received)
+    return Response(response, mimetype='text/xml')
 
 
 @app.route('/reader-progress.json')
