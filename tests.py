@@ -26,6 +26,23 @@ class FlaskTestsBasic(unittest.TestCase):
         result = self.client.get("/")
         self.assertIn("Welcome to The Reading Coach!", result.data)
 
+    def test_login_form_admin(self):
+        """test the login form for an admin"""
+
+        result = self.client.get("/login-admin")
+        self.assertIn("Email address:", result.data)
+
+    def test_login_form_coach(self):
+        """test the login form for an coach"""
+
+        result = self.client.get("/login")
+        self.assertIn("Phone number:", result.data)
+
+    def test_error_page(self):
+        """test the error page"""
+
+        result = self.client.get("/error")
+        self.assertIn("The database did not return expected results", result.data)
 
 class FlaskTestsDatabase(unittest.TestCase):
     """Flask tests that use the database."""
@@ -69,18 +86,45 @@ class FlaskTestsDatabase(unittest.TestCase):
                                   follow_redirects=True)
         self.assertIn("Ms. Smith Readers Report", result.data)
 
-    def test_register(self):
+    def test_register_page(self):
         """Test registration page"""
 
         result = self.client.get("/register")
 
         self.assertIn("Share progress with Teacher or Organization", result.data)
 
+    def test_registration_process(self):
+        """Test registration of a coach"""
+
+        result = self.client.post("/register_process",
+                                  data={"coach_phone": "999-888-7777", "password": "MyPassword", "first_name": "Geraldo", "admin_id": 1, "email": "mrhooper@muppetmail.com"},
+                                  follow_redirects=True)
+
+        self.assertIn("is now registered", result.data)
+        self.assertIn("With your phone", result.data)
+
+    def test_registration_process_dupe(self):
+        """Test duplicate registration of a coach"""
+
+        result = self.client.post("/register_process",
+                                  data={"coach_phone": "510-384-8508", "password": "MyPassword", "first_name": "Geraldo", "admin_id": 1, "email": "mrhooper@muppetmail.com"},
+                                  follow_redirects=True)
+
+        self.assertIn("is already registered", result.data)
+
     def test_send_sms(self):
         """Test sending of an sms message"""
 
         result = self.client.get("/send-message/510-384-8508")
         self.assertIn("/record", result.data)
+
+    def test_add_log_entry(self):
+        """test adding reading log entries to db"""
+
+        result = self.client.post("/log_minutes",
+                                  data={"minutes_read": 10, "title": "Phantom Tollbooth", "reader_id": 1, "date": "May 22"},
+                                  follow_redirects=True)
+        self.assertIn("10 minutes recorded", result.data)
 
 
 class FlaskTestsAdminLoggedIn(unittest.TestCase):
@@ -118,6 +162,15 @@ class FlaskTestsAdminLoggedIn(unittest.TestCase):
 
         result = self.client.get("/progress-view")
         self.assertIn("Readers Report", result.data)
+        self.assertIn('<canvas id="barChart"', result.data)
+
+    # def test_send_sms_from_admin(self):
+    #     """Test sending an sms from an admin"""
+
+    #     result = self.client.get("/send-sms-from-admin.json",
+    #                               data={"reader": "Enzo", "message_txt": "yay!"},
+    #                               follow_redirects=True)
+    #     self.assertIn("SMS message sent", result.data)
 
 
 class FlaskTestsCoachLoggedIn(unittest.TestCase):
@@ -161,6 +214,13 @@ class FlaskTestsCoachLoggedIn(unittest.TestCase):
 
         result = self.client.get("/dashboard")
         self.assertIn("Reading Progress", result.data)
+        self.assertIn('<canvas id="barChart"', result.data)
+
+    def test_logout(self):
+        """test logout"""
+
+        result = self.client.get("/logout")
+        self.assertIn("/login", result.data)
 
 
 class FlaskTestsLoggedOut(unittest.TestCase):

@@ -44,7 +44,7 @@ def send_message_from_admin(first_name, admin_email, message):
         admin_name = admin.nameprefix.prefix + " " + admin.name
 
     #get the coach's phone number
-    reader = get_reader_by_name(first_name, admin.admin_id)
+    reader = get_reader_by_name(first_name)
     coach = reader.coach
     phone_number = coach.phone
 

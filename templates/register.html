@@ -5,46 +5,38 @@
     <script src="https://code.jquery.com/jquery.js"></script>
     <form action="/register_process" method="POST">
 
-    <div>
-        <script>
-            // Show helpful info about the phone number entry
-            $(document).ready(function() {
-                $('#phone_msg').hide();
-                $('#phone_num').on('mouseover', function(){
-                $('#phone_msg').toggle(); });
-            });
-
-
-            // Prevent form submission until phone number matches xxx-xxx-xxx pattern
-           $("form").submit( function(evt) {
-                var phone_string = $('#phone_num').val(); 
-                if (! /^[0-9]{3}-[0-9]{3}-[0-9]{4}$/.test(phone_string)) {
-                    evt.preventDefault();
-                    alert("Please enter a telephone number in the format xxx-xxx-xxxx");
-                }
-            });
-
-        </script>
-        <label for="phone">Phone number:
-            <input type="text" name="phone" id="phone_num" placeholder="xxx-xxx-xxxx" required> 
-            <div id="phone_msg" >xxx-xxx-xxxx format. US numbers only. This must be a text message enabled phone. You'll receive daily text message (sms) reminders to log your child's reading progress on this phone.</div>
-        
-        </label>
-    </div>
+    <script>
+        // Prevent form submission until phone number matches xxx-xxx-xxx pattern
+       $("form").submit( function(evt) {
+            var phone_string = $('#phone_num').val(); 
+            if (! /^[0-9]{3}-[0-9]{3}-[0-9]{4}$/.test(phone_string)) {
+                evt.preventDefault();
+                alert("Please enter a telephone number in the format xxx-xxx-xxxx");
+            }
+        });
+    </script>
+    <br>
+    <br>
+    <label for="phone">Phone number:
+        <input type="text" name="coach_phone" id="phone_num" placeholder="xxx-xxx-xxxx" required> 
+        <div id="phone_msg">xxx-xxx-xxxx format. US numbers only. This must be a text message enabled phone. You'll receive daily text message (sms) reminders to log your child's reading progress on this phone.</div>
+    
+    </label>
+    <br>
     <br>
     <div>
         <script>
             // SHow a message about password format
             $(document).ready(function() {
                 $('#password_msg').hide();
-                $('#password').on('mouseover', function(){
-                $('#password_msg').toggle(); });
+                $('#password').on('click', function(){
+                $('#password_msg').show(); });
             });
         </script>
         <label>Password:
             <input type="password" name="password" id="password" required>
         </label>
-        <div id="password_msg">Password or Phrase (alpha, numeric, spaces and special characters allowed). Minimum 6 characters. Max 25 characters.</div>
+        <div id="password_msg" hidden>Password or Phrase (alpha, numeric, spaces and special characters allowed). Minimum 6 characters. Max 25 characters.</div>
     </div>
     <br>
     <div>
@@ -68,20 +60,9 @@
     </div>
     <br>
     <div>
-        <script>
-            // Show information about what the email might be used for
-            $(document).ready(function() {
-                $('#email_msg').hide();
-                $('#email').on('mouseover', function(){
-                $('#email_msg').toggle(); });
-            });
-        </script>
         <label>Email address (optional):
             <input type="text" name="email" id="email">
         </label>
-        <div id="email_msg">
-            We'll use this only for application notifications or to reset your password.
-        </div>
     </div>
     <div>
         <input type="submit" id="submit" value="Register">

@@ -53,7 +53,7 @@ def get_admin_logs(admin_id):
         admin = Admin.query.get(admin_id)
     except:
         return "error"
-    
+
     #initialize an empty dictionary
     reader_data = {}
 
@@ -123,11 +123,11 @@ def get_admin_by_email(email):
     return admin
 
 
-def get_reader_by_name(name, admin_id):
-    """Given a reader's name and an admin_id, return the reader object"""
+def get_reader_by_name(name):
+    """Given a reader's name, return the reader object"""
 
     try:
-        reader = Reader.query.filter(first_name == name, admin_id == admin_id).one()
+        reader = Reader.query.filter_by(first_name=name).one()
     except NoResultFound:
         return "error"
     except MultipleResultsFound:

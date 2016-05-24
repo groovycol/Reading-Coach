@@ -129,7 +129,7 @@ def register_process():
     #make sure this phone number isn't already in use
     coach = get_coach_by_phone(coach_phone)
 
-    if not coach:
+    if not coach or coach == "error":
         #Add new coach to the database
         coach_id = add_coach_to_db(coach_phone, hash, email)
 
@@ -299,15 +299,9 @@ def reader_progress_data():
 def admin_reader_detail():
     """Return chart data for a specific reader"""
 
-    #get the admin object
-    admin = get_admin_by_email(session["email"])
-    #check to make sure we got something back
-    if admin is None or admin == "error":
-            return render_template("error.html", err_msg=ERR_MSG)
-
     #get the reader object
     first_name = request.args.get("reader")
-    reader = get_reader_by_name(first_name, admin.admin_id)
+    reader = get_reader_by_name(first_name)
     #check to make sure we got something back
     if reader is None or reader == "error":
             return render_template("error.html", err_msg=ERR_MSG)
