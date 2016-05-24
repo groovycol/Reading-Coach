@@ -108,8 +108,9 @@ def handle_incoming(sms_message):
         resp.message("The Reading Coach: not a proper log command. Try again?")
         return str(resp)
 
-    if len(incoming_coach.readers) > 1:
-        for reader in incoming_coach.readers:
+    readers = incoming_coach.readers
+    if len(readers) > 1:
+        for reader in readers:
             if reader.first_name.lower() in names:
                 print reader.first_name.lower()
                 print reader.reader_id
