@@ -100,12 +100,12 @@ def handle_incoming(sms_message):
 
     #if the phone number does not match our db
     if incoming_coach is None:
-        resp.say("The Reading Coach: Your phone number does not match our database.")
+        resp.message("The Reading Coach: Your phone number does not match our database.")
         return str(resp)
 
     #if the string "log" is not in the body of the message
     if not log_minutes:
-        resp.say("The Reading Coach: not a proper log command. Try again?")
+        resp.message("The Reading Coach: not a proper log command. Try again?")
         return str(resp)
 
     if len(incoming_coach.readers) > 1:
@@ -115,17 +115,18 @@ def handle_incoming(sms_message):
                 print reader.reader_id
                 first_name = reader.first_name
                 reader_id = reader.reader_id
-                break
-            else:
-                resp.say("The Reading Coach: Reader's name not found. Try again?")
-                return str(resp)
     else:
         first_name = readers[0].first_name
         reader_id = readers[0].reader_id
 
+    #do we have a reader?
+    if not first_name:
+        resp.message("The Reading Coach: Reader's name not found. Try again?")
+        return str(resp)
+
     #do we have some digit data to assign to minutes?
     if minutes == []:
-        resp.say("The Reading Coach: number of minutes not found. Try again?")
+        resp.message("The Reading Coach: number of minutes not found. Try again?")
         return str(resp)
 
     #we need a date and time
@@ -142,7 +143,6 @@ def handle_incoming(sms_message):
 
     #All elements found, success message
     resp.message("The Reading Coach: You have successfully logged {} min for {}".format(minutes, first_name))
-    print str(resp)
     return str(resp)
 
 
