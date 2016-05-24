@@ -232,6 +232,7 @@ def show_progress():
         return redirect("/login-admin")
 
 
+#Routes to manage sms/twilio integration
 @app.route("/send-message/<phone>")
 def send_sms_message(phone):
     """Sends an SMS message via the Twilio API"""
@@ -264,6 +265,7 @@ def sendlog():
     return Response(response, mimetype='text/xml')
 
 
+#routes that return json data for chart.js
 @app.route('/reader-progress.json')
 def reader_progress_data():
     """Return chart data about Reader Progress"""
@@ -282,21 +284,9 @@ def reader_progress_data():
     for date in date_labels:
         minutes_data.append(log_data[date])
 
-    chart_data = {
-        "labels": date_labels,
-        "datasets":
-        [
-            {
-            "label": "Reading Progress",
-            "backgroundColor": "rgba(255,0,0,0.2)",
-            "borderColor": "rgba(255,0,0,1)",
-            "borderWidth": 1,
-            "hoverBackgroundColor": "rgba(255,99,132,0.4)",
-            "hoverBorderColor": "rgba(255,99,132,1)",
-            "data": minutes_data
-            }
-        ]
-    }
+    label = "Reading Progress"
+
+    chart_data = build_a_chart(date_labels, label, minutes_data)
 
     return jsonify(chart_data)
 
@@ -320,21 +310,8 @@ def admin_reader_detail():
     for date in date_labels:
         minutes_data.append(log_data[date])
 
-    chart_data = {
-        "labels": date_labels,
-        "datasets":
-        [
-            {
-            "label": first_name,
-            "backgroundColor": "rgba(255,0,0,0.2)",
-            "borderColor": "rgba(255,0,0,1)",
-            "borderWidth": 1,
-            "hoverBackgroundColor": "rgba(255,99,132,0.4)",
-            "hoverBorderColor": "rgba(255,99,132,1)",
-            "data": minutes_data
-            }
-        ]
-    }
+    #get chart.js dictionary for chart
+    chart_data = build_a_chart(date_labels, first_name, minutes_data)
 
     return jsonify(chart_data)
 
@@ -354,25 +331,16 @@ def admin_progress_data():
     #make a list to append minute data to
     avg_minutes_data = log_data.values()
 
-    chart_data = {
-        "labels": name_labels,
-        "datasets":
-        [
-            {
-            "label": "Average daily minutes per reader",
-            "backgroundColor": "rgba(255,0,0,0.2)",
-            "borderColor": "rgba(255,0,0,1)",
-            "borderWidth": 1,
-            "hoverBackgroundColor": "rgba(255,99,132,0.4)",
-            "hoverBorderColor": "rgba(255,99,132,1)",
-            "data": avg_minutes_data
-            }
-        ]
-    }
+    #set a label
+    label = "Average Reading Minutes"
+
+    #get chart.js dictionary for chart
+    chart_data = build_a_chart(name_labels, label, avg_minutes_data)
 
     return jsonify(chart_data)
 
 
+#handld errors
 @app.route("/error")
 def error_page():
     """Displays an error page"""

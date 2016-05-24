@@ -142,6 +142,31 @@ def get_message_by_day(num):
     return message
 
 
+def build_a_chart(labels, label, data):
+    """return a dictionary of chart.js information"""
+
+    labels = labels
+    label = label
+    data = data
+
+    chart = {
+        "labels": labels,
+        "datasets":
+        [
+            {
+            "label": label,
+            "backgroundColor": "rgba(255,0,0,0.2)",
+            "borderColor": "rgba(255,0,0,1)",
+            "borderWidth": 1,
+            "hoverBackgroundColor": "rgba(255,99,132,0.4)",
+            "hoverBorderColor": "rgba(255,99,132,1)",
+            "data": data
+            }
+        ]
+    }
+
+    return chart
+
 def add_coach_to_db(user_id, password, email):
     """Add a new user to the database"""
 

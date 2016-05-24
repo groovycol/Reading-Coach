@@ -15,6 +15,8 @@ windows cmd
 cd C:\Program Files\Ngrok
 ngrok http 5000
 
+THEN: update Twilio manage numbers page with the new url
+
 *********************************************************
 To recreate the sample data:
 ./regen_seed_data.sh
