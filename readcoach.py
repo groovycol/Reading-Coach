@@ -98,9 +98,9 @@ def get_coach_by_phone(phone):
     except NoResultFound:
         coach = None
     except MultipleResultsFound:
-        coach = "error" 
+        coach = "error"
     except:
-        coach =  "error"
+        coach = "error"
     return coach
 
 
