@@ -24,7 +24,7 @@ class FlaskTestsBasic(unittest.TestCase):
         """Test homepage page."""
 
         result = self.client.get("/")
-        self.assertIn("Welcome", result.data)
+        self.assertIn("Welcome to The Reading Coach!", result.data)
 
 
 class FlaskTestsDatabase(unittest.TestCase):
@@ -53,13 +53,27 @@ class FlaskTestsDatabase(unittest.TestCase):
         db.session.close()
         db.drop_all()
 
-    def test_login(self):
-        """Test login page."""
+    def test_login_coach(self):
+        """Test login of coach role"""
 
         result = self.client.post("/login",
-                                  data={"coach_phone": "510-384-8508", "password": "MyPassword" },
+                                  data={"coach_phone": "510-384-8508", "password": "MyPassword"},
                                   follow_redirects=True)
         self.assertIn("Number of minutes read:", result.data)
+
+    def test_login_admin(self):
+        """Test login of admin role"""
+
+        result = self.client.post("/process_admin_login",
+                                  data={"email": "teach@gmail.com", "password": "MyPassword"},
+                                  follow_redirects=True)
+        self.assertIn("Ms. Smith Readers Report", result.data)
+
+    def test_send_sms(self):
+        """Test sending of an sms message"""
+
+        result = self.client.get("/send-message/510-384-8508")
+        self.assertIn("/record", result.data)
 
 
 class FlaskTestsAdminLoggedIn(unittest.TestCase):
