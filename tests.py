@@ -69,6 +69,13 @@ class FlaskTestsDatabase(unittest.TestCase):
                                   follow_redirects=True)
         self.assertIn("Ms. Smith Readers Report", result.data)
 
+    def test_register(self):
+        """Test registration page"""
+
+        result = self.client.get("/register")
+
+        self.assertIn("Share progress with Teacher or Organization", result.data)
+
     def test_send_sms(self):
         """Test sending of an sms message"""
 
