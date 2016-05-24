@@ -49,8 +49,11 @@ def get_admin_logs(admin_id):
     and the avg num minutes read as values
     """
     #retrieve the admin object
-    admin = Admin.query.get(admin_id)
-
+    try:
+        admin = Admin.query.get(admin_id)
+    except:
+        return "error"
+    
     #initialize an empty dictionary
     reader_data = {}
 
@@ -69,7 +72,10 @@ def get_reader_logs(reader_id, time_period):
     return a dictionary of date keys and num minutes read as values """
 
     #retrieve the reader object
-    reader = Reader.query.get(reader_id)
+    try:
+        reader = Reader.query.get(reader_id)
+    except:
+        return "error"
 
     if time_period == "week":
         dates = get_formatted_dates(6)
@@ -96,11 +102,11 @@ def get_coach_by_phone(phone):
     try:
         coach = Coach.query.filter_by(phone=phone).one()
     except NoResultFound:
-        coach = None
+        return "error"
     except MultipleResultsFound:
-        coach = "error"
+        return "error"
     except:
-        coach = "error"
+        return "error"
     return coach
 
 
@@ -109,18 +115,26 @@ def get_admin_by_email(email):
     try:
         admin = Admin.query.filter_by(email=email).one()
     except NoResultFound:
-        admin = None
+        return "error"
     except MultipleResultsFound:
-        admin = "error"
+        return "error"
     except:
-        admin = "error"
+        return "error"
     return admin
 
 
-def get_reader_by_name(name):
-    """Given a reader's name, return the reader object"""
+def get_reader_by_name(name, admin_id):
+    """Given a reader's name and an admin_id, return the reader object"""
 
-    reader = Reader.query.filter_by(first_name=name).one()
+    try:
+        reader = Reader.query.filter(first_name == name, admin_id == admin_id).one()
+    except NoResultFound:
+        return "error"
+    except MultipleResultsFound:
+        return "error"
+    except:
+        return "error"
+
     return reader
 
 
@@ -166,6 +180,7 @@ def build_a_chart(labels, label, data):
     }
 
     return chart
+
 
 def add_coach_to_db(user_id, password, email):
     """Add a new user to the database"""

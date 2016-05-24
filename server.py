@@ -165,6 +165,8 @@ def record_mins():
         #find the day and message to display:
         day_index = get_elapsed_days(coach.start_date)
         msg = get_message_by_day(day_index)
+        if msg is None or msg == "error":
+            return render_template("error.html", err_msg=ERR_MSG)
 
         #get a list of formatted dates to populate dropdown menu
         dates = get_formatted_dates(day_index)
@@ -275,6 +277,8 @@ def reader_progress_data():
 
     #retrieve reader log data
     log_data = get_reader_logs(reader_id, time_period)
+    if log_data is None or log_data == "error":
+            return render_template("error.html", err_msg=ERR_MSG)
 
     #date_labels are the sorted keys of the log_data dictionary
     date_labels = sorted(log_data.keys())
@@ -295,12 +299,27 @@ def reader_progress_data():
 def admin_reader_detail():
     """Return chart data for a specific reader"""
 
+    #get the admin object
+    admin = get_admin_by_email(session["email"])
+    #check to make sure we got something back
+    if admin is None or admin == "error":
+            return render_template("error.html", err_msg=ERR_MSG)
+
+    #get the reader object
     first_name = request.args.get("reader")
-    reader = get_reader_by_name(first_name)
+    reader = get_reader_by_name(first_name, admin.admin_id)
+    #check to make sure we got something back
+    if reader is None or reader == "error":
+            return render_template("error.html", err_msg=ERR_MSG)
+
+    #set the time_period to all for this view
     time_period = "all"
 
     #retrieve reader log data
     log_data = get_reader_logs(reader.reader_id, time_period)
+    #check to make sure we got something back
+    if log_data is None or log_data == "error":
+            return render_template("error.html", err_msg=ERR_MSG)
 
     #date_labels are the sorted keys of the log_data dictionary
     date_labels = sorted(log_data.keys())
@@ -324,6 +343,9 @@ def admin_progress_data():
 
     #get reader's log data in the form of a dictionary
     log_data = get_admin_logs(admin_id)
+    #check to make sure we got data back from the dbase
+    if log_data is None or log_data == "error":
+            return render_template("error.html", err_msg=ERR_MSG)
 
     #date_labels are the sorted keys of the log_data dictionary
     name_labels = log_data.keys()
