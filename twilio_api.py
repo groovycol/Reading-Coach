@@ -22,7 +22,7 @@ def send_message(phone_number):
     msg = get_message_by_day(day)
 
     #format message to send
-    msg_body = "ReadingCoach reminder: " + msg.message_text + " Log progress now! http://goo.gl/dEA6eq"
+    msg_body = "ReadingCoach reminder: " + msg.message_text + " Reply now to log minutes read today. Include: [log] [number of minutes] [child name]' Ex: 'log 10 Kyla'"
 
     #send the message via Twilio. Twilio does not return a success/failure status
     client = TwilioRestClient(ACCOUNT_SID, AUTH_TOKEN)
@@ -78,7 +78,7 @@ def handle_incoming(sms_message):
     #initialize some variables
     names = set()
     log_minutes = False
-    minutes = 0
+    minutes = None
 
     #look for Log or log, a string of digits and all other words may be names
     for word in received_message.split():
@@ -89,11 +89,6 @@ def handle_incoming(sms_message):
             minutes = word
         else:
             names.add(word.lower())
-
-    print received_message
-    print minutes
-    print log_minutes
-    print names
 
     #Find the user associated with this phone number
     incoming_coach = get_coach_by_phone(phone_number)
@@ -126,7 +121,7 @@ def handle_incoming(sms_message):
         return str(resp)
 
     #do we have some digit data to assign to minutes?
-    if minutes == []:
+    if not minutes:
         resp.message("The Reading Coach: number of minutes not found. Try again?")
         return str(resp)
 
@@ -134,11 +129,6 @@ def handle_incoming(sms_message):
     date = None
     title = None
 
-    print "ready to add to db"
-    print reader_id
-    print minutes
-    print title
-    print date
     #Here's where we add log to the database
     add_logentry_to_db(reader_id, minutes, title, date)
 
