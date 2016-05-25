@@ -45,6 +45,7 @@ def send_message_from_admin(first_name, admin_email, message):
 
     #get the coach's phone number
     reader = get_reader_by_name(first_name)
+    # import pdb; pdb.set_trace()
     coach = reader.coach
     phone_number = coach.phone
 

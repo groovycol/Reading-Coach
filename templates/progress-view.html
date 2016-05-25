@@ -11,7 +11,7 @@
         <h2 id="chart_description">Average Daily Minutes by Reader</h2>
         <input type="hidden" id="admin_id" value="{{admin.admin_id}}">
         <div id="message_desc" hidden>Send a real-time text message to this reader</div>
-        <form action="/send-sms-from-admin.json" id="sendmessage" method="get">
+        <form action="/send-sms-from-admin.json" id="sendmessage" method="post">
             <textarea id="messagebox" hidden rows="4" cols="40"  placeholder="Send encouragement, book suggestions or feedback" wrap="hard"></textarea>
             <input type="submit" id="submit" value="Send" hidden>
         </form>
@@ -83,7 +83,7 @@
                     "message_txt": $('#messagebox').val()
                 };
 
-                $.get("/send-sms-from-admin.json", formInputs, function (data){ 
+                $.post("/send-sms-from-admin.json", formInputs, function (data){ 
                     $('#messagebox').val(data) });
                     // $('#success_msg').html(data).show() });
                 $('#submit').prop('disabled', true)

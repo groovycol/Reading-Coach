@@ -244,13 +244,14 @@ def send_sms_message(phone):
     return redirect("/record")
 
 
-@app.route("/send-sms-from-admin.json")
+@app.route("/send-sms-from-admin.json", methods=['POST'])
 def send_sms_from_admin():
     """Sends an SMS message to the coach from the admin via the Twilio API"""
 
-    first_name = request.args.get("reader")
-    message = request.args.get("message_txt")
+    first_name = request.form.get("reader")
+    message = request.form.get("message_txt")
     admin = session["admin"]
+    # import pdb; pdb.set_trace()
 
     #send the message, and return a string about status
     msg_status = send_message_from_admin(first_name, admin, message)

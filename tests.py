@@ -164,13 +164,13 @@ class FlaskTestsAdminLoggedIn(unittest.TestCase):
         self.assertIn("Readers Report", result.data)
         self.assertIn('<canvas id="barChart"', result.data)
 
-    # def test_send_sms_from_admin(self):
-    #     """Test sending an sms from an admin"""
+    def test_send_sms_from_admin(self):
+        """Test sending an sms from an admin"""
 
-    #     result = self.client.get("/send-sms-from-admin.json",
-    #                               data={"reader": "Enzo", "message_txt": "yay!"},
-    #                               follow_redirects=True)
-    #     self.assertIn("SMS message sent", result.data)
+        result = self.client.post("/send-sms-from-admin.json",
+                                  data={"reader": "Enzo", "message_txt": "yay!"},
+                                  follow_redirects=True)
+        self.assertIn("SMS message sent", result.data)
 
 
 class FlaskTestsCoachLoggedIn(unittest.TestCase):
