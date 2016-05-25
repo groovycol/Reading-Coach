@@ -18,11 +18,10 @@ def send_message(phone_number):
     recipient = get_coach_by_phone(phone_number)
 
     #determine the message of the day to send
-    day = get_elapsed_days(recipient.start_date)
-    msg = get_message_by_day(day)
+    msg = get_message_by_day(get_elapsed_days(recipient.start_date))
 
     #format message to send
-    msg_body = "ReadingCoach reminder: " + msg.message_text + " Reply now to log minutes read today. Include: [log] [number of minutes] [child name]' Ex: 'log 10 Kyla'"
+    msg_body = "ReadingCoach reminder: " + msg.message_text + " Reply to log today's minutes. example: 'log 10 Jenny'"
 
     #send the message via Twilio. Twilio does not return a success/failure status
     client = TwilioRestClient(ACCOUNT_SID, AUTH_TOKEN)
@@ -45,7 +44,7 @@ def send_message_from_admin(first_name, admin_email, message):
 
     #get the coach's phone number
     reader = get_reader_by_name(first_name)
-    # import pdb; pdb.set_trace()
+
     coach = reader.coach
     phone_number = coach.phone
 

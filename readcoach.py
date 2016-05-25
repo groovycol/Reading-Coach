@@ -1,9 +1,11 @@
 
 from datetime import datetime, date, timedelta
-from sqlalchemy.orm.exc import NoResultFound
-from sqlalchemy.orm.exc import MultipleResultsFound
 
 from model import *
+
+DFLT_DATE_FMT = '%b %d'
+LONG_DATE_FMT = '%b %d %Y %I:%M%p'
+GENERIC_DATE_INFO = ' 2016  12:01PM'
 
 
 def get_elapsed_days(start_date):
@@ -28,7 +30,7 @@ def get_formatted_dates(elapsed_days):
     day_labels = []
     for x in range(elapsed_days, -1, -1):
         day = date.today() - timedelta(days=x)
-        day_labels.append(day.strftime("%b %d"))
+        day_labels.append(day.strftime(DFLT_DATE_FMT))
 
     return day_labels
 
@@ -49,19 +51,14 @@ def get_admin_logs(admin_id):
     and the avg num minutes read as values
     """
     #retrieve the admin object
-    try:
-        admin = Admin.query.get(admin_id)
-    except:
-        return "error"
+    admin = Admin.query.get(admin_id)
 
     #initialize an empty dictionary
     reader_data = {}
 
     #generate a list of names
     for reader in admin.readers:
-        num_days = get_elapsed_days(get_start_date(reader))
-        total_mins = get_total_mins(reader)
-        avg_minutes = total_mins / num_days
+        avg_minutes = get_total_mins(reader) / get_elapsed_days(get_start_date(reader))
         reader_data[reader.first_name] = avg_minutes
 
     return reader_data
@@ -72,16 +69,12 @@ def get_reader_logs(reader_id, time_period):
     return a dictionary of date keys and num minutes read as values """
 
     #retrieve the reader object
-    try:
-        reader = Reader.query.get(reader_id)
-    except:
-        return "error"
+    reader = Reader.query.get(reader_id)
 
     if time_period == "week":
         dates = get_formatted_dates(6)
     else:
-        sdate = get_start_date(reader)
-        dates = get_formatted_dates(get_elapsed_days(sdate))
+        dates = get_formatted_dates(get_elapsed_days(get_start_date(reader)))
 
     #setup an empty dictionary
     entries = {}
@@ -91,7 +84,7 @@ def get_reader_logs(reader_id, time_period):
 
     #iterate through the logs and add minutes read for days that match
     for log_entry in reader.logs:
-        log_date = log_entry.date_time.date().strftime("%b %d")
+        log_date = log_entry.date_time.date().strftime(DFLT_DATE_FMT)
         if log_date in entries:
             entries[log_date] = entries[log_date] + log_entry.minutes_read
     return entries
@@ -99,41 +92,24 @@ def get_reader_logs(reader_id, time_period):
 
 def get_coach_by_phone(phone):
     """Given a phone number, return a Coach object"""
-    try:
-        coach = Coach.query.filter_by(phone=phone).one()
-    except NoResultFound:
-        return "error"
-    except MultipleResultsFound:
-        return "error"
-    except:
-        return "error"
+
+    coach = Coach.query.filter_by(phone=phone).one()
+
     return coach
 
 
 def get_admin_by_email(email):
     """Given an email address, return a Admin object"""
-    try:
-        admin = Admin.query.filter_by(email=email).one()
-    except NoResultFound:
-        return "error"
-    except MultipleResultsFound:
-        return "error"
-    except:
-        return "error"
+
+    admin = Admin.query.filter_by(email=email).one()
+
     return admin
 
 
 def get_reader_by_name(name):
     """Given a reader's name, return the reader object"""
 
-    try:
-        reader = Reader.query.filter_by(first_name=name).one()
-    except NoResultFound:
-        return "error"
-    except MultipleResultsFound:
-        return "error"
-    except:
-        return "error"
+    reader = Reader.query.filter_by(first_name=name).one()
 
     return reader
 
@@ -141,18 +117,9 @@ def get_reader_by_name(name):
 def get_message_by_day(num):
     """Given an integer, retrieve the message_text for that message_id"""
 
-    #add one to the number passed in because day 0 will need to retrieve msg 1
-    num += 1
+    #retrieve message for day num +1 (day 0 needs msg 1, etc.)
+    message = Message.query.get(num + 1)
 
-    #retrieve the message by id and handle errors
-    try:
-        message = Message.query.get(num)
-    except NoResultFound:
-        message = None
-    except MultipleResultsFound:
-        message = "error"
-    except:
-        message = "error"
     return message
 
 
@@ -187,7 +154,7 @@ def add_coach_to_db(phone, password, email):
 
     new_coach = Coach(phone=phone,
                     password=password,
-                    email=email, 
+                    email=email,
                     start_date=datetime.strftime(datetime.now(), '%Y-%m-%d %H:%M:%S'))
     db.session.add(new_coach)
     db.session.commit()
@@ -208,10 +175,9 @@ def add_logentry_to_db(reader_id, minutes, title, logdate):
 
     if not logdate:
         d = date.today()
-        logdate = d.strftime("%b %d")
+        logdate = d.strftime(DFLT_DATE_FMT)
 
-    date_str = logdate + " 2016  12:01PM"
-    date_time = datetime.strptime(date_str, '%b %d %Y %I:%M%p')
+    date_time = datetime.strptime(logdate + GENERIC_DATE_INFO, LONG_DATE_FMT)
 
     #prepare entry for database insert
     logentry = ReadingLog(reader_id=reader_id,

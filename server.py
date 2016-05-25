@@ -42,25 +42,21 @@ def login_admin():
 def login_process():
     """Process login."""
 
-    coach_phone = request.form["coach_phone"]
-
     #make sure this coach phone and password match in the database
-    coach = get_coach_by_phone(coach_phone)
-
-    if not coach:
+    try:
+        coach_phone = request.form["coach_phone"]
+        coach = get_coach_by_phone(coach_phone)
+        #check the encrypted password to see if it matches the db
+        if sha256_crypt.verify(request.form["password"], coach.password):
+            #add coach to the session
+            session["coach"] = coach_phone
+            return redirect("/record")
+        else:
+            #if password doesn't match, back to /login rte w/msg
+            flash("Incorrect password")
+            return redirect("/login")
+    except:
         flash("Phone number doesn't match")
-        return redirect("/login")
-    elif coach == "error":
-        return render_template("error.html", err_msg=ERR_MSG)
-
-    #check the encrypted password to see if it matches the db
-    if sha256_crypt.verify(request.form["password"], coach.password):
-        #add coach to the session
-        session["coach"] = coach_phone
-        return redirect("/record")
-    else:
-        #if password doesn't match, back to /login rte w/msg
-        flash("Incorrect password")
         return redirect("/login")
 
 
@@ -68,24 +64,21 @@ def login_process():
 def process_admin_login():
     """Process login for admin."""
 
-    email = request.form["email"]
-
     #make sure this email and password match in the database
-    admin = get_admin_by_email(email)
+    try:
+        email = request.form["email"]
+        admin = get_admin_by_email(email)
 
-    if not admin:
+        if sha256_crypt.verify(request.form["password"], admin.password):
+            #add email to the session
+            session["admin"] = email
+            return redirect("/progress-view")
+        else:
+            #if password doesn't match, back to /login rte w/msg
+            flash("Incorrect password")
+            return redirect("/login-admin")
+    except:
         flash("email doesn't match an entry in our database")
-        return redirect("/login-admin")
-    elif admin == "error":
-        return render_template("error.html", err_msg=ERR_MSG)
-
-    if sha256_crypt.verify(request.form["password"], admin.password):
-        #add email to the session
-        session["admin"] = email
-        return redirect("/progress-view")
-    else:
-        #if password doesn't match, back to /login rte w/msg
-        flash("Incorrect password")
         return redirect("/login-admin")
 
 
@@ -127,9 +120,14 @@ def register_process():
     hash = sha256_crypt.encrypt(request.form["password"])
 
     #make sure this phone number isn't already in use
-    coach = get_coach_by_phone(coach_phone)
+    try:
+        get_coach_by_phone(coach_phone)
 
-    if not coach or coach == "error":
+        #already in the dbase, redirect to login page
+        flash("This phone number is already registered. Login?")
+        return redirect("/login")
+    except:
+
         #Add new coach to the database
         coach_id = add_coach_to_db(coach_phone, hash, email)
 
@@ -140,13 +138,11 @@ def register_process():
 
         #Give the coach a confirmation message about being registered.
         flash(coach_phone + " is now registered to receive text message reminders")
+
         #Add the new phone to the session to keep coach logged in.
         session["coach"] = coach_phone
+
         return render_template("new-coach-info.html")
-    else:
-        #already in the dbase, redirect to login page
-        flash(coach_phone + " is already registered")
-        return redirect("/login")
 
 
 #Routes to manage input and displaying data
@@ -155,18 +151,12 @@ def record_mins():
     """Allows logged in coach to record minutes read"""
 
     #make sure coach is logged in
-    if "coach" in session:
+    try:
         coach = get_coach_by_phone(session["coach"])
-
-        #make sure the database retrieved something real
-        if coach is None or coach == "error":
-            return render_template("error.html", err_msg=ERR_MSG)
 
         #find the day and message to display:
         day_index = get_elapsed_days(coach.start_date)
         msg = get_message_by_day(day_index)
-        if msg is None or msg == "error":
-            return render_template("error.html", err_msg=ERR_MSG)
 
         #get a list of formatted dates to populate dropdown menu
         dates = get_formatted_dates(day_index)
@@ -174,7 +164,7 @@ def record_mins():
         return render_template("record.html", coach=coach, msg=msg, dates=dates[::-1])
 
     #if not logged in, return coach to the /login screen
-    else:
+    except:
         flash("You must be logged in to record reading minutes")
         return redirect("/login")
 
@@ -199,17 +189,12 @@ def show_dashboard():
     """shows progress charts"""
 
     #make sure coach is logged in
-    if "coach" in session:
+    try:
         coach = get_coach_by_phone(session["coach"])
 
-        #make sure the database returned something real
-        if coach is None or coach == "error":
-            return render_template("error.html", err_msg=ERR_MSG)
-
-        #otherwise render the page for this route
         return render_template("dashboard.html", coach=coach)
 
-    else:
+    except:
         flash("You must be logged in to view progress charts")
         return redirect("/login")
 
@@ -219,17 +204,12 @@ def show_progress():
     """Allows logged in admin to view progress charts"""
 
     #make sure admin is logged in
-    if "admin" in session:
+    try:
         admin = get_admin_by_email(session["admin"])
 
-        #make sure the database retrieved something real
-        if admin is None or admin == "error":
-            return render_template("error.html", err_msg=ERR_MSG)
-
-        #otherwise render the page for this route
         return render_template("progress-view.html", admin=admin)
 
-    else:
+    except:
         flash("You must be logged in to view progress")
         return redirect("/login-admin")
 
@@ -251,7 +231,6 @@ def send_sms_from_admin():
     first_name = request.form.get("reader")
     message = request.form.get("message_txt")
     admin = session["admin"]
-    # import pdb; pdb.set_trace()
 
     #send the message, and return a string about status
     msg_status = send_message_from_admin(first_name, admin, message)
@@ -265,6 +244,7 @@ def sendlog():
 
     msg_received = request.form
     response = handle_incoming(msg_received)
+
     return Response(response, mimetype='text/xml')
 
 
@@ -277,23 +257,22 @@ def reader_progress_data():
     time_period = request.args.get("time_period")
 
     #retrieve reader log data
-    log_data = get_reader_logs(reader_id, time_period)
-    if log_data is None or log_data == "error":
-            return render_template("error.html", err_msg=ERR_MSG)
+    try:
+        log_data = get_reader_logs(reader_id, time_period)
 
-    #date_labels are the sorted keys of the log_data dictionary
-    date_labels = sorted(log_data.keys())
+        #date_labels are the sorted keys of the log_data dictionary
+        date_labels = sorted(log_data.keys())
 
-    #make a list to append minute data to
-    minutes_data = []
-    for date in date_labels:
-        minutes_data.append(log_data[date])
+        #make a list to append minute data to
+        minutes_data = [log_data[date] for date in date_labels]
 
-    label = "Reading Progress"
+        label = "Reading Progress"
 
-    chart_data = build_a_chart(date_labels, label, minutes_data)
+        chart_data = build_a_chart(date_labels, label, minutes_data)
 
-    return jsonify(chart_data)
+        return jsonify(chart_data)
+    except:
+        return render_template("error.html", err_msg=ERR_MSG)
 
 
 @app.route('/admin-reader-detail.json')
@@ -301,63 +280,60 @@ def admin_reader_detail():
     """Return chart data for a specific reader"""
 
     #get the reader object
-    first_name = request.args.get("reader")
-    reader = get_reader_by_name(first_name)
-    #check to make sure we got something back
-    if reader is None or reader == "error":
-            return render_template("error.html", err_msg=ERR_MSG)
+    try:
+        first_name = request.args.get("reader")
+        reader = get_reader_by_name(first_name)
 
-    #set the time_period to all for this view
-    time_period = "all"
+        #set the time_period to all for this view
+        time_period = "all"
 
-    #retrieve reader log data
-    log_data = get_reader_logs(reader.reader_id, time_period)
-    #check to make sure we got something back
-    if log_data is None or log_data == "error":
-            return render_template("error.html", err_msg=ERR_MSG)
+        #retrieve reader log data
+        log_data = get_reader_logs(reader.reader_id, time_period)
 
-    #date_labels are the sorted keys of the log_data dictionary
-    date_labels = sorted(log_data.keys())
+        #date_labels are the sorted keys of the log_data dictionary
+        date_labels = sorted(log_data.keys())
 
-    #make a list to append minute data to
-    minutes_data = []
-    for date in date_labels:
-        minutes_data.append(log_data[date])
+        #make a list to append minute data to
+        minutes_data = [log_data[date] for date in date_labels]
 
-    #get chart.js dictionary for chart
-    chart_data = build_a_chart(date_labels, first_name, minutes_data)
+        #get chart.js dictionary for chart
+        chart_data = build_a_chart(date_labels, first_name, minutes_data)
 
-    return jsonify(chart_data)
+        return jsonify(chart_data)
+
+    except:
+        return render_template("error.html", err_msg=ERR_MSG)
 
 
 @app.route('/admin-progress.json')
 def admin_progress_data():
     """Return chart data for all readers associated with an Admin"""
 
-    admin_id = request.args.get("admin_id")
+    try:
+        admin_id = request.args.get("admin_id")
 
-    #get reader's log data in the form of a dictionary
-    log_data = get_admin_logs(admin_id)
-    #check to make sure we got data back from the dbase
-    if log_data is None or log_data == "error":
-            return render_template("error.html", err_msg=ERR_MSG)
+        #get reader's log data in the form of a dictionary
+        log_data = get_admin_logs(admin_id)
 
-    #date_labels are the sorted keys of the log_data dictionary
-    name_labels = log_data.keys()
+        #date_labels are the sorted keys of the log_data dictionary
+        name_labels = log_data.keys()
 
-    #make a list to append minute data to
-    avg_minutes_data = log_data.values()
+        #make a list to append minute data to
+        avg_minutes_data = log_data.values()
 
-    #set a label
-    label = "Average Reading Minutes"
+        #set a label
+        label = "Average Reading Minutes"
 
-    #get chart.js dictionary for chart
-    chart_data = build_a_chart(name_labels, label, avg_minutes_data)
+        #get chart.js dictionary for chart
+        chart_data = build_a_chart(name_labels, label, avg_minutes_data)
 
-    return jsonify(chart_data)
+        return jsonify(chart_data)
+
+    except:
+        return render_template("error.html", err_msg=ERR_MSG)
 
 
-#handld errors
+#handle errors
 @app.route("/error")
 def error_page():
     """Displays an error page"""
