@@ -182,10 +182,10 @@ def build_a_chart(labels, label, data):
     return chart
 
 
-def add_coach_to_db(user_id, password, email):
+def add_coach_to_db(phone, password, email):
     """Add a new user to the database"""
 
-    new_coach = Coach(phone=user_id,
+    new_coach = Coach(phone=phone,
                     password=password,
                     email=email, 
                     start_date=datetime.strftime(datetime.now(), '%Y-%m-%d %H:%M:%S'))
