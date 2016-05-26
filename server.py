@@ -14,6 +14,11 @@ app = Flask(__name__)
 app.secret_key = "secret"
 
 ERR_MSG = "The database did not return expected results. Please try again."
+CHT_ORANGE = 'rgba(222,114,44,1)'
+CHT_BLUE = 'rgba(44,152,222,1)'
+CHT_HOR = 'horizontalBar'
+CHT_BAR = 'bar'
+
 
 # Force jinja to raise an error
 app.jinja_env.undefined = StrictUndefined
@@ -266,9 +271,9 @@ def reader_progress_data():
         #make a list to append minute data to
         minutes_data = [log_data[date] for date in date_labels]
 
-        label = "Reading Progress"
+        label = "Reading Minutes logged"
 
-        chart_data = build_a_chart(date_labels, label, minutes_data)
+        chart_data = build_a_chart(date_labels, label, minutes_data, CHT_BAR, CHT_BLUE)
 
         return jsonify(chart_data)
     except:
@@ -281,8 +286,7 @@ def admin_reader_detail():
 
     #get the reader object
     try:
-        first_name = request.args.get("reader")
-        reader = get_reader_by_name(first_name)
+        reader = get_reader_by_name(request.args.get("reader"))
 
         #set the time_period to all for this view
         time_period = "all"
@@ -297,7 +301,7 @@ def admin_reader_detail():
         minutes_data = [log_data[date] for date in date_labels]
 
         #get chart.js dictionary for chart
-        chart_data = build_a_chart(date_labels, first_name, minutes_data)
+        chart_data = build_a_chart(date_labels, reader.first_name, minutes_data, CHT_BAR, CHT_ORANGE)
 
         return jsonify(chart_data)
 
@@ -325,7 +329,7 @@ def admin_progress_data():
         label = "Average Reading Minutes"
 
         #get chart.js dictionary for chart
-        chart_data = build_a_chart(name_labels, label, avg_minutes_data)
+        chart_data = build_a_chart(name_labels, label, avg_minutes_data, CHT_HOR, CHT_BLUE)
 
         return jsonify(chart_data)
 

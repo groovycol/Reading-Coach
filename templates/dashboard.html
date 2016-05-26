@@ -1,7 +1,6 @@
 {% extends 'base.html' %}
 {% block content %}
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.js"> </script>
+<script src="../static/Chart.min.js"> </script>
 <script src="https://code.jquery.com/jquery.js"></script>
     <h1> Reading Progress</h1>
     <h3><label>Reader:</label></h3>
@@ -32,7 +31,7 @@
                 $("#canvas").append(canvas_tag)
                 var ctx_bar = $("#barChart").get(0).getContext("2d");
                 $.get("/reader-progress.json", {"reader_id": $("#reader_id").val(), "time_period": $('#time_period').val() }, function (data) {
-                        var myBarChart = new Chart(ctx_bar).Bar(data, options);
+                        var myBarChart = new Chart(ctx_bar, data);
             });}
 
             // function toggles chart display and button text

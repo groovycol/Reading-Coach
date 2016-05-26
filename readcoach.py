@@ -123,25 +123,30 @@ def get_message_by_day(num):
     return message
 
 
-def build_a_chart(labels, label, data):
+def build_a_chart(labels, label, data, chart_type, color):
     """return a dictionary of chart.js information"""
 
     labels = labels
     label = label
     data = data
+    chart_type = chart_type
+    color = color
 
     chart = {
-        "labels": labels,
-        "datasets":
-        [
-            {
-            "label": label,
-            "fillColor": "rgba(97,195,255,1)",
-            "strokeColor": "rgba(97,195,255,1)",
-            "borderWidth": 1,
-            "data": data
-            }
-        ]
+        "type": chart_type,
+        "data": {
+            "labels": labels,
+            "datasets":
+            [
+                {
+                "label": label,
+                "backgroundColor": color,
+                "borderColor": color,
+                "borderWidth": 1,
+                "data": data
+                }
+            ]
+        }
     }
 
     return chart

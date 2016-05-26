@@ -1,14 +1,16 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.js"> </script>
+
 <script src="https://code.jquery.com/jquery.js"></script>
+<script src="../static/Chart.min.js"> </script>
     {% if admin.nameprefix.prefix == "Organization" %}
-        <h1> {{admin.name}} Readers Report</h1>
+        <h1 id="page_title"> {{admin.name}} Readers Report</h1>
     {% else %}
-        <h1> {{admin.nameprefix.prefix}} {{admin.name}} Readers Report</h1>
+        <h1 id="page_title"> {{admin.nameprefix.prefix}} {{admin.name}} Readers Report</h1>
     {% endif %}
-        <h2 id="chart_description">Average Daily Minutes by Reader</h2>
+        <h2 id="chart_label">Average Daily Minutes by Reader</h2>
+        <h3 id="chart_description" hidden>Minutes logged per day</h2>
         <input type="hidden" id="admin_id" value="{{admin.admin_id}}">
         <div id="message_desc" hidden>Send a real-time text message to this reader</div>
         <form action="/send-sms-from-admin.json" id="sendmessage" method="post">
@@ -39,17 +41,18 @@
                 var ctx_bar = $("#barChart").get(0).getContext("2d");
 
                 // draw chart
-                var myBarChart = new Chart(ctx_bar).Bar(data,
-                                                     options);
+                var myBarChart = new Chart(ctx_bar, data);
            
 
                 // event handler for clicking on a data bar in the chart
                 $("#barChart").click( function(evt) {
-                    var activePoints = myBarChart.getBarsAtEvent(evt);
-                    var reader = activePoints[0].label;
+                    var activePoints = myBarChart.getElementsAtEvent(evt);
+                    var reader = activePoints[0]._model.label
 
                     // change the chart heading descriptor
-                    $('#chart_description').html(reader)
+                    $('#page_title').html(reader)
+                    $('#chart_label').hide()
+                    $('#chart_description').show()
 
                     // clear the canvas
                     $("#barChart").remove()
@@ -60,7 +63,7 @@
 
                     //draw new chart
                     $.get("/admin-reader-detail.json", {"reader": reader}, function (data){
-                        var myBarChart = new Chart(ctx_bar).Bar(data, options);
+                        var myBarChart = new Chart(ctx_bar, data);
 
                         // show button to return to all students view
                         $('#showbutton').show()

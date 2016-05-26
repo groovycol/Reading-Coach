@@ -168,7 +168,7 @@ class FlaskTestsAdminLoggedIn(unittest.TestCase):
         """Test sending an sms from an admin"""
 
         result = self.client.post("/send-sms-from-admin.json",
-                                  data={"reader": "Enzo", "message_txt": "yay!"},
+                                  data={"reader": "Enzo", "message_txt": "Keep up the good work!"},
                                   follow_redirects=True)
         self.assertIn("SMS message sent", result.data)
 
