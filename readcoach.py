@@ -136,11 +136,9 @@ def build_a_chart(labels, label, data):
         [
             {
             "label": label,
-            "backgroundColor": "rgba(255,0,0,0.2)",
-            "borderColor": "rgba(255,0,0,1)",
+            "fillColor": "rgba(97,195,255,1)",
+            "strokeColor": "rgba(97,195,255,1)",
             "borderWidth": 1,
-            "hoverBackgroundColor": "rgba(255,99,132,0.4)",
-            "hoverBorderColor": "rgba(255,99,132,1)",
             "data": data
             }
         ]

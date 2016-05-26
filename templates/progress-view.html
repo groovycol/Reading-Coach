@@ -26,7 +26,7 @@
             // Initialize some chart variables
             var canvas_tag = '<canvas id="barChart" width="1000" height="500"></canvas>'
 
-            var options = { responsive: false, maintainAspectRatio: true};
+            var options = { responsive: true, maintainAspectRatio: true};
 
             // initial chart display
             $.get("/admin-progress.json", {"admin_id": $("#admin_id").val() }, function (data) {
