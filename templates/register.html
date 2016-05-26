@@ -40,11 +40,10 @@
     </div>
     <br>
     <div>
-        <label>Child's First name:
+        <label>Your reader's first name:
             <input type="text" name="first_name" required>
         </label>
     </div>
-    <br>
     <div>
         <label>Share progress with Teacher or Organization:
             <select name="admin_id" id="admin_id">
@@ -58,6 +57,39 @@
                 </select>
         </label>
     </div>
+    <br>
+    <br>
+    <script>
+        $(document).ready(function() {
+                $('#add_reader').hide();
+                $('#admin_show').hide();
+                $('#admin_id2').hide();
+                $('#more_boxes').on('click', function(){
+                $('#add_reader').show();
+                $('#admin_show').show();
+                $('#admin_id2').show(); });
+            });
+    </script>
+    <div>
+    <input type="button" id="more_boxes" value="Add Additional Reader">
+        <label for="additional readers">
+            <input type="text" id="add_reader" name="add_reader" value="" placeholder="reader's first name" hidden>
+        </label>
+    </div>
+    <div>
+        <label id="admin_show" hidden>Share progress with Teacher or Organization:
+            <select name="admin_id2" id="admin_id2" hidden>
+                {% for admin in admins %}
+                    {% if admin.nameprefix.prefix == "Organization" %}
+                        <option value="{{admin.admin_id}}"> {{admin.name}}</option>
+                    {% else %}
+                        <option value="{{admin.admin_id}}">{{admin.nameprefix.prefix}} {{admin.name}}</option>
+                    {% endif %}
+                {% endfor %}
+                </select>
+        </label>
+    </div>
+    <br>
     <br>
     <div>
         <label>Email address (optional):

@@ -120,6 +120,8 @@ def register_process():
     email = request.form["email"]
     first_name = request.form["first_name"]
     admin = request.form["admin_id"]
+    second_reader = request.form["add_reader"]
+    admin2 = request.form["admin_id2"]
 
     #hash the password
     hash = sha256_crypt.encrypt(request.form["password"])
@@ -134,12 +136,21 @@ def register_process():
     except:
 
         #Add new coach to the database
-        coach_id = add_coach_to_db(coach_phone, hash, email)
+        add_coach_to_db(coach_phone, hash, email)
+
+        #retrieve the new coach id
+        coach = get_coach_by_phone(coach_phone)
 
         #add a new reader to the db
         add_reader_to_db(first_name,
-                    coach_id,
+                    coach.coach_id,
                     admin)
+
+        #if an additional reader name was supplied
+        if second_reader is not None:
+            add_reader_to_db(second_reader,
+                            coach.coach_id,
+                            admin2)
 
         #Give the coach a confirmation message about being registered.
         flash(coach_phone + " is now registered to receive text message reminders")
