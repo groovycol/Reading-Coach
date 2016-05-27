@@ -5,6 +5,8 @@ from flask_debugtoolbar import DebugToolbarExtension
 from flask import jsonify
 from flask import Response
 from passlib.hash import sha256_crypt
+import schedule
+import time
 
 from twilio_api import send_message, send_message_from_admin, handle_incoming
 from model import *
@@ -259,18 +261,20 @@ def sendlog():
     """Handle incoming sms messages"""
 
     msg_received = request.form
+    print "msg_receieved:"
+    print msg_received
     response = handle_incoming(msg_received)
 
     return Response(response, mimetype='text/xml')
 
 
 #routes that return json data for chart.js
-@app.route('/reader-progress.json')
+@app.route('/reader-progress.json', methods=['POST'])
 def reader_progress_data():
     """Return chart data about Reader Progress"""
 
-    reader_id = request.args.get("reader_id")
-    time_period = request.args.get("time_period")
+    reader_id = request.form.get("reader_id")
+    time_period = request.form.get("time_period")
 
     #retrieve reader log data
     try:
@@ -291,13 +295,13 @@ def reader_progress_data():
         return render_template("error.html", err_msg=ERR_MSG)
 
 
-@app.route('/admin-reader-detail.json')
+@app.route('/admin-reader-detail.json', methods=['POST'])
 def admin_reader_detail():
     """Return chart data for a specific reader"""
 
     #get the reader object
     try:
-        reader = get_reader_by_name(request.args.get("reader"))
+        reader = get_reader_by_name(request.form.get("reader"))
 
         #set the time_period to all for this view
         time_period = "all"
@@ -320,12 +324,12 @@ def admin_reader_detail():
         return render_template("error.html", err_msg=ERR_MSG)
 
 
-@app.route('/admin-progress.json')
+@app.route('/admin-progress.json', methods=['POST'])
 def admin_progress_data():
     """Return chart data for all readers associated with an Admin"""
 
     try:
-        admin_id = request.args.get("admin_id")
+        admin_id = request.form.get("admin_id")
 
         #get reader's log data in the form of a dictionary
         log_data = get_admin_logs(admin_id)
@@ -356,13 +360,29 @@ def error_page():
     return render_template("error.html", err_msg=ERR_MSG)
 
 
+# #setup a listener for scheduled events
+# def schedule_listen():
+#     """start a listener for scheduled events"""
+
+#     while True:
+#         schedule.run_pending()
+#         time.sleep(1)
+
+
 if __name__ == "__main__":
     # turn this off for demos
-    app.debug = True
+    app.debug = False
 
+    #connect to the database
     connect_to_db(app)
 
     # Use the DebugToolbar
-    DebugToolbarExtension(app)
+    # DebugToolbarExtension(app)
 
+    #start the web application
     app.run()
+
+    #start the scheduler listener
+    # schedule_listen()
+
+    # schedule.every().day.at("13:28").do(send_sms_message("510-384-8508"))

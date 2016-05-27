@@ -44,6 +44,7 @@ class FlaskTestsBasic(unittest.TestCase):
         result = self.client.get("/error")
         self.assertIn("The database did not return expected results", result.data)
 
+
 class FlaskTestsDatabase(unittest.TestCase):
     """Flask tests that use the database."""
 
@@ -125,6 +126,35 @@ class FlaskTestsDatabase(unittest.TestCase):
                                   data={"minutes_read": 10, "title": "Phantom Tollbooth", "reader_id": 1, "date": "May 22"},
                                   follow_redirects=True)
         self.assertIn("10 minutes recorded", result.data)
+
+    def test_admin_progress_json(self):
+        """test calling the /admin-progress.json route"""
+
+        result = self.client.post("/admin-progress.json",
+                                  data={"admin_id": 1},
+                                  follow_redirects=True)
+        self.assertIn("backgroundColor", result.data)
+        self.assertIn("Enzo", result.data)
+        self.assertIn("horizontalBar", result.data)
+
+    def test_admin_reader_detail_json(self):
+        """test calling the /admin-reader-detail.json route"""
+
+        result = self.client.post("/admin-reader-detail.json",
+                                  data={"reader": "Enzo"},
+                                  follow_redirects=True)
+
+        self.assertIn("maintainAspectRatio", result.data)
+        self.assertIn('"label": "Enzo"', result.data)
+
+    def test_reader_progress_json(self):
+        """test the /reader-progress.json route"""
+
+        result = self.client.post("/reader-progress.json",
+                                  data={"reader_id": 1, "time_period": "week"},
+                                  follow_redirects=True)
+        self.assertIn('"label": "Reading Minutes logged"', result.data)
+        self.assertNotIn("horizontalBar", result.data)
 
 
 class FlaskTestsAdminLoggedIn(unittest.TestCase):
@@ -252,12 +282,6 @@ class FlaskTestsLoggedOut(unittest.TestCase):
         result = self.client.get("/progress-view", follow_redirects=True)
         self.assertNotIn("Student Reading Progress", result.data)
         self.assertIn("You must be logged in to view progress", result.data)
-
-
-if __name__ == "__main__":
-    import unittest
-
-    unittest.main()
 
 
 if __name__ == "__main__":

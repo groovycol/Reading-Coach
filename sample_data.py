@@ -40,8 +40,8 @@ def example_data():
     r4 = Reader(first_name="Kallie", coach_id="4", admin_id="3")
 
     # Add sample reading log entries
-    logentry1 = ReadingLog(reader_id=1, minutes_read=10, date_time='2016-05-09 10:34:09', title="The Penderwicks")
-    logentry2 = ReadingLog(reader_id=1, minutes_read=30, date_time='2016-05-11 11:34:09', title="The Penderwicks")
+    logentry1 = ReadingLog(reader_id=1, minutes_read=10, date_time='2016-05-26 10:34:09', title="The Penderwicks")
+    logentry2 = ReadingLog(reader_id=1, minutes_read=30, date_time='2016-05-25 11:34:09', title="The Penderwicks")
     logentry3 = ReadingLog(reader_id=2, minutes_read=5, date_time='2016-05-12 9:34:09')
     logentry4 = ReadingLog(reader_id=2, minutes_read=10, date_time='2016-05-10 10:34:09')
     logentry5 = ReadingLog(reader_id=3, minutes_read=25, date_time='2016-05-10 10:34:09', title="Harry Potter")

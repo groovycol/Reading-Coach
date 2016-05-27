@@ -28,7 +28,7 @@
                 $("#barChart").remove()
                 $("#canvas").append(canvas_tag)
                 var ctx_bar = $("#barChart").get(0).getContext("2d");
-                $.get("/reader-progress.json", {"reader_id": $("#reader_id").val(), "time_period": $('#time_period').val() }, function (data) {
+                $.post("/reader-progress.json", {"reader_id": $("#reader_id").val(), "time_period": $('#time_period').val() }, function (data) {
                         var myBarChart = new Chart(ctx_bar, data);
             });}
 

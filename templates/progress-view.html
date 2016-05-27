@@ -27,7 +27,7 @@
             var canvas_tag = '<canvas id="barChart" width="1000" height="500"></canvas>'
 
             // initial chart display
-            $.get("/admin-progress.json", {"admin_id": $("#admin_id").val() }, function (data) {
+            $.post("/admin-progress.json", {"admin_id": $("#admin_id").val() }, function (data) {
 
                 // clear the canvas
                 $("#barChart").remove()
@@ -59,7 +59,7 @@
                     // var options = { responsive: true, maintainAspectRatio: true};
 
                     //draw new chart
-                    $.get("/admin-reader-detail.json", {"reader": reader}, function (data){
+                    $.post("/admin-reader-detail.json", {"reader": reader}, function (data){
                         var myBarChart = new Chart(ctx_bar, data);
 
                         // show button to return to all students view
