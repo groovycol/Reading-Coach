@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% block content %}
-<script src="../static/Chart.min.js"> </script>
 <script src="https://code.jquery.com/jquery.js"></script>
+<script src="../static/Chart.min.js"> </script>
     <h1> Reading Progress</h1>
     <h3><label>Reader:</label></h3>
     {% if coach.readers|length > 1 %}
@@ -22,8 +22,6 @@
         <script>
             // Initialize some chart variables
             var canvas_tag = '<canvas id="barChart" width="1200" height="600"></canvas>'
-
-            // var options = { responsive: true, maintainAspectRatio: true};
 
             // initial chart display last 7 days
             function draw_chart() { 
