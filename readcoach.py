@@ -146,6 +146,10 @@ def build_a_chart(labels, label, data, chart_type, color):
                 "data": data
                 }
             ]
+        },
+        "options": {
+            "responsive": "true",
+            "maintainAspectRatio": "true"
         }
     }
 

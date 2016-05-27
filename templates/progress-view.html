@@ -1,16 +1,14 @@
 {% extends 'base.html' %}
 {% block content %}
 
-
 <script src="https://code.jquery.com/jquery.js"></script>
-<script src="../static/Chart.min.js"> </script>
+<script src="../static/Chart.min.js"></script>
     {% if admin.nameprefix.prefix == "Organization" %}
-        <h1 id="page_title"> {{admin.name}} Readers Report</h1>
+        <h1 id="chart_name"> {{admin.name}} Readers Report</h1>
     {% else %}
-        <h1 id="page_title"> {{admin.nameprefix.prefix}} {{admin.name}} Readers Report</h1>
+        <h1 id="chart_name"> {{admin.nameprefix.prefix}} {{admin.name}} Readers Report</h1>
     {% endif %}
-        <h2 id="chart_label">Average Daily Minutes by Reader</h2>
-        <h3 id="chart_description" hidden>Minutes logged per day</h2>
+        <h2 id="chart_description">Average Daily Minutes by Reader</h2>
         <input type="hidden" id="admin_id" value="{{admin.admin_id}}">
         <div id="message_desc" hidden>Send a real-time text message to this reader</div>
         <form action="/send-sms-from-admin.json" id="sendmessage" method="post">
@@ -28,8 +26,6 @@
             // Initialize some chart variables
             var canvas_tag = '<canvas id="barChart" width="1000" height="500"></canvas>'
 
-            var options = { responsive: true, maintainAspectRatio: true};
-
             // initial chart display
             $.get("/admin-progress.json", {"admin_id": $("#admin_id").val() }, function (data) {
 
@@ -39,6 +35,7 @@
 
                 // initialize chart
                 var ctx_bar = $("#barChart").get(0).getContext("2d");
+                // var options = { responsive: true, maintainAspectRatio: true};
 
                 // draw chart
                 var myBarChart = new Chart(ctx_bar, data);
@@ -47,12 +44,11 @@
                 // event handler for clicking on a data bar in the chart
                 $("#barChart").click( function(evt) {
                     var activePoints = myBarChart.getElementsAtEvent(evt);
-                    var reader = activePoints[0]._model.label
-
+                    var reader = activePoints[0]._model.label;
+                    
                     // change the chart heading descriptor
-                    $('#page_title').html(reader)
-                    $('#chart_label').hide()
-                    $('#chart_description').show()
+                    $('#chart_name').html(reader)
+                    $('#chart_description').html("Minutes read per day")
 
                     // clear the canvas
                     $("#barChart").remove()
@@ -60,6 +56,7 @@
 
                     // re-initialize chart
                     var ctx_bar = $("#barChart").get(0).getContext("2d");
+                    // var options = { responsive: true, maintainAspectRatio: true};
 
                     //draw new chart
                     $.get("/admin-reader-detail.json", {"reader": reader}, function (data){

@@ -97,7 +97,7 @@ class FlaskTestsDatabase(unittest.TestCase):
         """Test registration of a coach"""
 
         result = self.client.post("/register_process",
-                                  data={"coach_phone": "999-888-7777", "password": "MyPassword", "first_name": "Geraldo", "admin_id": 1, "email": "mrhooper@muppetmail.com"},
+                                  data={"coach_phone": "999-888-7777", "password": "MyPassword", "first_name": "Geraldo", "admin_id": 1, "add_reader": "Julia", "admin_id2": 2, "email": "mrhooper@muppetmail.com"},
                                   follow_redirects=True)
 
         self.assertIn("is now registered", result.data)
@@ -107,7 +107,7 @@ class FlaskTestsDatabase(unittest.TestCase):
         """Test duplicate registration of a coach"""
 
         result = self.client.post("/register_process",
-                                  data={"coach_phone": "510-384-8508", "password": "MyPassword", "first_name": "Geraldo", "admin_id": 1, "email": "mrhooper@muppetmail.com"},
+                                  data={"coach_phone": "510-384-8508", "password": "MyPassword", "first_name": "Geraldo", "admin_id": 1, "add_reader": "Julia", "admin_id2": 2, "email": "mrhooper@muppetmail.com"},
                                   follow_redirects=True)
 
         self.assertIn("is already registered", result.data)

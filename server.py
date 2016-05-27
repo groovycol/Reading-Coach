@@ -337,7 +337,7 @@ def admin_progress_data():
         avg_minutes_data = log_data.values()
 
         #set a label
-        label = "Average Reading Minutes"
+        label = "Average Reading Minutes Per Day"
 
         #get chart.js dictionary for chart
         chart_data = build_a_chart(name_labels, label, avg_minutes_data, CHT_HOR, CHT_BLUE)
