@@ -19,8 +19,8 @@
     <br>
     <label for="phone">Phone number:
         <input type="text" name="coach_phone" id="phone_num" placeholder="xxx-xxx-xxxx" required> 
-        <div id="phone_msg">xxx-xxx-xxxx format. US numbers only. This must be a text message enabled phone. You'll receive daily text message (sms) reminders to log your child's reading progress on this phone.</div>
-    
+        <div id="phone_msg">xxx-xxx-xxxx format. US numbers only. This must be a text message enabled phone. You will be able to log your reader's minutes right from your phone! You can also receive daily text message (sms) reminders
+        </div>
     </label>
     <br>
     <br>
@@ -45,7 +45,7 @@
         </label>
     </div>
     <div>
-        <label>Share progress with Teacher or Organization:
+        <label>Share progress with a Teacher or Organization:
             <select name="admin_id" id="admin_id">
                 {% for admin in admins %}
                     {% if admin.nameprefix.prefix == "Organization" %}
@@ -77,7 +77,7 @@
         </label>
     </div>
     <div>
-        <label id="admin_show" hidden>Share progress with Teacher or Organization:
+        <label id="admin_show" hidden>Share progress with a Teacher or Organization:
             <select name="admin_id2" id="admin_id2" hidden>
                 {% for admin in admins %}
                     {% if admin.nameprefix.prefix == "Organization" %}

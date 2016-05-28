@@ -92,7 +92,7 @@ class FlaskTestsDatabase(unittest.TestCase):
 
         result = self.client.get("/register")
 
-        self.assertIn("Share progress with Teacher or Organization", result.data)
+        self.assertIn("Share progress with a Teacher or Organization", result.data)
 
     def test_registration_process(self):
         """Test registration of a coach"""
