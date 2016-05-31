@@ -5,14 +5,16 @@ from flask_debugtoolbar import DebugToolbarExtension
 from flask import jsonify
 from flask import Response
 from passlib.hash import sha256_crypt
-import schedule
-import time
 
 from twilio_api import send_message, send_message_from_admin, handle_incoming
 from model import *
 from readcoach import *
+# from tasks import *
 
 app = Flask(__name__)
+
+# celery = make_celery(app)
+
 app.secret_key = "secret"
 
 ERR_MSG = "The database did not return expected results. Please try again."
@@ -360,15 +362,6 @@ def error_page():
     return render_template("error.html", err_msg=ERR_MSG)
 
 
-# #setup a listener for scheduled events
-# def schedule_listen():
-#     """start a listener for scheduled events"""
-
-#     while True:
-#         schedule.run_pending()
-#         time.sleep(1)
-
-
 if __name__ == "__main__":
     # turn this off for demos
     app.debug = False
@@ -377,12 +370,7 @@ if __name__ == "__main__":
     connect_to_db(app)
 
     # Use the DebugToolbar
-    # DebugToolbarExtension(app)
+    DebugToolbarExtension(app)
 
     #start the web application
     app.run()
-
-    #start the scheduler listener
-    # schedule_listen()
-
-    # schedule.every().day.at("13:28").do(send_sms_message("510-384-8508"))
