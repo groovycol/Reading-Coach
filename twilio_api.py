@@ -62,6 +62,19 @@ def send_message_from_admin(first_name, admin_email, message):
     return "SMS message sent."
 
 
+def send_welcome_msg(phone, first_name):
+    """Send a one time welcome message to registrants"""
+
+    #prepare the message to send
+    msg_body = "Welcome to the ReadingCoach! You can record reading minutes by sending a text message to this number. For example, to log 10 minutes for {}, text 'log 10 {}'  Enjoy reading this summer!".format(first_name, first_name)
+
+    #Send the message via Twilio
+    client = TwilioRestClient(ACCOUNT_SID, AUTH_TOKEN)
+    client.messages.create(to=phone,
+                            from_ =FROM_ACCOUNT,
+                            body=msg_body)
+
+
 def handle_incoming(sms_message):
     """handle incoming sms messages"""
 

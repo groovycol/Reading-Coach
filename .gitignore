@@ -4,4 +4,3 @@ logs/*
 .coverage
 secrets.sh
 TODO
-test_list

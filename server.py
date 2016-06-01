@@ -6,14 +6,12 @@ from flask import jsonify
 from flask import Response
 from passlib.hash import sha256_crypt
 
-from twilio_api import send_message, send_message_from_admin, handle_incoming
+from twilio_api import send_message, send_message_from_admin, handle_incoming, send_welcome_msg
 from model import *
 from readcoach import *
-# from tasks import *
+
 
 app = Flask(__name__)
-
-# celery = make_celery(app)
 
 app.secret_key = "secret"
 
@@ -120,15 +118,24 @@ def register_process():
     """Process registration."""
 
     #retrieve values from the form
-    coach_phone = request.form["coach_phone"]
-    email = request.form["email"]
-    first_name = request.form["first_name"]
-    admin = request.form["admin_id"]
+    print "got here!"
     second_reader = request.form["add_reader"]
+    print second_reader
+    print "got here, too"
+    coach_phone = request.form["coach_phone"]
+    print coach_phone
+    first_name = request.form["first_name"]
+    print first_name
+    admin = request.form["admin_id"]
+    print admin
     admin2 = request.form["admin_id2"]
+    print admin2
+    email = request.form["email"]
+    print email
 
     #hash the password
     hash = sha256_crypt.encrypt(request.form["password"])
+    print hash
 
     #make sure this phone number isn't already in use
     try:
@@ -141,9 +148,11 @@ def register_process():
 
         #Add new coach to the database
         add_coach_to_db(coach_phone, hash, email)
+        print "added coach to db"
 
         #retrieve the new coach id
         coach = get_coach_by_phone(coach_phone)
+        print coach
 
         #add a new reader to the db
         add_reader_to_db(first_name,
@@ -161,6 +170,9 @@ def register_process():
 
         #Add the new phone to the session to keep coach logged in.
         session["coach"] = coach_phone
+
+        #send a welcoming text message
+        send_welcome_msg(coach_phone, first_name)
 
         return render_template("new-coach-info.html")
 
