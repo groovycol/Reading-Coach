@@ -64,17 +64,9 @@ def get_admin_logs(admin_id):
     return reader_data
 
 
-def get_reader_logs(reader_id, time_period):
-    """Given a reader_id and a parameter of either "week" or "all"
+def get_reader_logs(reader, dates):
+    """Given a reader object and a list of dates
     return a dictionary of date keys and num minutes read as values """
-
-    #retrieve the reader object
-    reader = Reader.query.get(reader_id)
-
-    if time_period == "week":
-        dates = get_formatted_dates(6)
-    else:
-        dates = get_formatted_dates(get_elapsed_days(get_start_date(reader)))
 
     #setup an empty dictionary
     entries = {}

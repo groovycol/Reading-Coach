@@ -278,22 +278,25 @@ def sendlog():
 def reader_progress_data():
     """Return chart data about Reader Progress"""
 
-    reader_id = request.form.get("reader_id")
     time_period = request.form.get("time_period")
 
-    #retrieve reader log data
     try:
-        log_data = get_reader_logs(reader_id, time_period)
+        #get the reader object
+        reader = Reader.query.get(request.form.get("reader_id"))
 
-        #date_labels are the sorted keys of the log_data dictionary
-        date_labels = sorted(log_data.keys())
+        if request.form.get("time_period") == "week":
+            dates = get_formatted_dates(6)
+        else:
+            dates = get_formatted_dates(get_elapsed_days(get_start_date(reader)))
+
+        log_data = get_reader_logs(reader, dates)
 
         #make a list to append minute data to
-        minutes_data = [log_data[date] for date in date_labels]
+        minutes_data = [log_data[date] for date in dates]
 
         label = "Reading Minutes logged"
 
-        chart_data = build_a_chart(date_labels, label, minutes_data, CHT_BAR, CHT_BLUE)
+        chart_data = build_a_chart(dates, label, minutes_data, CHT_BAR, CHT_BLUE)
 
         return jsonify(chart_data)
     except:
@@ -308,20 +311,17 @@ def admin_reader_detail():
     try:
         reader = get_reader_by_name(request.form.get("reader"))
 
-        #set the time_period to all for this view
-        time_period = "all"
+        #get the dates for this chart
+        dates = get_formatted_dates(get_elapsed_days(get_start_date(reader)))
 
         #retrieve reader log data
-        log_data = get_reader_logs(reader.reader_id, time_period)
-
-        #date_labels are the sorted keys of the log_data dictionary
-        date_labels = sorted(log_data.keys())
+        log_data = get_reader_logs(reader, dates)
 
         #make a list to append minute data to
-        minutes_data = [log_data[date] for date in date_labels]
+        minutes_data = [log_data[date] for date in dates]
 
         #get chart.js dictionary for chart
-        chart_data = build_a_chart(date_labels, reader.first_name, minutes_data, CHT_BAR, CHT_ORANGE)
+        chart_data = build_a_chart(dates, reader.first_name, minutes_data, CHT_BAR, CHT_ORANGE)
 
         return jsonify(chart_data)
 
@@ -339,7 +339,7 @@ def admin_progress_data():
         #get reader's log data in the form of a dictionary
         log_data = get_admin_logs(admin_id)
 
-        #date_labels are the sorted keys of the log_data dictionary
+        #name_labels are the sorted keys of the log_data dictionary
         name_labels = log_data.keys()
 
         #make a list to append minute data to
