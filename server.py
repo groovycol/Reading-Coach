@@ -121,7 +121,7 @@ def register_process():
     coach_phone = request.form["coach_phone"]
     first_name = request.form["first_name"]
     admin = request.form["admin_id"]
-    sms_option = request.form["sms_option"]
+    sms_option = request.form["yesorno"]
     admin2 = request.form.get("admin_id2", None)
     second_reader = request.form.get("add_reader", None)
     email = request.form.get("email", None)

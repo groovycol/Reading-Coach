@@ -90,8 +90,10 @@ def handle_incoming(sms_message):
 
     #initialize some variables
     remaining_words = []
+    possible_names = set()
     log_minutes = False
     minutes = None
+    first_name = None
 
     #look for Log or log, a string of digits and all other words may be names
     for word in received_message.split():
@@ -100,7 +102,8 @@ def handle_incoming(sms_message):
         elif word.isdigit():
             minutes = word
         else:
-            remaining_words.append(word.lower())
+            remaining_words.append(word)
+            possible_names.add(word.lower())
 
     #Find the user associated with this phone number
     incoming_coach = get_coach_by_phone(phone_number)
@@ -116,9 +119,14 @@ def handle_incoming(sms_message):
         return str(resp)
 
     for reader in incoming_coach.readers:
-        if reader.first_name.lower() in set(remaining_words):
+        #chedk to see if the name occurs in the possible_names set
+        if reader.first_name.lower() in possible_names:
+            #if so, set first_name and remove that value from the remaining words list
             first_name = reader.first_name
-            remaining_words.remove(reader.first_name.lower())
+            if first_name in remaining_words:
+                remaining_words.remove(reader.first_name)
+            else:
+                remaining_words.remove(reader.first_name.lower())
             reader_id = reader.reader_id
 
     #do we have a reader?
