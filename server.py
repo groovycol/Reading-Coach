@@ -118,24 +118,15 @@ def register_process():
     """Process registration."""
 
     #retrieve values from the form
-    print "got here!"
-    second_reader = request.form["add_reader"]
-    print second_reader
-    print "got here, too"
     coach_phone = request.form["coach_phone"]
-    print coach_phone
     first_name = request.form["first_name"]
-    print first_name
     admin = request.form["admin_id"]
-    print admin
-    admin2 = request.form["admin_id2"]
-    print admin2
-    email = request.form["email"]
-    print email
+    admin2 = request.form.get("admin_id2", None)
+    second_reader = request.form.get("add_reader", None)
+    email = request.form.get("email", None)
 
     #hash the password
-    hash = sha256_crypt.encrypt(request.form["password"])
-    print hash
+    passhash = sha256_crypt.encrypt(request.form["password"])
 
     #make sure this phone number isn't already in use
     try:
@@ -147,7 +138,7 @@ def register_process():
     except:
 
         #Add new coach to the database
-        add_coach_to_db(coach_phone, hash, email)
+        add_coach_to_db(coach_phone, passhash, email)
         print "added coach to db"
 
         #retrieve the new coach id
@@ -160,7 +151,7 @@ def register_process():
                     admin)
 
         #if an additional reader name was supplied
-        if second_reader is not None:
+        if second_reader:
             add_reader_to_db(second_reader,
                             coach.coach_id,
                             admin2)
@@ -172,7 +163,7 @@ def register_process():
         session["coach"] = coach_phone
 
         #send a welcoming text message
-        send_welcome_msg(coach_phone, first_name)
+        #send_welcome_msg(coach_phone, first_name)
 
         return render_template("new-coach-info.html")
 
@@ -376,7 +367,7 @@ def error_page():
 
 if __name__ == "__main__":
     # turn this off for demos
-    app.debug = False
+    app.debug = True
 
     #connect to the database
     connect_to_db(app)
