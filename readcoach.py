@@ -142,12 +142,13 @@ def build_a_chart(x_axis_labels, chart_label, data, chart_type, bar_color):
     return chart
 
 
-def add_coach_to_db(phone, password, email):
+def add_coach_to_db(phone, password, email, sms_option):
     """Add a new user to the database"""
 
     new_coach = Coach(phone=phone,
                     password=password,
                     email=email,
+                    sms_option = sms_option,
                     start_date=datetime.strftime(datetime.now(), '%Y-%m-%d %H:%M:%S'))
     db.session.add(new_coach)
     db.session.commit()

@@ -14,11 +14,12 @@ def load_coaches():
 
     for i, row in enumerate(open("seed_data/d.coaches")):
         row = row.rstrip()
-        phone, email, password, start_date = row.split("|")
+        phone, email, sms_option, password, start_date = row.split("|")
 
         coach = Coach(phone=phone,
                     email=email,
-                    password=password, 
+                    password=password,
+                    sms_option=sms_option,
                     start_date=start_date)
 
         #add entry to the session

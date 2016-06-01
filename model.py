@@ -14,6 +14,7 @@ class Coach(db.Model):
     phone = db.Column(db.String(15), nullable=False, unique=True)
     email = db.Column(db.String(35), nullable=True)
     password = db.Column(db.String(150), nullable=False)
+    sms_option = db.Column(db.String(10), nullable=False)
     start_date = db.Column(db.DateTime, nullable=False)
 
     readers = db.relationship('Reader')

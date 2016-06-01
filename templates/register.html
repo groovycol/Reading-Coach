@@ -92,6 +92,16 @@
     <br>
     <br>
     <div>
+        <label for="sms">Would you like to receive text message reminders twice a week during the program?:</label>
+                <input type="radio" name="yesorno" value="yes" id="sms_option">Yes, please send me text message reminders!
+                <input type="radio" name="yesorno" value="no" id="sms_option">No, thank you.
+                <br>
+                <p>We will send you a one-time welcome text message.</p>
+        </label>
+    </div>
+    <br>
+    <br>
+    <div>
         <label>Email address (optional):
             <input type="text" name="email" id="email">
         </label>
@@ -100,6 +110,5 @@
         <input type="submit" id="submit" value="Register">
     </div>
     </form>
-
 
 {% endblock %}

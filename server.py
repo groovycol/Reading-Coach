@@ -121,6 +121,7 @@ def register_process():
     coach_phone = request.form["coach_phone"]
     first_name = request.form["first_name"]
     admin = request.form["admin_id"]
+    sms_option = request.form["sms_option"]
     admin2 = request.form.get("admin_id2", None)
     second_reader = request.form.get("add_reader", None)
     email = request.form.get("email", None)
@@ -138,7 +139,7 @@ def register_process():
     except:
 
         #Add new coach to the database
-        add_coach_to_db(coach_phone, passhash, email)
+        add_coach_to_db(coach_phone, passhash, email, sms_option)
         print "added coach to db"
 
         #retrieve the new coach id

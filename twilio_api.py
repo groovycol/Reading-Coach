@@ -89,19 +89,18 @@ def handle_incoming(sms_message):
     resp = twilio.twiml.Response()
 
     #initialize some variables
-    names = set()
+    remaining_words = []
     log_minutes = False
     minutes = None
 
     #look for Log or log, a string of digits and all other words may be names
     for word in received_message.split():
-        print word
         if word == "log" or word == "Log":
             log_minutes = True
         elif word.isdigit():
             minutes = word
         else:
-            names.add(word.lower())
+            remaining_words.append(word.lower())
 
     #Find the user associated with this phone number
     incoming_coach = get_coach_by_phone(phone_number)
@@ -113,34 +112,28 @@ def handle_incoming(sms_message):
 
     #if the string "log" is not in the body of the message
     if not log_minutes:
-        resp.message("The Reading Coach: not a proper log command. Try again?")
+        resp.message("The Reading Coach: not a proper log command. Try again? Example: log 10 Sam")
         return str(resp)
 
-    readers = incoming_coach.readers
-    if len(readers) > 1:
-        for reader in readers:
-            if reader.first_name.lower() in names:
-                print reader.first_name.lower()
-                print reader.reader_id
-                first_name = reader.first_name
-                reader_id = reader.reader_id
-    else:
-        first_name = readers[0].first_name
-        reader_id = readers[0].reader_id
+    for reader in incoming_coach.readers:
+        if reader.first_name.lower() in set(remaining_words):
+            first_name = reader.first_name
+            remaining_words.remove(reader.first_name.lower())
+            reader_id = reader.reader_id
 
     #do we have a reader?
     if not first_name:
-        resp.message("The Reading Coach: Reader's name not found. Try again?")
+        resp.message("The Reading Coach: Reader's name not found. Try again? Example: log 10 Sam")
         return str(resp)
 
     #do we have some digit data to assign to minutes?
     if not minutes:
-        resp.message("The Reading Coach: number of minutes not found. Try again?")
+        resp.message("The Reading Coach: number of minutes not found. Try again? Example: log 10 Sam")
         return str(resp)
 
     #we need a date and time
     date = None
-    title = None
+    title = ' '.join(remaining_words)
 
     #Here's where we add log to the database
     add_logentry_to_db(reader_id, minutes, title, date)
