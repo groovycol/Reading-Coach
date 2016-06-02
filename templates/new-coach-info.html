@@ -3,28 +3,23 @@
 
 <!-- implement form to log reading minutes -->
 <body>
-   <h2> {{ session["coach"] }}</h2>
-
-    <div>Congratulations! You've just signed up to keep a child on track with reading!</div>
+   <h3>Congratulations!</h3>
+    <div>You've just signed up to stay on track with summer reading! You should receive a one-time welcome text message (sent to: {{ session["coach"] }} ) from us shortly. You may want to add the number the message comes from to your address book as "The Reading Coach". (If you opted to receive text message reminders, you will receive them twice a week) 
+        <p>You can view your <a href="/dashboard">reader's progress</a> at anytime, and you can log reading minutes in 2 ways:</p></div>
     <br>
+    <ol>
+    <li><h3> With your phone:</h3>
+    <div>You can log minutes by sending a text message to: 650-753-5549. Include the word "log", the number of minutes, your reader's name, and you can optionally include the book title.</p>
+        <p>Example 1: "log 10 {{ first_name }}" will add a reading log entry of 10 minutes for {{ first_name }} today</p>
+        <p>Example 2: "log 15 {{ first_name }} My Father's Dragon" will add a reading log entry of 15 minutes for {{ first_name }} for today and add the title My Father's Dragon to the reading list.</p>
+    </div></li>
     <br>
-    <h3> With your phone:</h3>
-    <div>You'll receive daily text messages to remind you to log reading minutes</div><br>
-    <div>And you can log minutes by sending a text message to:
-        <p>650-753-5549</p>
-        <p>Include the word "log" the number of minutes and your reader's name,</p>
-        <p>Example: "log 10 Kassie" will add a reading log entry of 10 minutes for Kassie for today</p>
-    </div>
-    <br>
-    <br>
-    <h3> Here on the Reading Coach App:</h3>
+    <li><h3> Here on the Reading Coach App:</h3>
     <div>You can start recording <a href="./record">reading minutes</a> right away!
-        <p>You can record for multiple days</p>
-    </div><br>
-    <div>And you can view your <a href="/dashboard">reader's progress</a> all summer.</div>
-
-
-    <div>Happy Reading!</div> 
+        <p>You can also record for multiple days, starting from the day you signed up (today!). So if you miss several days due to vacation, you can catch up online.</p>
+    </div><br></li>
+</ol>
+    <h2>Happy Reading!</h2> 
 </body>
 
 {% endblock %}

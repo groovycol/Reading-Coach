@@ -158,7 +158,7 @@ def register_process():
                             admin2)
 
         #Give the coach a confirmation message about being registered.
-        flash(coach_phone + " is now registered to receive text message reminders")
+        flash(" is now registered")
 
         #Add the new phone to the session to keep coach logged in.
         session["coach"] = coach_phone
@@ -166,7 +166,7 @@ def register_process():
         #send a welcoming text message
         #send_welcome_msg(coach_phone, first_name)
 
-        return render_template("new-coach-info.html")
+        return render_template("new-coach-info.html", first_name=first_name)
 
 
 #Routes to manage input and displaying data
