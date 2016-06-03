@@ -149,13 +149,19 @@ def register_process():
 
     #retrieve values from the form
     coach_phone = request.form["coach_phone"]
+    print coach_phone
     names = request.form.getlist("reader_names")
+    print names
     admins = request.form.getlist("admin_ids")
+    print admins
     sms_option = request.form["yesorno"]
+    print sms_option
     email = request.form.get("email", None)
+    print email
 
     #hash the password
     passhash = sha256_crypt.encrypt(request.form["password"])
+    print passhash
 
     #make sure this phone number isn't already in use
     try:
@@ -174,7 +180,9 @@ def register_process():
         coach = get_coach_by_phone(coach_phone)
 
         #add a new reader to the db
-        for reader_number in range(len(names) -1):
+        for reader_number in range(len(names)):
+            print names[reader_number]
+            print admins[reader_number]
             add_reader_to_db(names[reader_number],
                         coach.coach_id,
                         admins[reader_number])

@@ -43,7 +43,7 @@
         function addReaders(divName){
             if (counter < max_readers)  {
                 var newdiv = document.createElement('div');
-                newdiv.innerHTML = "<br><br><label>Reader's First Name: " + "<input type='text' name='reader_names[]'></label><label>Share progress with a Teacher or Organization: " + "<select name='admin_ids[]'>{% for admin in admins %} <option value='{{admin.admin_id}}'>{{admin.nameprefix.prefix}} {{admin.name}}</option>{%endfor%}</select></label><br>";
+                newdiv.innerHTML = "<br><br><label>Reader's First Name: " + "<input type='text' name='reader_names'></label><label>Share progress with a Teacher or Organization: " + "<select name='admin_ids'>{% for admin in admins %} <option value='{{admin.admin_id}}'>{{admin.nameprefix.prefix}} {{admin.name}}</option>{%endfor%}</select></label><br>";
           document.getElementById(divName).appendChild(newdiv);
           counter++;
           }
@@ -52,10 +52,10 @@
     <div id="add_readers">
         <br>You can add up to four Reader/Student names<br>
         <label>Reader's first name:
-            <input type="text" name="reader_names[]">
+            <input type="text" name="reader_names">
         </label>
         <label>Share progress with a Teacher or Organization:
-            <select name="admin_ids[]" id="admin_id">
+            <select name="admin_ids">
                 {% for admin in admins %}
                     <option value="{{admin.admin_id}}">{{admin.nameprefix.prefix}} {{admin.name}}</option>
                 {% endfor %}
