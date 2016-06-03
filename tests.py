@@ -252,6 +252,20 @@ class FlaskTestsCoachLoggedIn(unittest.TestCase):
         result = self.client.get("/logout")
         self.assertIn("/login", result.data)
 
+    def test_save_settings(self):
+        """Test changing password and text preferences"""
+
+        result = self.client.post("/save-settings",
+                                  data={"password": "BananaPeel", "yesorno": "yes"},
+                                  follow_redirects=True)
+        self.assertIn("Your password was updated", result.data)
+
+    def test_change_settings(self):
+        """"Test the change settings form"""
+
+        result = self.client.get("/change-settings")
+        self.assertIn("Change Text Message Reminder option", result.data)
+
 
 class FlaskTestsLoggedOut(unittest.TestCase):
     """Flask tests when logged out of the session."""

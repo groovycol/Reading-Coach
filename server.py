@@ -107,7 +107,6 @@ def logout():
 def change_settings():
     """Allow Coach to reset password and change text message options """
     coach = get_coach_by_phone(session["coach"])
-    print coach
     return render_template("change-settings.html", coach=coach)
 
 
@@ -117,8 +116,6 @@ def save_settings():
 
     sms_option = request.form.get("yesorno", None)
     password = request.form.get("password", None)
-    print "password"
-    print password
     coach = get_coach_by_phone(session["coach"])
 
     if sms_option:
@@ -128,9 +125,7 @@ def save_settings():
 
     if password:
         #hash the password
-        print password
         passhash = sha256_crypt.encrypt(password)
-        print passhash
         update_password(coach, passhash)
         flash("Your password was updated")
 

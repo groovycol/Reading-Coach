@@ -7,6 +7,7 @@ omit =
     logs/*
     seed.py
     tests.py
+    twilio_api.py
 source = .
 [report]
 exclude_lines =

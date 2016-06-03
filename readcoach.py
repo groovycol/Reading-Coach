@@ -198,11 +198,9 @@ def update_sms_option(coach, sms_preference):
 def update_password(coach, passhash):
     """Update the sms_option in the coach table for the given coach"""
 
-    print "got here in update_password"
     #reassign the new value to the sms_option value
     coach.password = passhash
 
-    print "got here, too!"
     #send the change to the database
     db.session.flush()
     db.session.commit()
