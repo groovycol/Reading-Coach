@@ -6,7 +6,7 @@ from flask import jsonify
 from flask import Response
 from passlib.hash import sha256_crypt
 
-from twilio_api import send_message, send_message_from_admin, handle_incoming, send_welcome_msg
+from twilio_api import *
 from model import *
 from readcoach import *
 
@@ -102,6 +102,41 @@ def logout():
     return redirect("/login")
 
 
+#Manage making changes to settings
+@app.route('/change-settings')
+def change_settings():
+    """Allow Coach to reset password and change text message options """
+    coach = get_coach_by_phone(session["coach"])
+    print coach
+    return render_template("change-settings.html", coach=coach)
+
+
+@app.route('/save-settings', methods=['POST'])
+def save_settings():
+    """Save any changes submitted from change-settings route"""
+
+    sms_option = request.form.get("yesorno", None)
+    password = request.form.get("password", None)
+    print "password"
+    print password
+    coach = get_coach_by_phone(session["coach"])
+
+    if sms_option:
+        if sms_option != coach.sms_option:
+            update_sms_option(coach, sms_option)
+        flash("Your text message preference has been saved")
+
+    if password:
+        #hash the password
+        print password
+        passhash = sha256_crypt.encrypt(password)
+        print passhash
+        update_password(coach, passhash)
+        flash("Your password was updated")
+
+    return redirect("/record")
+
+
 #Manage new registrations
 @app.route('/register')
 def register():
@@ -144,7 +179,6 @@ def register_process():
 
         #retrieve the new coach id
         coach = get_coach_by_phone(coach_phone)
-        print coach
 
         #add a new reader to the db
         add_reader_to_db(first_name,
@@ -368,13 +402,13 @@ def error_page():
 
 if __name__ == "__main__":
     # turn this off for demos
-    app.debug = True
+    app.debug = False
 
     #connect to the database
     connect_to_db(app)
 
     # Use the DebugToolbar
-    DebugToolbarExtension(app)
+    #DebugToolbarExtension(app)
 
     #start the web application
     app.run()

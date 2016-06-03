@@ -11,3 +11,6 @@ coverage run tests.py
 
 #check coverage
 coverage report -m
+
+#html version
+coverage html

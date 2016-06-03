@@ -3,4 +3,5 @@ logs/*
 *.pyc
 .coverage
 secrets.sh
+htmlcov
 TODO

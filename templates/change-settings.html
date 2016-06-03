@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block content %} 
+
+    <form action="/save-settings" method="POST">
+    <h2>Settings for phone {{ coach.phone }}</h2>
+    <div>
+        <label>Change Password:
+            <input type="password" name="password" id="password">
+        </label>
+    </div>
+    <br>
+    <br>
+    <div>
+        <label for="sms">Change Text Message Reminder option. Your current setting is <strong>{{ coach.sms_option}}</strong>:</label>
+                <br>
+                <input type="radio" name="yesorno" value="yes" id="sms_option">Yes, please send me text message reminders!
+                <input type="radio" name="yesorno" value="no" id="sms_option">No, thank you.
+    </div>
+    <br>
+    <div>
+        <input type="submit" id="submit" value="Save Changes">
+    </div>
+    </form>
+    <br>
+    <br>
+    </div>
+        <button id="back" onclick="location.href='/record'" value="back">Return without making changes</button>
+    <div>
+{% endblock %}
