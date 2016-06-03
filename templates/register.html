@@ -1,7 +1,6 @@
 {% extends 'base.html' %}
 {% block content %} 
 
-
     <script src="https://code.jquery.com/jquery.js"></script>
     <form action="/register_process" method="POST">
 
@@ -17,9 +16,9 @@
     </script>
     <br>
     <br>
-    <label for="phone">Phone number:
+    <label for="phone">Login/Phone number:
         <input type="text" name="coach_phone" id="phone_num" placeholder="xxx-xxx-xxxx" required> 
-        <div id="phone_msg">xxx-xxx-xxxx format. US numbers only. This must be a text message enabled phone. You will be able to log your reader's minutes right from your phone! You can also receive daily text message (sms) reminders
+        <div id="phone_msg">xxx-xxx-xxxx format. US numbers only. This must be a text message enabled phone. You will be able to log your reader's minutes right from your phone! 
         </div>
     </label>
     <br>
@@ -36,71 +35,45 @@
         <label>Password:
             <input type="password" name="password" id="password" required>
         </label>
-        <div id="password_msg" hidden>Password or Phrase (alpha, numeric, spaces and special characters allowed). Minimum 6 characters. Max 25 characters.</div>
+        <div id="password_msg" hidden>Password or Phrase (alpha, numeric, spaces and special characters allowed). Minimum 6 characters. Max 30 characters.</div>
     </div>
-    <br>
-    <div>
-        <label>Your reader's first name:
-            <input type="text" name="first_name" required>
-        </label>
-    </div>
-    <div>
-        <label>Share progress with a Teacher or Organization:
-            <select name="admin_id" id="admin_id">
-                {% for admin in admins %}
-                    {% if admin.nameprefix.prefix == "Organization" %}
-                        <option value="{{admin.admin_id}}"> {{admin.name}}</option>
-                    {% else %}
-                        <option value="{{admin.admin_id}}">{{admin.nameprefix.prefix}} {{admin.name}}</option>
-                    {% endif %}
-                {% endfor %}
-                </select>
-        </label>
-    </div>
-    <br>
-    <br>
     <script>
-        $(document).ready(function() {
-                $('#add_reader').hide();
-                $('#admin_show').hide();
-                $('#admin_id2').hide();
-                $('#more_boxes').on('click', function(){
-                $('#add_reader').show();
-                $('#admin_show').show();
-                $('#admin_id2').show(); });
-            });
+        var counter = 1;
+        var max_readers = 4;
+        function addReaders(divName){
+            if (counter < max_readers)  {
+                var newdiv = document.createElement('div');
+                newdiv.innerHTML = "<br><br><label>Reader's First Name: " + "<input type='text' name='reader_names[]'></label><label>Share progress with a Teacher or Organization: " + "<select name='admin_ids[]'>{% for admin in admins %} <option value='{{admin.admin_id}}'>{{admin.nameprefix.prefix}} {{admin.name}}</option>{%endfor%}</select></label><br>";
+          document.getElementById(divName).appendChild(newdiv);
+          counter++;
+          }
+        }
     </script>
-    <div>
-    <input type="button" id="more_boxes" value="Add Additional Reader">
-        <label for="additional readers">
-            <input type="text" id="add_reader" name="add_reader" value="" placeholder="reader's first name" hidden>
+    <div id="add_readers">
+        <br>You can add up to four Reader/Student names<br>
+        <label>Reader's first name:
+            <input type="text" name="reader_names[]">
         </label>
-    </div>
-    <div>
-        <label id="admin_show" hidden>Share progress with a Teacher or Organization:
-            <select name="admin_id2" id="admin_id2" hidden>
+        <label>Share progress with a Teacher or Organization:
+            <select name="admin_ids[]" id="admin_id">
                 {% for admin in admins %}
-                    {% if admin.nameprefix.prefix == "Organization" %}
-                        <option value="{{admin.admin_id}}"> {{admin.name}}</option>
-                    {% else %}
-                        <option value="{{admin.admin_id}}">{{admin.nameprefix.prefix}} {{admin.name}}</option>
-                    {% endif %}
+                    <option value="{{admin.admin_id}}">{{admin.nameprefix.prefix}} {{admin.name}}</option>
                 {% endfor %}
                 </select>
         </label>
     </div>
     <br>
+    <input type="button" value="Add another Reader" onClick="addReaders('add_readers');">
+    <br>
     <br>
     <div>
-        <label for="sms">Would you like to receive text message reminders twice a week during the program?:</label>
-                <br>
+        <label for="sms">Would you like to receive text message reminders twice a week during the program? NOTE: We will send you a one-time welcome text message.</label><br>
                 <input type="radio" name="yesorno" value="yes" id="sms_option">Yes, please send me text message reminders!
                 <input type="radio" name="yesorno" value="no" id="sms_option" checked>No, thank you.
                 <br>
-                <p>We will send you a one-time welcome text message.</p>
+                
         </label>
     </div>
-    <br>
     <br>
     <div>
         <label>Email address (optional):

@@ -149,11 +149,9 @@ def register_process():
 
     #retrieve values from the form
     coach_phone = request.form["coach_phone"]
-    first_name = request.form["first_name"]
-    admin = request.form["admin_id"]
+    names = request.form.getlist("reader_names")
+    admins = request.form.getlist("admin_ids")
     sms_option = request.form["yesorno"]
-    admin2 = request.form.get("admin_id2", None)
-    second_reader = request.form.get("add_reader", None)
     email = request.form.get("email", None)
 
     #hash the password
@@ -176,15 +174,10 @@ def register_process():
         coach = get_coach_by_phone(coach_phone)
 
         #add a new reader to the db
-        add_reader_to_db(first_name,
-                    coach.coach_id,
-                    admin)
-
-        #if an additional reader name was supplied
-        if second_reader:
-            add_reader_to_db(second_reader,
-                            coach.coach_id,
-                            admin2)
+        for reader_number in range(len(names) -1):
+            add_reader_to_db(names[reader_number],
+                        coach.coach_id,
+                        admins[reader_number])
 
         #Give the coach a confirmation message about being registered.
         flash(" is now registered")
@@ -195,7 +188,7 @@ def register_process():
         #send a welcoming text message
         #send_welcome_msg(coach_phone, first_name)
 
-        return render_template("new-coach-info.html", first_name=first_name)
+        return render_template("new-coach-info.html", first_name=names[0])
 
 
 #Routes to manage input and displaying data
