@@ -308,8 +308,6 @@ def sendlog():
 def reader_progress_data():
     """Return chart data about Reader Progress"""
 
-    time_period = request.form.get("time_period")
-
     try:
         #get the reader object
         reader = Reader.query.get(request.form.get("reader_id"))

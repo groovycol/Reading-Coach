@@ -147,7 +147,7 @@ class FlaskTestsDatabase(unittest.TestCase):
         self.assertIn("maintainAspectRatio", result.data)
         self.assertIn('"label": "Enzo"', result.data)
 
-    def test_reader_progress_json(self):
+    def test_reader_progress_json_week(self):
         """test the /reader-progress.json route"""
 
         result = self.client.post("/reader-progress.json",
@@ -156,6 +156,14 @@ class FlaskTestsDatabase(unittest.TestCase):
         self.assertIn('"label": "Reading Minutes logged"', result.data)
         self.assertNotIn("horizontalBar", result.data)
 
+    def test_reader_progress_json_all(self):
+        """test the /reader-progress.json route"""
+
+        result = self.client.post("/reader-progress.json",
+                                  data={"reader_id": 1, "time_period": "all"},
+                                  follow_redirects=True)
+        self.assertIn('"label": "Reading Minutes logged"', result.data)
+        self.assertNotIn("horizontalBar", result.data)
 
 class FlaskTestsAdminLoggedIn(unittest.TestCase):
     """Flask tests with admin logged in to session."""

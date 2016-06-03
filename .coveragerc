@@ -5,9 +5,9 @@ omit =
     env/*
     seed_data/*
     logs/*
+    sample_data.py
     seed.py
     tests.py
-    twilio_api.py
 source = .
 [report]
 exclude_lines =
