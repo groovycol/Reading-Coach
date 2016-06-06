@@ -264,7 +264,7 @@ class FlaskTestsCoachLoggedIn(unittest.TestCase):
         """Test changing password and text preferences"""
 
         result = self.client.post("/save-settings",
-                                  data={"password": "BananaPeel", "yesorno": "yes"},
+                                  data={"password": "BananaPeel", "yesorno": "no"},
                                   follow_redirects=True)
         self.assertIn("Your password was updated", result.data)
 

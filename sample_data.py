@@ -15,7 +15,7 @@ def example_data():
     Message.query.delete()
 
     # Add sample Coaches
-    c1 = Coach(phone="510-384-8508", password='$5$rounds=535000$wjufdSNVsChPA256$iiuJn6aXCGk1BqV2Sn2YNgbGM9R/Q46Cex51tAFcSBA', email='groovycol@gmail.com', sms_option="yes", start_date="2016-05-30 10:34:09")
+    c1 = Coach(phone="510-384-8508", password='$5$rounds=535000$wjufdSNVsChPA256$iiuJn6aXCGk1BqV2Sn2YNgbGM9R/Q46Cex51tAFcSBA', email='groovycol@gmail.com', sms_option="yes", start_date="2016-06-03 10:34:09")
     c2 = Coach(phone="510-655-1353", password='$5$rounds=535000$wjufdSNVsChPA256$iiuJn6aXCGk1BqV2Sn2YNgbGM9R/Q46Cex51tAFcSBA', sms_option="yes", start_date="2016-05-20 10:34:09")
     c3 = Coach(phone="410-632-3222", password='$5$rounds=535000$wjufdSNVsChPA256$iiuJn6aXCGk1BqV2Sn2YNgbGM9R/Q46Cex51tAFcSBA', email='adfoodie@gmail.com', sms_option="yes", start_date="2016-05-20 10:34:09")
     c4 = Coach(phone="410-651-3757", password='$5$rounds=535000$wjufdSNVsChPA256$iiuJn6aXCGk1BqV2Sn2YNgbGM9R/Q46Cex51tAFcSBA', sms_option="yes", start_date="2016-05-20 10:34:09")
@@ -40,8 +40,8 @@ def example_data():
     r4 = Reader(first_name="Kallie", coach_id="4", admin_id="3")
 
     # Add sample reading log entries
-    logentry1 = ReadingLog(reader_id=1, minutes_read=10, date_time='2016-05-26 10:34:09', title="The Penderwicks")
-    logentry2 = ReadingLog(reader_id=1, minutes_read=30, date_time='2016-05-25 11:34:09', title="The Penderwicks")
+    logentry1 = ReadingLog(reader_id=1, minutes_read=10, date_time='2016-06-03 10:34:09', title="The Penderwicks")
+    logentry2 = ReadingLog(reader_id=1, minutes_read=30, date_time='2016-06-02 11:34:09', title="The Penderwicks")
     logentry3 = ReadingLog(reader_id=2, minutes_read=5, date_time='2016-05-12 9:34:09')
     logentry4 = ReadingLog(reader_id=2, minutes_read=10, date_time='2016-05-10 10:34:09')
     logentry5 = ReadingLog(reader_id=3, minutes_read=25, date_time='2016-05-10 10:34:09', title="Harry Potter")
