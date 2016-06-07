@@ -210,7 +210,7 @@ class FlaskTestsDatabase(unittest.TestCase):
         result = self.client.post("/reader-progress.json",
                                   data={"reader_id": 1, "time_period": "week"},
                                   follow_redirects=True)
-        self.assertIn('"label": "Reading Minutes logged"', result.data)
+        self.assertIn('"label": "Reading Minutes Logged"', result.data)
         self.assertNotIn("horizontalBar", result.data)
 
     def test_reader_progress_json_all(self):

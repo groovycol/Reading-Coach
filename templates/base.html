@@ -4,6 +4,7 @@
     <title>TheReadingCoach</title>
 <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">
 <link rel="stylesheet" href="static/style.css">
+<link rel="icon" href="/static/favicon.png" type="image/gif" sizes="16x16">
 </head>
 <body>
 <!-- Code goes here. -->
@@ -25,7 +26,7 @@
         <ul class="nav navbar-nav">
         {% if "coach" in session %}
             <li><a href="/record">Record Reading Minutes </a></li>
-            <li><a href="/dashboard">View your reader's progress</a></li>
+            <li><a href="/dashboard">View Your Reader's Progress</a></li>
         {% elif "admin" in session %}
             <li><a href="#">Teacher/Admin Portal</a></li>
         {% endif %}
@@ -33,7 +34,7 @@
         <ul class="nav navbar-nav navbar-right">
         {% if "coach" in session %}
             <li><a href="/change-settings">{{ session["coach"] }}</a></li>
-            <li><a href="/logout">Log out</a></li>
+            <li><a href="/logout">Log Out</a></li>
         {% elif "admin" in session %}
             <li><a href="#">{{ session["admin"] }}</a></li>
             <li><a href="/logout">Logout</a></li>

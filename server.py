@@ -185,7 +185,7 @@ def register_process():
         session["coach"] = coach_phone
 
         #send a welcoming text message
-        #send_welcome_msg(coach_phone, first_name)
+        send_welcome_msg(coach_phone, first_name)
 
         return render_template("new-coach-info.html", first_name=names[0])
 
@@ -312,7 +312,7 @@ def reader_progress_data():
         #make a list to append minute data to
         minutes_data = [log_data[date] for date in dates]
 
-        label = "Reading Minutes logged"
+        label = "Reading Minutes Logged"
 
         chart_data = build_a_chart(dates, label, minutes_data, CHT_BAR, CHT_BLUE)
 

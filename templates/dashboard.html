@@ -21,7 +21,7 @@
         </div>
         <div class="col-xs-12">
         <div id="canvas"></div>
-        <button class="btn-primary" id="time_period" value="week">Show all</button>
+        <button class="btn-primary" id="time_period" value="week">Show All</button>
         <script>
             // Initialize some chart variables
             var canvas_tag = '<canvas id="barChart" width="800" height="250"></canvas>'
@@ -37,8 +37,8 @@
 
             // function toggles chart display and button text
             function toggleDataDisplay(evt) {
-                if ($('#time_period').text() === "Show all"){
-                    $('#time_period').text("Show this week");
+                if ($('#time_period').text() === "Show All"){
+                    $('#time_period').text("Show This Week");
                     $('#time_period').val("all");
                 } else {
                     $('#time_period').text("Show all");
