@@ -1,0 +1,21 @@
+.navbar-default {
+    background-color: #2C98DE;
+}
+ .navbar-default .navbar-nav > li > a {
+    color: #FFFFFF;
+}
+ 
+ .navbar-default .navbar-brand {
+    color: #FFFFFF;
+ }
+
+ .btn-primary {
+    color: #ffffff;
+    background-color: #2C98DE;
+    border-radius: 5px;
+    margin:5px 40px 5px 0px;
+ }
+
+ .inputbox {
+  border-radius: 5px;
+}
