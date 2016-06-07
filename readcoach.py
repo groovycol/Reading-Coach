@@ -58,7 +58,7 @@ def get_admin_logs(admin_id):
 
     #generate a list of names
     for reader in admin.readers:
-        avg_minutes = get_total_mins(reader) / get_elapsed_days(get_start_date(reader))
+        avg_minutes = get_total_mins(reader) / (get_elapsed_days(get_start_date(reader)) + 1)
         reader_data[reader.first_name] = avg_minutes
 
     return reader_data
