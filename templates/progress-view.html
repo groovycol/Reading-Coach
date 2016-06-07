@@ -3,28 +3,35 @@
 
 <script src="https://code.jquery.com/jquery.js"></script>
 <script src="../static/Chart.min.js"></script>
+<div class="container">
+    <div class="row">
+      <div class="col-xs-6">
     {% if admin.nameprefix.prefix == "Organization" %}
-        <h1 id="chart_name"> {{admin.name}} Readers Report</h1>
+        <h2 id="chart_name"> {{admin.name}} Readers Report</h2>
     {% else %}
-        <h1 id="chart_name"> {{admin.nameprefix.prefix}} {{admin.name}} Readers Report</h1>
+        <h2 id="chart_name"> {{admin.nameprefix.prefix}} {{admin.name}} Readers Report</h2>
     {% endif %}
-        <h2 id="chart_description">Average Daily Minutes by Reader</h2>
+        <h3 id="chart_description">Average Daily Minutes by Reader</h3>
+    </div>
         <input type="hidden" id="admin_id" value="{{admin.admin_id}}">
-        <div id="message_desc" hidden>Send a real-time text message to this reader</div>
+        <div class="col-xs-offset- col-xs-6">
+        <br>
+        <span id="message_desc" hidden>Send a real-time text message to this reader</span>
         <form action="/send-sms-from-admin.json" id="sendmessage" method="post">
-            <textarea id="messagebox" hidden rows="4" cols="40"  placeholder="Send encouragement, book suggestions or feedback" wrap="hard"></textarea>
-            <input type="submit" id="submit" value="Send" hidden>
+            <textarea id="messagebox" hidden rows="2" cols="40"  placeholder="Send encouragement, book suggestions or feedback" wrap="hard" class="inputbox"></textarea>
+            <input  class="btn-primary" type="submit" id="submit" value="Send" hidden>
         </form>
+    </div>
         <div id="success_msg" hidden></div>
-        <div class="admin-progress-chart"></div>
+        <div class="col-xs-12"></div>
         <div id="canvas"></div>
-        <button type="button" id="showbutton" onclick="location='/progress-view'" hidden>Return to All Students View</button>
+        <button type="button" id="showbutton" class="btn-primary" onclick="location='/progress-view'" hidden>Return to All Students View</button>
         <br>
         <br>
         
         <script>
             // Initialize some chart variables
-            var canvas_tag = '<canvas id="barChart" width="500" height="250"></canvas>'
+            var canvas_tag = '<canvas id="barChart" width="800" height="250"></canvas>'
 
             // initial chart display
             $.post("/admin-progress.json", {"admin_id": $("#admin_id").val() }, function (data) {
@@ -90,6 +97,8 @@
             }
             // event listener for messagebox 
             $('#sendmessage').on("submit", send_message);
-
         </script>
+        </div>
+    </div>
+</div>
 {% endblock %}

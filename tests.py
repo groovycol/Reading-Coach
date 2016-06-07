@@ -79,6 +79,22 @@ class FlaskTestsDatabase(unittest.TestCase):
                                   follow_redirects=True)
         self.assertIn("Number of minutes read:", result.data)
 
+    def test_login_coach_bad_phone(self):
+        """Test login of coach role with wrong phone"""
+
+        result = self.client.post("/login",
+                                  data={"coach_phone": "BananaPeel", "password": "BananaPeel"},
+                                  follow_redirects=True)
+        self.assertIn("number used to register with The Reading Coach", result.data)
+
+    def test_login_coach_bad_password(self):
+        """Test login of coach role with wrong pass"""
+
+        result = self.client.post("/login",
+                                  data={"coach_phone": "510-384-8508", "password": "BananaPeel"},
+                                  follow_redirects=True)
+        self.assertIn("Incorrect password", result.data)
+
     def test_login_admin(self):
         """Test login of admin role"""
 
@@ -86,6 +102,22 @@ class FlaskTestsDatabase(unittest.TestCase):
                                   data={"email": "teach@gmail.com", "password": "MyPassword"},
                                   follow_redirects=True)
         self.assertIn("Ms. Smith Readers Report", result.data)
+
+    def test_login_admin_bad_email(self):
+        """Test login of admin role with wrong email"""
+
+        result = self.client.post("/process_admin_login",
+                                  data={"email": "barbie", "password": "MyPassword"},
+                                  follow_redirects=True)
+        self.assertIn("match an entry in our database", result.data)
+
+    def test_login_admin_bad_pass(self):
+        """Test login of admin role with bad password"""
+
+        result = self.client.post("/process_admin_login",
+                                  data={"email": "teach@gmail.com", "password": "BananaPeel"},
+                                  follow_redirects=True)
+        self.assertIn("Incorrect password", result.data)
 
     def test_register_page(self):
         """Test registration page"""

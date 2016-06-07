@@ -1,25 +1,25 @@
 {% extends 'base.html' %}
 {% block content %} 
-
- <form action="/process_admin_login" method="POST">
-    <div>
+<div class="container">
+    <div class="row">
+        <div class="col-xs-12">
+        <form action="/process_admin_login" method="POST">
         <br>
         <br>
         <label>Email address:
-            <input type="text" name="email" required>
+            <input class="inputbox" type="text" name="email" required>
         </label>
-    </div>
-    <br>
-    <div>
+        <br>
+        <br>
         <label>Password:
-            <input type="password" name="password" required>
+            <input class="inputbox" type="password" name="password" required>
         </label>
+            <br>
+            <br>
+            <input class="btn btn-primary" type="submit" value="Login">
+        </form>
+        </div>
     </div>
-    <br>
-    <div>
-        <input type="submit" value="Login">
-    </div>
-
-</form>
+</div>
 
 {% endblock %}

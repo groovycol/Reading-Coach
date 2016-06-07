@@ -3,10 +3,11 @@
 <head>
     <title>TheReadingCoach</title>
 <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="static/style.css">
 </head>
 <body>
 <!-- Code goes here. -->
-<nav class="navbar navbar-default">
+<nav class="nav navbar-default">
   <div class="container-fluid">
     <!-- Brand and toggle get grouped for better mobile display -->
     <div class="navbar-header">
@@ -23,13 +24,10 @@
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
         <ul class="nav navbar-nav">
         {% if "coach" in session %}
-            <li class="active"><a href="/record">Record Reading Minutes <span class="sr-only">(current)</span></a></li>
+            <li><a href="/record">Record Reading Minutes </a></li>
             <li><a href="/dashboard">View your reader's progress</a></li>
         {% elif "admin" in session %}
-            <li><a href="/progress-view">View your Reader Report</a></li>
-        {% else %}
-            <li><a href="/login">Parent or CareGiver Login</a></li>
-            <li><a href="/register">Register as a parent or CareGiver</a></li>
+            <li><a href="#">Teacher/Admin Portal</a></li>
         {% endif %}
         </ul>
         <ul class="nav navbar-nav navbar-right">
@@ -40,17 +38,19 @@
             <li><a href="#">{{ session["admin"] }}</a></li>
             <li><a href="/logout">Logout</a></li>
         {% else %}
-            <li><a href="/login-admin">Login to Teacher/Admin Portal</a></li>
+            <li><a href="/login-admin">Teacher/Admin Portal</a></li>
         {% endif %}
         </ul>
      </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->
 </nav>
 
-
-
 {% for flash in get_flashed_messages() %}
-  {{ flash }}
+    <div class="col-xs-6">
+    <div class="alert alert-info fade in" role="alert" >
+    {{ flash }}
+    </div>
+    </div>
 {% endfor %}
 
 {% block content %}

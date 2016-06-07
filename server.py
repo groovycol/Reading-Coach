@@ -188,7 +188,7 @@ def register_process():
                         admins[reader_number])
 
         #Give the coach a confirmation message about being registered.
-        flash(" is now registered")
+        flash(coach_phone + " is now registered")
 
         #Add the new phone to the session to keep coach logged in.
         session["coach"] = coach_phone
@@ -297,8 +297,6 @@ def sendlog():
     """Handle incoming sms messages"""
 
     msg_received = request.form
-    print "msg_receieved:"
-    print msg_received
     response = handle_incoming(msg_received)
 
     return Response(response, mimetype='text/xml')

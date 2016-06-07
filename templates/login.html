@@ -1,28 +1,29 @@
 {% extends 'base.html' %}
 {% block content %} 
 
- <form action="/login" method="POST">
-    <div>
+<div class="container">
+    <div class="row">
+        <div class="col-xs-12">
+        <form action="/login" method="POST">
         <br>
         <br>
         <label>Phone number:
-            <input type="text" name="coach_phone" required>
+            <input  class="inputbox" type="text" name="coach_phone" required>
         </label>
-        <div>
-            This will be the phone number you signed up with. Phone number must match the one from which you recieve text messages from ReadingCoach
+        <br>
+         <small>Phone number used to register with The Reading Coach</small>
+        <br>
+        <br>
+        <label>Password:
+            <input class="inputbox" type="password" name="password" required>
+        </label>
+        <br>
+        <br>
+        <input class="btn btn-primary" type="submit" value="Login">
+
+        </form>
         </div>
     </div>
-    <br>
-    <div>
-        <label>Password:
-            <input type="password" name="password" required>
-        </label>
-    </div>
-    <br>
-    <div>
-        <input type="submit" value="Login">
-    </div>
-
-</form>
+</div> 
 
 {% endblock %}

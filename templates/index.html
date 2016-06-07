@@ -1,18 +1,30 @@
 {% extends 'base.html' %}
 {% block content %}
 
+<div class="container">
+    <div class="row">
+      <div class="col-xs-12">
 
-<h1>Welcome to The Reading Coach!</h1>
-<h2>Parents and Caregivers</h2> 
-<div>Turn your phone into a Reading Coach to help you and a child track reading progress!</div>
-<br>
-<br>
-<h2>Teachers, Administrators, PTA Leaders and Librarians</h2> 
-<div>Talk to us about setting up a program to track reading progress for classrooms, read-a-thons or Summer Reading programs!</div>
-
-<div id="footer">
-    {% block footer %}
-    <h3><a href="mailto:thereadingcoachapp@gmail.com" target="_top">Contact us!</a></h3>
-    {% endblock %}
+            <h1>Welcome to The Reading Coach!</h1>
+            <br>
+            <br>
+            <h3>Parents and Caregivers</h3> 
+            <span>Turn your phone into a Reading Coach to help you and a child track reading progress!</span>
+            <br><br>
+            
+            <button class="btn-primary btn-lg" onclick="location.href='/login'">Login</button><button class="btn-primary btn-lg" onclick="location.href='/register'">Register</button>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+           <!--  <h3>Teachers, Administrators, PTA Leaders and Librarians</h3> 
+            <span>Talk to us about setting up a program to track reading progress for classrooms, read-a-thons or Summer Reading programs!</span>
+            <br><br><br><i><a href="mailto:thereadingcoachapp@gmail.com" target="_top">Contact The Reading Coach</a></i> -->
+        </div>
+    </div>
 </div>
+
 {% endblock %}

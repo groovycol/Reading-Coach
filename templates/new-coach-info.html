@@ -2,24 +2,27 @@
 {% block content %}
 
 <!-- implement form to log reading minutes -->
-<body>
-   <h3>Congratulations!</h3>
-    <div>You've just signed up to stay on track with summer reading! You should receive a one-time welcome text message (sent to: {{ session["coach"] }} ) from us shortly. You may want to add the number the message comes from to your address book as "The Reading Coach". (If you opted to receive text message reminders, you will receive them twice a week) 
-        <p>You can view your <a href="/dashboard">reader's progress</a> at anytime, and you can log reading minutes in 2 ways:</p></div>
-    <br>
-    <ol>
-    <li><h3> With your phone:</h3>
-    <div>You can log minutes by sending a text message to: 650-753-5549. Include the word "log", the number of minutes, your reader's name, and you can optionally include the book title.</p>
+<div class="container">
+    <div class="row">
+      <div class="col-xs-12">
+        <h3>Congratulations!</h3>
+            <span>You've just signed up to stay on track with summer reading! You should receive a one-time welcome text message (sent to: {{ session["coach"] }} ) from us shortly. Add the incoming number to your address book as "The Reading Coach". (If you opted to receive text message reminders, you will receive them twice a week) 
+        <strong><p>You can view your <a href="/dashboard">reader's progress</a> at anytime, and you can log reading minutes in 2 ways:</p></strong></span>
+        <br>
+        <ol>
+        <li><strong><p> With your phone:</p></strong>
+        <span>You can log minutes by sending a text message to: 650-753-5549. Include the word "log", the number of minutes, your reader's name, and you can optionally include the book title.</p>
         <p>Example 1: "log 10 {{ first_name }}" will add a reading log entry of 10 minutes for {{ first_name }} today</p>
         <p>Example 2: "log 15 {{ first_name }} My Father's Dragon" will add a reading log entry of 15 minutes for {{ first_name }} for today and add the title My Father's Dragon to the reading list.</p>
-    </div></li>
-    <br>
-    <li><h3> Here on the Reading Coach App:</h3>
-    <div>You can start recording <a href="./record">reading minutes</a> right away!
-        <p>You can also record for multiple days, starting from the day you signed up (today!). So if you miss several days due to vacation, you can catch up online.</p>
-    </div><br></li>
-</ol>
-    <h2>Happy Reading!</h2> 
-</body>
-
+        </span></li>
+        <br>
+        <strong><li><p> Here on the Reading Coach App:</p></strong>
+        <span>You can start recording <a href="./record">reading minutes</a> right away!
+            <p>You can also record for multiple days, starting from the day you signed up (today!). So if you miss several days due to vacation, you can catch up online.</p>
+        </span><br></li>
+        </ol>
+        <h2>Happy Reading!</h2> 
+        </div>
+    </div>
+</div>
 {% endblock %}

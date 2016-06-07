@@ -2,26 +2,29 @@
 {% block content %}
 <script src="https://code.jquery.com/jquery.js"></script>
 <script src="../static/Chart.min.js"> </script>
-    <h1> Reading Progress</h1>
-    <h3><label>Reader:</label></h3>
-    {% if coach.readers|length > 1 %}
-        <select name="reader_id" id="reader_id">
-        {% for reader in coach.readers %}
-            <option value="{{ reader.reader_id }}">{{ reader.first_name }}</option>
-        {% endfor %}
-        </select>
-    {% else %}
-        {% for reader in coach.readers %}
-            <h3>{{ reader.first_name }}</h3>
-            <input type="hidden" id="reader_id" name="reader_id" value="{{reader.reader_id}}">
-        {% endfor %}
-    {% endif %}
-        <div class="reader-progress-chart">
+<div class="container">
+    <div class="row">
+        <div class="col-xs-3"> 
+        <h2> Reading Progress</h2>
+        {% if coach.readers|length > 1 %}
+            <select name="reader_id" id="reader_id" class="form-control">
+            {% for reader in coach.readers %}
+                <option value="{{ reader.reader_id }}">{{ reader.first_name }}</option>
+            {% endfor %}
+            </select>
+        {% else %}
+            {% for reader in coach.readers %}
+                <h3>{{ reader.first_name }}</h3>
+                <input type="hidden" id="reader_id" name="reader_id" value="{{reader.reader_id}}">
+            {% endfor %}
+        {% endif %}
+        </div>
+        <div class="col-xs-12">
         <div id="canvas"></div>
-        <button id="time_period" value="week">Show all</button>
+        <button class="btn-primary" id="time_period" value="week">Show all</button>
         <script>
             // Initialize some chart variables
-            var canvas_tag = '<canvas id="barChart" width="1000" height="350"></canvas>'
+            var canvas_tag = '<canvas id="barChart" width="800" height="250"></canvas>'
 
             // initial chart display last 7 days
             function draw_chart() { 
@@ -56,4 +59,7 @@
             $('#time_period').click(toggleDataDisplay)
 
         </script>
+        </div>
+    </div>
+</div>
 {% endblock %}
