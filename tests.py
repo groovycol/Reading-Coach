@@ -169,6 +169,14 @@ class FlaskTestsDatabase(unittest.TestCase):
         self.assertIn("Enzo", result.data)
         self.assertIn("horizontalBar", result.data)
 
+    def test_admin_progress_json_wrong_id(self):
+        """test calling the /admin-progress.json route"""
+
+        result = self.client.post("/admin-progress.json",
+                                  data={"admin_id": 11},
+                                  follow_redirects=True)
+        self.assertIn("The database did not return expected results", result.data)
+
     def test_admin_reader_detail_json(self):
         """test calling the /admin-reader-detail.json route"""
 
@@ -178,6 +186,23 @@ class FlaskTestsDatabase(unittest.TestCase):
 
         self.assertIn("maintainAspectRatio", result.data)
         self.assertIn('"label": "Enzo"', result.data)
+
+    def test_admin_reader_detail_json_err(self):
+        """test calling the /admin-reader-detail.json route"""
+
+        result = self.client.post("/admin-reader-detail.json",
+                                  data={"reader": "Alexandria"},
+                                  follow_redirects=True)
+
+        self.assertIn("The database did not return expected results", result.data)
+
+    def test_reader_progress_json_err(self):
+        """test the /reader-progress.json route"""
+
+        result = self.client.post("/reader-progress.json",
+                                  data={"reader_id": 100, "time_period": "week"},
+                                  follow_redirects=True)
+        self.assertIn('The database did not return expected results', result.data)
 
     def test_reader_progress_json_week(self):
         """test the /reader-progress.json route"""
