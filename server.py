@@ -20,6 +20,9 @@ CHT_ORANGE = 'rgba(222,114,44,1)'
 CHT_BLUE = 'rgba(44,152,222,1)'
 CHT_HOR = 'horizontalBar'
 CHT_BAR = 'bar'
+PORT = int(os.environ.get("PORT", 5000))
+DEBUG = "NO_DEBUG" not in os.environ
+connect_to_db(app, os.environ.get("DATABASE_URL"))
 
 
 # Force jinja to raise an error
@@ -394,4 +397,4 @@ if __name__ == "__main__":
     #DebugToolbarExtension(app)
 
     #start the web application
-    app.run()
+    app.run(host="0.0.0.0", port=PORT, debug=DEBUG)

@@ -100,8 +100,8 @@ class Message(db.Model):
         return "<Message id=%d message=%s>" % (self.message_id, self.message_text)
 
 
-def connect_to_db(app, db_uri="postgresql:///readcoachdb"):
-    app.config['SQLALCHEMY_DATABASE_URI'] = db_uri
+def connect_to_db(app, db_uri=None):
+    app.config['SQLALCHEMY_DATABASE_URI'] = db_uri or 'postgresql:///readcoachdb'
     db.app = app
     db.init_app(app)
 
