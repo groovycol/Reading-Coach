@@ -22,7 +22,6 @@ CHT_HOR = 'horizontalBar'
 CHT_BAR = 'bar'
 PORT = int(os.environ.get("PORT", 5000))
 DEBUG = "NO_DEBUG" not in os.environ
-connect_to_db(app, os.environ.get("DATABASE_URL"))
 
 
 # Force jinja to raise an error
@@ -391,7 +390,7 @@ if __name__ == "__main__":
     app.debug = False
 
     #connect to the database
-    connect_to_db(app)
+    connect_to_db(app, os.environ.get("DATABASE_URL"))
 
     # Use the DebugToolbar
     #DebugToolbarExtension(app)
