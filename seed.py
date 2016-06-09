@@ -1,4 +1,4 @@
-"""Utility file to seed readcoach database from data in seed_data/"""
+"""Utility file to seed readcoach database from data in seed_data_prod/"""
 
 import datetime
 from sqlalchemy import func
@@ -12,7 +12,7 @@ def load_coaches():
 
     print "Coaches"
 
-    for i, row in enumerate(open("seed_data/d.coaches")):
+    for i, row in enumerate(open("seed_data_prod/d.coaches")):
         row = row.rstrip()
         phone, email, sms_option, password, start_date = row.split("|")
 
@@ -34,7 +34,7 @@ def load_readers():
 
     print "Readers"
 
-    for i, row in enumerate(open("seed_data/d.readers")):
+    for i, row in enumerate(open("seed_data_prod/d.readers")):
         row = row.rstrip()
         first_name, coach_id, admin_id = row.split("|")
 
@@ -54,7 +54,7 @@ def load_prefixes():
 
     print "Prefixes"
 
-    for i, row in enumerate(open("seed_data/d.prefixes")):
+    for i, row in enumerate(open("seed_data_prod/d.prefixes")):
         row = row.rstrip()
 
         nameprefix = Prefix(prefix=row)
@@ -71,7 +71,7 @@ def load_admins():
 
     print "Admins"
 
-    for i, row in enumerate(open("seed_data/d.admins")):
+    for i, row in enumerate(open("seed_data_prod/d.admins")):
         row = row.rstrip()
         name, prefix, email, password = row.split("|")
 
@@ -92,7 +92,7 @@ def load_readlogs():
 
     print "ReadingLogs"
 
-    for i, row in enumerate(open("seed_data/d.readinglogs")):
+    for i, row in enumerate(open("seed_data_prod/d.readinglogs")):
         row = row.rstrip()
         reader_id, minutes_read, date_time, title = row.split(",")
 
@@ -113,7 +113,7 @@ def load_messages():
 
     print "Messages"
 
-    for i, row in enumerate(open("seed_data/d.messages")):
+    for i, row in enumerate(open("seed_data_prod/d.messages")):
         row = row.rstrip()
 
         message = Message(message_text=row)
