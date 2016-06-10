@@ -12,9 +12,11 @@ def get_elapsed_days(start_date):
     """Given a date, return an integer for the number of elapsed days
     """
 
-    #gets the number of days since start date
+    #gets the number of days since start date 
     delta = datetime.now() - start_date
-    return delta.days
+
+    #never return 0
+    return delta.days + 1
 
 
 def get_start_date(reader):
@@ -110,7 +112,7 @@ def get_message_by_day(num):
     """Given an integer, retrieve the message_text for that message_id"""
 
     #retrieve message for day num +1 (day 0 needs msg 1, etc.)
-    message = Message.query.get(num + 1)
+    message = Message.query.get(num)
 
     return message
 
