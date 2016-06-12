@@ -12,11 +12,13 @@ def get_elapsed_days(start_date):
     """Given a date, return an integer for the number of elapsed days
     """
 
-    #gets the number of days since start date 
+    #gets the number of days since start date
     delta = datetime.now() - start_date
 
-    #never return 0
-    return delta.days + 1
+    if delta.days == 0:
+        delta.days += 1
+
+    return delta.days
 
 
 def get_start_date(reader):
@@ -60,7 +62,7 @@ def get_admin_logs(admin_id):
 
     #generate a list of names
     for reader in admin.readers:
-        avg_minutes = get_total_mins(reader) / (get_elapsed_days(get_start_date(reader)) + 1)
+        avg_minutes = get_total_mins(reader) / (get_elapsed_days(get_start_date(reader)))
         reader_data[reader.first_name] = avg_minutes
 
     return reader_data
@@ -103,7 +105,7 @@ def get_admin_by_email(email):
 def get_reader_by_name(name):
     """Given a reader's name, return the reader object"""
 
-    reader = Reader.query.filter_by(first_name=name).one()
+    reader = Reader.query.filter_by(first_name=name).first()
 
     return reader
 
@@ -111,7 +113,6 @@ def get_reader_by_name(name):
 def get_message_by_day(num):
     """Given an integer, retrieve the message_text for that message_id"""
 
-    #retrieve message for day num +1 (day 0 needs msg 1, etc.)
     message = Message.query.get(num)
 
     return message
