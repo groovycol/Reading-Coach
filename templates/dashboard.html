@@ -16,6 +16,9 @@
             {% for reader in coach.readers %}
                 <h3>{{ reader.first_name }}</h3>
                 <input type="hidden" id="reader_id" name="reader_id" value="{{reader.reader_id}}">
+                {% if reader_totals %}
+                    <span>TOTAL minutes read: {{reader_totals[reader.first_name]}}</span>
+                {%endif%}
             {% endfor %}
         {% endif %}
         </div>
@@ -24,7 +27,7 @@
         <button class="btn-primary" id="time_period" value="week">Show All</button>
         <script>
             // Initialize some chart variables
-            var canvas_tag = '<canvas id="barChart" width="800" height="250"></canvas>'
+            var canvas_tag = '<canvas id="barChart" width="600" height="200"></canvas>'
 
             // initial chart display last 7 days
             function draw_chart() { 
