@@ -21,7 +21,7 @@ def send_message(phone_number):
     msg = get_message_by_day(get_elapsed_days(recipient.start_date))
 
     #format message to send
-    msg_body = "ReadingCoach reminder: " + msg.message_text + " Reply to log today's minutes. example: 'log 10 Jenny'"
+    msg_body = "ReadingCoach reminder: " + msg.message_text + " Reply to log today's minutes. example: 'log 10 {}'".format(recipient.readers[0].first_name)
 
     #send the message via Twilio. Twilio does not return a success/failure status
     client = TwilioRestClient(ACCOUNT_SID, AUTH_TOKEN)
@@ -115,7 +115,7 @@ def handle_incoming(sms_message):
 
     #if the string "log" is not in the body of the message
     if not log_minutes:
-        resp.message("The Reading Coach: not a proper log command. Try again? Example: log 10 Sam")
+        resp.message("The Reading Coach: not a proper log command. Try again? Example: log 10 {}".format(incoming_coach.readers[0].first_name))
         return str(resp)
 
     for reader in incoming_coach.readers:
@@ -131,12 +131,12 @@ def handle_incoming(sms_message):
 
     #do we have a reader?
     if not first_name:
-        resp.message("The Reading Coach: Reader's name not found. Try again? Example: log 10 Sam")
+        resp.message("The Reading Coach: Reader's name not found. Try again? Example: log 10 {}".format(incoming_coach.readers[0].first_name))
         return str(resp)
 
     #do we have some digit data to assign to minutes?
     if not minutes:
-        resp.message("The Reading Coach: number of minutes not found. Try again? Example: log 10 Sam")
+        resp.message("The Reading Coach: number of minutes not found. Try again? Example: log 10 {}".format(incoming_coach.readers[0].first_name))
         return str(resp)
 
     #we need a date and time
