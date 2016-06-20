@@ -21,7 +21,7 @@ def send_message(phone_number):
     msg = get_message_by_day(get_elapsed_days(recipient.start_date))
 
     #format message to send
-    msg_body = "ReadingCoach reminder: " + msg.message_text + " Log in to http://goo.gl/o0H4qh to turn off reminder text messages. Reply to log today's minutes. example: 'log 10 {}'".format(recipient.readers[0].first_name)
+    msg_body = "The Reading Coach reminder: " + msg.message_text + " Log in to http://goo.gl/o0H4qh to turn off reminder text messages. Reply to log today's minutes. example: 'log 10 {}'".format(recipient.readers[0].first_name)
 
     #send the message via Twilio. Twilio does not return a success/failure status
     client = TwilioRestClient(ACCOUNT_SID, AUTH_TOKEN)
@@ -49,7 +49,7 @@ def send_message_from_admin(first_name, admin_email, message):
     phone_number = coach.phone
 
     #prepare the message to send
-    msg_body = "ReadingCoach message from " + admin_name + ": " + message
+    msg_body = "The Reading Coach message from " + admin_name + ": " + message
 
     #Send the message via Twilio
     client = TwilioRestClient(ACCOUNT_SID, AUTH_TOKEN)
@@ -66,7 +66,7 @@ def send_welcome_msg(phone, first_name):
     """Send a one time welcome message to registrants"""
 
     #prepare the message to send
-    msg_body = "Welcome to the ReadingCoach! You can record reading minutes by sending a text message to this number. For example, to log 10 minutes for {}, text 'log 10 {}'  Enjoy reading this summer!".format(first_name, first_name)
+    msg_body = "Welcome to the Reading Coach! You can record reading minutes by sending a text message to this number. For example, to log 10 minutes for {}, text 'log 10 {}'  Enjoy reading this summer!".format(first_name, first_name)
 
     #Send the message via Twilio
     client = TwilioRestClient(ACCOUNT_SID, AUTH_TOKEN)
