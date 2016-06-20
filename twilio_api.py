@@ -21,7 +21,7 @@ def send_message(phone_number):
     msg = get_message_by_day(get_elapsed_days(recipient.start_date))
 
     #format message to send
-    msg_body = "ReadingCoach reminder: " + msg.message_text + " Reply to log today's minutes. example: 'log 10 {}'".format(recipient.readers[0].first_name)
+    msg_body = "ReadingCoach reminder: " + msg.message_text + " Log in to http://goo.gl/o0H4qh to turn off reminder text messages. Reply to log today's minutes. example: 'log 10 {}'".format(recipient.readers[0].first_name)
 
     #send the message via Twilio. Twilio does not return a success/failure status
     client = TwilioRestClient(ACCOUNT_SID, AUTH_TOKEN)
