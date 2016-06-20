@@ -102,10 +102,10 @@ def get_admin_by_email(email):
     return admin
 
 
-def get_reader_by_name(name):
+def get_reader_by_name(name, admin_id):
     """Given a reader's name, return the reader object"""
 
-    reader = Reader.query.filter_by(first_name=name).first()
+    reader = Reader.query.filter(Reader.first_name == name, Reader.admin_id == admin_id).first()
 
     return reader
 

@@ -187,7 +187,7 @@ def register_process():
         session["coach"] = coach_phone
 
         #send a welcoming text message
-        send_welcome_msg(coach_phone, names[0])
+        #send_welcome_msg(coach_phone, names[0])
 
         return render_template("new-coach-info.html", first_name=names[0])
 
@@ -332,7 +332,8 @@ def admin_reader_detail():
 
     #get the reader object
     try:
-        reader = get_reader_by_name(request.form.get("reader"))
+        admin = get_admin_by_email(session["admin"])
+        reader = get_reader_by_name(request.form.get("reader"), admin.admin_id)
 
         #get the dates for this chart
         dates = get_formatted_dates(get_elapsed_days(get_start_date(reader)))

@@ -177,16 +177,6 @@ class FlaskTestsDatabase(unittest.TestCase):
                                   follow_redirects=True)
         self.assertIn("The database did not return expected results", result.data)
 
-    def test_admin_reader_detail_json(self):
-        """test calling the /admin-reader-detail.json route"""
-
-        result = self.client.post("/admin-reader-detail.json",
-                                  data={"reader": "Enzo"},
-                                  follow_redirects=True)
-
-        self.assertIn("maintainAspectRatio", result.data)
-        self.assertIn('"label": "Enzo"', result.data)
-
     def test_admin_reader_detail_json_err(self):
         """test calling the /admin-reader-detail.json route"""
 
@@ -258,6 +248,16 @@ class FlaskTestsAdminLoggedIn(unittest.TestCase):
         result = self.client.get("/progress-view")
         self.assertIn("Readers Report", result.data)
         self.assertIn('<canvas id="barChart"', result.data)
+
+    def test_admin_reader_detail_json(self):
+        """test calling the /admin-reader-detail.json route"""
+
+        result = self.client.post("/admin-reader-detail.json",
+                                  data={"reader": "Enzo"},
+                                  follow_redirects=True)
+
+        self.assertIn("maintainAspectRatio", result.data)
+        self.assertIn('"label": "Enzo"', result.data)
 
     def test_send_sms_from_admin(self):
         """Test sending an sms from an admin"""
