@@ -1,5 +1,7 @@
 # The Reading Coach
 
+![capture](https://cloud.githubusercontent.com/assets/7019142/16339366/2a7e8d94-39d7-11e6-9584-1eeeabc3261f.PNG)
+
 The Reading Coach is a web application that allows Parents and Teachers/Administrators to track the number of minutes a Student has read.
 
   - Parents or Caregivers can login to record and view the number of minutes their Student has read for the days in the program.
