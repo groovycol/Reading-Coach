@@ -6,10 +6,11 @@ The Reading Coach is a web application that allows Parents and Teachers/Administ
 
   - Parents or Caregivers can login to record and view the number of minutes their Student has read for the days in the program.
 ![record](https://cloud.githubusercontent.com/assets/7019142/16339385/427068fa-39d7-11e6-8bde-c735ff3ab981.PNG)
-  - Parents can opt in to receive occasional text message reminders. 
-![img_4544](https://cloud.githubusercontent.com/assets/7019142/16339947/3c7af44e-39da-11e6-8b57-3c269936b611.PNG)
+  - Parents can opt in to receive occasional text message reminders.
+
+<img src="https://cloud.githubusercontent.com/assets/7019142/16339947/3c7af44e-39da-11e6-8b57-3c269936b611.PNG" width="300">
   - Parents can also log minutes by sending a text message to the applications webhook phone number.
-![fullsizerender](https://cloud.githubusercontent.com/assets/7019142/16339949/3ec433f0-39da-11e6-9b78-889ddd15b8a9.jpg)
+<img src="https://cloud.githubusercontent.com/assets/7019142/16339949/3ec433f0-39da-11e6-9b78-889ddd15b8a9.jpg" width="300">
   - Teachers/Administrators can login to view the progress of all their Students
 ![teach](https://cloud.githubusercontent.com/assets/7019142/16339395/4a64927a-39d7-11e6-9663-aa3b024d3a24.PNG)
 
