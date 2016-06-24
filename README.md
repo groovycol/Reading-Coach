@@ -1,14 +1,18 @@
 # The Reading Coach
 
-![capture](https://cloud.githubusercontent.com/assets/7019142/16339366/2a7e8d94-39d7-11e6-9584-1eeeabc3261f.PNG)
+![capture](https://cloud.githubusercontent.com/assets/7019142/16339565/3d6abb02-39d8-11e6-98b3-bec3143e6fae.PNG)
 
 The Reading Coach is a web application that allows Parents and Teachers/Administrators to track the number of minutes a Student has read.
 
   - Parents or Caregivers can login to record and view the number of minutes their Student has read for the days in the program.
+![record](https://cloud.githubusercontent.com/assets/7019142/16339385/427068fa-39d7-11e6-8bde-c735ff3ab981.PNG)
   - Parents can opt in to receive occasional text message reminders. 
   - Parents can also log minutes by sending a text message to the applications webhook phone number.
   - Teachers/Administrators can login to view the progress of all their Students
+![teach](https://cloud.githubusercontent.com/assets/7019142/16339395/4a64927a-39d7-11e6-9663-aa3b024d3a24.PNG)
+
   - Teachers have the option to send a text message to the Student's family with messages of encouragement or practical advice
+![teacherview](https://cloud.githubusercontent.com/assets/7019142/16339463/a519ee7c-39d7-11e6-9103-d0a13495bbfb.PNG)
 
 The Reading Coach came about as the brainchild of an elementary teacher in Berkeley, CA. After reading this [article](http://goo.gl/YIUrb5) in the New York Times demonstrating the power that text message reminders can have in helping people build habits, she envisioned an application that would send text reminders to parents during the 10 weeks of summer break. The text would remind them to get their student to read, and prompt them to log how many minutes they had read that day. In her vision, both parents and teachers would be able to see the student's recorded reading minutes in a browser, but busy parents could log their student's progress from a phone.[df1]
 
