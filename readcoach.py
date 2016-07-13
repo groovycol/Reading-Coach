@@ -86,6 +86,20 @@ def get_reader_logs(reader, dates):
     return entries
 
 
+def get_books_by_reader(reader):
+    """Given a reader object, return title data from reading logs"""
+
+    #setup an empty dictionary
+    books = {'readerdata':[]}
+    titles = set()
+
+    for entry in reader.logs:
+        if entry.title:
+            titles.add(entry.title + ', ')
+    books['readerdata'] = list(titles)
+    return books
+
+
 def get_coach_by_phone(phone):
     """Given a phone number, return a Coach object"""
 

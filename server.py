@@ -326,6 +326,21 @@ def reader_progress_data():
         return render_template("error.html", err_msg=ERR_MSG)
 
 
+@app.route('/admin-reader-books.json', methods=['POST'])
+def admin_reader_books():
+    """Return list of books for a specific reader"""
+
+    #get the reader object
+    try:
+        admin = get_admin_by_email(session["admin"])
+        reader = get_reader_by_name(request.form.get("reader"), admin.admin_id)
+
+        book_list = get_books_by_reader(reader)
+        return jsonify(book_list)
+    except:
+        return render_template("error.html", err_msg=ERR_MSG)
+
+
 @app.route('/admin-reader-detail.json', methods=['POST'])
 def admin_reader_detail():
     """Return chart data for a specific reader"""
