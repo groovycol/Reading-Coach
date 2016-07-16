@@ -187,7 +187,7 @@ def register_process():
         session["coach"] = coach_phone
 
         #send a welcoming text message
-        send_welcome_msg(coach_phone, names[0])
+        #send_welcome_msg(coach_phone, names[0])
 
         return render_template("new-coach-info.html", first_name=names[0])
 
@@ -296,6 +296,20 @@ def sendlog():
     response = handle_incoming(msg_received)
 
     return Response(response, mimetype='text/xml')
+
+
+@app.route('/check-reader-name.json', methods=['POST'])
+def check_name_availability():
+    """Return true or false if name in database"""
+
+    result = {'name_exists': None}
+
+    reader = get_reader_by_name(request.form.get("reader_name"), request.form.get("admin_id"))
+    if reader is None:
+        result['name_exists'] = 'false'
+    else:
+        result['name_exists'] = 'true'
+    return jsonify(result)
 
 
 #routes that return json data for chart.js

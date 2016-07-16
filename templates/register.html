@@ -5,18 +5,6 @@
         <div class="col-xs-12">
         <script src="https://code.jquery.com/jquery.js"></script>
         <form action="/register_process" method="POST">
-
-            <script>
-                // Prevent form submission until phone number matches xxx-xxx-xxx pattern
-               $("form").submit( function(evt) {
-                    var phone_string = $('#phone_num').val(); 
-                    if (! /^[0-9]{3}-[0-9]{3}-[0-9]{4}$/.test(phone_string)) {
-                        evt.preventDefault();
-                        alert("Please enter a telephone number in the format xxx-xxx-xxxx");
-                    }
-                });
-            </script>
-    
             <br>
             <br>
             <label for="phone">Login/Phone number:
@@ -25,6 +13,16 @@
                 </label> 
                 <span id="phone_msg"><small>xxx-xxx-xxxx format. US numbers only. This must be a text message enabled phone. You will be able to log your reader's minutes right from your phone! </small>
                 </span>
+            <script>
+                // Prevent form submission until phone number matches xxx-xxx-xxx pattern
+               $("form").submit( function(evt) {
+                    var phoneString = $('#phone_num').val(); 
+                    if (! /^[0-9]{3}-[0-9]{3}-[0-9]{4}$/.test(phoneString)) {
+                        evt.preventDefault();
+                        alert("Please enter a telephone number in the format xxx-xxx-xxxx");
+                    }
+                });
+            </script>
             <br>
             <br>
             <span>
@@ -47,7 +45,7 @@
                 function addReaders(divName){
                     if (counter < max_readers)  {
                         var newdiv = document.createElement('div');
-                        newdiv.innerHTML = "<br><br><label>Reader's First Name: " + "<input type='text' name='reader_names' class='inputbox'></label><br><label>Share progress with a Teacher or Organization: " + "<select name='admin_ids' class='form-control'>{% for admin in admins %} <option value='{{admin.admin_id}}'>{{admin.nameprefix.prefix}} {{admin.name}}</option>{%endfor%}</select></label>";
+                        newdiv.innerHTML = "<br><label>Share progress with a Teacher or Organization: " + "<select name='admin_ids' class='form-control'>{% for admin in admins %} <option value='{{admin.admin_id}}'>{{admin.nameprefix.prefix}} {{admin.name}}</option>{%endfor%}</select></label><label>Reader's First Name: " + "<input type='text' name='reader_names' class='reader_names' id='reader_names'></label>";
                   document.getElementById(divName).appendChild(newdiv);
                   counter++;
                   }
@@ -55,10 +53,6 @@
             </script>
             <span id="add_readers">
             <br><br>
-            <label>Reader's first name:
-                <input class="inputbox" type="text" name="reader_names">
-            </label>
-            <br>
             <label>Share progress with a Teacher or Organization:
                 <select name="admin_ids" class="form-control" >
                     {% for admin in admins %}
@@ -66,6 +60,9 @@
                     {% endfor %}
                     </select>
             </label>
+            <label>Reader's first name:
+                <input class="reader_names" id="reader_names" type="text" name="reader_names">
+            </label> 
             </span>
             <input type="button" class="btn-primary" value="Add another Reader" onClick="addReaders('add_readers');">
             <small>You can add up to four Reader/Student names</small><br>
@@ -78,6 +75,33 @@
                     <input type="radio" name="yesorno" value="no" id="sms_option" checked>No, thank you.</strong>
                     <br>
             </span>
+            <script>
+                var delay = (function(){
+                var timer = 0;
+                return function(callback, ms){
+                    clearTimeout (timer);
+                    timer = setTimeout(callback, ms);
+                    };
+                })();
+                $(document).on( "keyup", "#reader_names", function (evt){
+                    delay(function(){
+                        var count = 1
+                        $(".reader_names").each(function() {
+                            var admin = $('.form-control').val()
+                            console.log(this.value + " " + admin);
+                            $.post("/check-reader-name.json", {"reader_name": this.value, "admin_id": admin}, function (data) {
+                                console.log(data.name_exists)
+                                if (data.name_exists === "true") {
+                                    evt.preventDefault();
+                                    var message = "The reader first name is not unique for this Teacher. Try adding a middle or last initial";
+                                    alert(message);
+                                }
+                            });
+                        count++
+                        });
+                    }, 2500 );
+                });
+            </script>
             <br><br>
             <span>
                 <label>Email address (optional):
