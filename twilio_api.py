@@ -76,9 +76,30 @@ def send_welcome_msg(phone, first_name):
                             body=msg_body)
 
 
+def handle_incoming_closed(sms_message):
+    """handle incoming sms messages"""
+    #get and format the phone number from which msg was received
+    phone = sms_message["From"][2:]
+    phone_number = '-'.join([phone[:3], phone[3:6], phone[6:]])
+
+    #set up the response
+    resp = twilio.twiml.Response()
+
+    #Find the user associated with this phone number
+    incoming_coach = get_coach_by_phone(phone_number)
+
+    #if the phone number does not match our db
+    if incoming_coach is None:
+        resp.message("The Reading Coach: Your phone number does not match our database.")
+        return str(resp)
+
+    #otherwise, send the message about the program end
+    resp.message("The Reading Coach: The 2016 Summer Reading Program has ended. Log in to http://goo.gl/o0H4qh to view or print progress, all data will be available until October 1,2016")
+    return str(resp)
+
+
 def handle_incoming(sms_message):
     """handle incoming sms messages"""
-
     #get and format the phone number from which msg was received
     phone = sms_message["From"][2:]
     phone_number = '-'.join([phone[:3], phone[3:6], phone[6:]])

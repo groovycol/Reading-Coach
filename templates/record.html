@@ -8,13 +8,14 @@
     <div class="row">
         <div class="col-xs-12">
         <h2>Thank you for using The Reading Coach this Summer!</h2>
-        <h3> <font color="red"> Summer Reading Program ends on Aug 31, 2016. You may record minutes up until Aug 31. You will still be able to log in and view progress through the month of September. Email thereadingcoachapp@gmail.com with any questions or feedback, or if you'd like to share the summer reading logs with your student's new teacher.</font></h3>
+        <h3> <font color="red"> The Summer Reading Program has now ended. You will still be able to log in and view progress until September 30th. Email </font> <font color="black"><i>thereadingcoachapp@gmail.com</i></font><font color="red"> with any questions or feedback, or if you'd like to share the summer reading logs with your student's new teacher.</font></h3>
         <br>
         <form action="/log_minutes" method="POST">
             <div class="col-xs-3">
+            <font color="grey">
             {% if coach.readers|length > 1 %}
                 <label>Reader name:</label>
-                <select name="reader_id" class="form-control">
+                <select disabled name="reader_id" class="form-control">
                 {% for reader in coach.readers %}
                     <option value="{{ reader.reader_id }}">{{ reader.first_name }}</option>
                 {% endfor %}
@@ -28,7 +29,7 @@
             <br>
             {% if dates %}
             <label>Date:</label>
-                <select name="date" id="date" class="form-control">
+                <select disabled name="date" id="date" class="form-control">
                 {% for date in dates %}
                     <option value="{{ date }}">{{ date }}</option>
                 {% endfor %}
@@ -39,15 +40,16 @@
             <br>
             <br>
             <label>Number of minutes read:
-                <input class="inputbox" type="text" name="minutes_read">
+                <input disabled class="inputbox" type="text" name="minutes_read">
             </label>
             <br>
             <br>
             <label>Title (optional):
-                <input  class="inputbox" type="text" name="title">
+                <input  disabled class="inputbox" type="text" name="title">
             </label>
             <br><br>
-            <input class=" btn btn-primary" type="submit" value="Add to Reading Log">
+            <input disabled class=" btn btn-primary" type="submit" value="Add to Reading Log">
+        </font>
         </form>
         </div>
     </div>

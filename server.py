@@ -59,7 +59,7 @@ def login_process():
         if sha256_crypt.verify(request.form["password"], coach.password):
             #add coach to the session
             session["coach"] = coach_phone
-            return redirect("/record")
+            return redirect("/dashboard")
         else:
             #if password doesn't match, back to /login rte w/msg
             flash("Incorrect password")
@@ -242,7 +242,7 @@ def show_dashboard():
         for reader in coach.readers:
             reader_totals[reader.first_name] = get_total_mins(reader)
 
-        return render_template("dashboard.html", coach=coach, reader_totals=reader_totals)
+        return render_template("dashboard_end.html", coach=coach, reader_totals=reader_totals)
 
     except:
         flash("You must be logged in to view progress charts")
@@ -265,13 +265,13 @@ def show_progress():
 
 
 #Routes to manage sms/twilio integration
-@app.route("/send-message/<phone>")
-def send_sms_message(phone):
-    """Sends an SMS message via the Twilio API"""
+# @app.route("/send-message/<phone>")
+# def send_sms_message(phone):
+#     """Sends an SMS message via the Twilio API"""
 
-    send_message(phone)
+#     send_message(phone)
 
-    return redirect("/record")
+#     return redirect("/record")
 
 
 @app.route("/send-sms-from-admin.json", methods=['POST'])
@@ -293,7 +293,7 @@ def sendlog():
     """Handle incoming sms messages"""
 
     msg_received = request.form
-    response = handle_incoming(msg_received)
+    response = handle_incoming_closed(msg_received)
 
     return Response(response, mimetype='text/xml')
 

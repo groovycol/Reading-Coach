@@ -33,7 +33,7 @@
         </ul>
         <ul class="nav navbar-nav navbar-right">
         {% if "coach" in session %}
-            <li><a href="/change-settings">Change your settings</a></li>
+            <!-- <li><a href="/change-settings">Change your settings</a></li> -->
             <li><a href="/logout">Log Out</a></li>
         {% elif "admin" in session %}
             <li><a href="#">{{ session["admin"] }}</a></li>
