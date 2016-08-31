@@ -13,8 +13,10 @@ def get_elapsed_days(start_date):
     """
 
     #gets the number of days since start date
-    delta = datetime.now() - start_date
-
+    #delta = datetime.now() - start_date
+    delta = datetime(2016,8,31) - start_date
+    
+    print delta.days
     if delta.days == 0:
         return 1
 
@@ -157,6 +159,17 @@ def build_a_chart(x_axis_labels, chart_label, data, chart_type, bar_color):
     }
 
     return chart
+
+
+def build_a_report(reader, dates):
+    """build a report of a readers reading logs, return a list of lists with [[date,minutes,title], [date,minutes,title]]"""
+    # for day in dates:
+    #     entries[day] = 0
+    logs = []
+    #iterate through the logs and add minutes read for days that match
+    for log_entry in reader.logs:
+        logs.append([log_entry.date_time.date().strftime(DFLT_DATE_FMT), log_entry.minutes_read, log_entry.title])
+    return logs
 
 
 def add_coach_to_db(phone, password, email, sms_option):

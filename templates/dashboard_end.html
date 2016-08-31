@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% block content %}
+<script src="https://code.jquery.com/jquery.js"></script>
+<script src="../static/Chart.min.js"> </script>
+<div class="container">
+    <div class="row">
+        <div class="col-xs-12"> 
+        <h2> Reading Progress for Summer 2016</h2>
+        {% if coach.readers|length > 1 %}
+            <select name="reader_id" id="reader_id" class="form-control">
+            {% for reader in coach.readers %}
+                <option value="{{ reader.reader_id }}">{{ reader.first_name }}</option>
+            {% endfor %}
+            </select>
+        {% else %}
+            {% for reader in coach.readers %}
+                <h3>{{ reader.first_name }}</h3>
+                <input type="hidden" id="reader_id" name="reader_id" value="{{reader.reader_id}}">
+                {% if reader_totals %}
+                    <span>TOTAL minutes read: {{reader_totals[reader.first_name]}}</span>
+                {%endif%}
+            {% endfor %}
+        {% endif %}
+        </div>
+        <div class="col-xs-12">
+        <div id="canvas"></div>
+        <button class="btn-primary" id="time_period" value="all" hidden>Show All</button>
+        <script>
+            // Initialize some chart variables
+            var canvas_tag = '<canvas id="barChart" width="600" height="200"></canvas>'
+
+            // initial chart display last 7 days
+            function draw_chart() { 
+                $("#barChart").remove()
+                $("#canvas").append(canvas_tag)
+                var ctx_bar = $("#barChart").get(0).getContext("2d");
+                $.post("/reader-progress.json", {"reader_id": $("#reader_id").val(), "time_period": $('#time_period').val() }, function (data) {
+                        var myBarChart = new Chart(ctx_bar, data);
+            });}
+
+            // function toggles chart display and button text
+            //function toggleDataDisplay(evt) {
+                //if ($('#time_period').text() === "Show All"){
+                    //$('#time_period').text("Show This Week");
+                    //$('#time_period').val("all");
+                //} else {
+                   // $('#time_period').text("Show all");
+                    //$('#time_period').val("week");
+                //}
+
+                //redraw the chart
+                //draw_chart();
+            //}
+
+            //initial chart display
+            draw_chart();
+
+            // evt handler for dropdown select of reader name
+            $('#reader_id').change(draw_chart)
+
+            // evt handler for button click to toggle chart data display
+            //$('#time_period').click(toggleDataDisplay)
+
+        </script>
+        </div>
+    </div>
+</div>
+{% endblock %}

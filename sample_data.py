@@ -37,7 +37,7 @@ def example_data():
     r1 = Reader(first_name="Enzo", coach_id="1", admin_id="1")
     r2 = Reader(first_name="Luke", coach_id="2", admin_id="2")
     r3 = Reader(first_name="Cora", coach_id="3", admin_id="1")
-    r4 = Reader(first_name="Kallie", coach_id="4", admin_id="3")
+    r4 = Reader(first_name="Kallie", coach_id="1", admin_id="3")
 
     # Add sample reading log entries
     logentry1 = ReadingLog(reader_id=1, minutes_read=10, date_time='2016-06-03 10:34:09', title="The Penderwicks")
