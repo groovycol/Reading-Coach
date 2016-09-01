@@ -35,7 +35,8 @@ def get_formatted_dates(elapsed_days):
 
     day_labels = []
     for x in range(elapsed_days, -1, -1):
-        day = date.today() - timedelta(days=x)
+        #day = date.today() - timedelta(days=x)
+        day = datetime(2016,8,31) - timedelta(days=x)
         day_labels.append(day.strftime(DFLT_DATE_FMT))
 
     return day_labels
