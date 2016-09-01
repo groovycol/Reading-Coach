@@ -5,23 +5,11 @@
     <div class="row">
         <div class="col-xs-12"> 
         <h2> Reading Logs for Summer 2016</h2>
-        {% if coach.readers|length > 1 %}
-            <select name="reader_id" id="reader_id" class="form-control">
-            {% for reader in coach.readers %}
-                <option value="{{ reader.reader_id }}">{{ reader.first_name }}</option>
-            
-                
-            {% endfor %}
-            </select> 
-        {% else %}
-            {% for reader in coach.readers %}
-                <h3>{{ reader.first_name }}</h3>
-                <input type="hidden" id="reader_id" name="reader_id" value="{{reader.reader_id}}">
-                {% if reader_totals %}
-                    <span>TOTAL minutes read: {{reader_totals[reader.first_name]}}</span>
-                {%endif%}
-            {% endfor %}
-        
+        <h3>{{ reader.first_name }}</h3>
+        <input type="hidden" id="reader_id" name="reader_id" value="{{reader.reader_id}}">
+        {% if reader_totals %}
+            <span>TOTAL minutes read: {{reader_totals[reader.first_name]}}</span>
+        {%endif%}
         </div>
         <div class="col-xs-12">
         <div id="canvas"></div>
@@ -43,7 +31,6 @@
             <td>{{log_entry[2]}}</td>
         </tr>
         {% endfor %}
-        {% endif %}
         </table>
         </div>
     </div>
