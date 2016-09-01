@@ -277,7 +277,7 @@ def show_s():
     return render_template("summary_alt.html", reader=reader, reader_totals=reader_totals, reader_logs=reader_logs)
 
 
-@app.route("/summary", methods=['POST'])
+@app.route("/summary")
 def show_summary():
     """show a summary page"""
 
