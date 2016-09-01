@@ -307,8 +307,10 @@ def show_progress():
     #make sure admin is logged in
     try:
         admin = get_admin_by_email(session["admin"])
+        total_minutes = get_total_by_admin(admin)
+        print total_minutes
 
-        return render_template("progress-view.html", admin=admin)
+        return render_template("progress-view.html", admin=admin, total_minutes=total_minutes)
 
     except:
         flash("You must be logged in to view progress")

@@ -9,8 +9,11 @@
         <h2 id="chart_name"> {{admin.nameprefix.prefix}} {{admin.name}} Readers Report</h2>
         <h4 id="booktitles" hidden>Books read: </h4>
             <span id="bookdata"></span>
+        
+        <strong><h4 id="total_mins">TOTAL minutes read by students this summer: {{ total_minutes }}</h4></strong>
         <br>
         <h3 id="chart_description">Average Daily Minutes by Reader</h3>
+
         </div>
         <input type="hidden" id="admin_id" value="{{admin.admin_id}}">
         <div class="col-xs-offset- col-xs-6">
@@ -75,6 +78,7 @@
                         $('#message_desc').show()
                         $('#messagebox').show() 
                         $('#submit').show()
+                        // $('#total_mins').hide()
                         // $('#showbooks').show()
                     });
                     // show book title list

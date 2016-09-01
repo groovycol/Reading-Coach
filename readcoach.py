@@ -41,6 +41,15 @@ def get_formatted_dates(elapsed_days):
     return day_labels
 
 
+def get_total_by_admin(admin):
+    """Given an admin object, return the total number of minutes for all readers"""
+
+    total_mins = 0
+    for reader in admin.readers:
+        total_mins += get_total_mins(reader)
+    return total_mins
+
+
 def get_total_mins(reader):
     """Given a reader object, return the total number of minutes read from ReadingLog table"""
 
