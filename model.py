@@ -12,6 +12,7 @@ class Coach(db.Model):
 
     coach_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     phone = db.Column(db.String(15), nullable=False, unique=True)
+    phone2 = db.Column(db.String(15), nullable=True, unique=True)
     email = db.Column(db.String(35), nullable=True)
     password = db.Column(db.String(150), nullable=False)
     sms_option = db.Column(db.String(10), nullable=False)

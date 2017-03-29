@@ -249,34 +249,6 @@ def show_dashboard():
         return redirect("/login")
 
 
-@app.route("/summary-l")
-def show_l():
-    reader = get_reader_by_name("Linden", 1)
-    reader_totals = {}
-    reader_totals[reader.first_name] = get_total_mins(reader)
-
-    #retrieve a list of dates from when reader signed up
-    dates = get_formatted_dates(get_elapsed_days(get_start_date(reader)))
-
-    reader_logs = build_a_report(reader, dates)
-
-    return render_template("summary_alt.html", reader=reader, reader_totals=reader_totals, reader_logs=reader_logs)
-
-
-@app.route("/summary-s")
-def show_s():
-    reader = get_reader_by_name("Sophia", 1)
-    reader_totals = {}
-    reader_totals[reader.first_name] = get_total_mins(reader)
-
-    #retrieve a list of dates from when reader signed up
-    dates = get_formatted_dates(get_elapsed_days(get_start_date(reader)))
-
-    reader_logs = build_a_report(reader, dates)
-
-    return render_template("summary_alt.html", reader=reader, reader_totals=reader_totals, reader_logs=reader_logs)
-
-
 @app.route("/summary")
 def show_summary():
     """show a summary page"""
@@ -318,13 +290,13 @@ def show_progress():
 
 
 #Routes to manage sms/twilio integration
-# @app.route("/send-message/<phone>")
-# def send_sms_message(phone):
-#     """Sends an SMS message via the Twilio API"""
+@app.route("/send-message/<phone>")
+def send_sms_message(phone):
+    """Sends an SMS message via the Twilio API"""
 
-#     send_message(phone)
+    send_message(phone)
 
-#     return redirect("/record")
+    return redirect("/record")
 
 
 @app.route("/send-sms-from-admin.json", methods=['POST'])
@@ -482,4 +454,4 @@ if __name__ == "__main__":
     #DebugToolbarExtension(app)
 
     #start the web application
-    app.run(host="0.0.0.0", port=PORT, debug=DEBUG)
+    app.run()

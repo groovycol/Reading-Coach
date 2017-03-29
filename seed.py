@@ -14,9 +14,10 @@ def load_coaches():
 
     for i, row in enumerate(open("seed_data_prod/d.coaches")):
         row = row.rstrip()
-        phone, email, sms_option, password, start_date = row.split("|")
+        phone, phone2, email, sms_option, password, start_date = row.split("|")
 
         coach = Coach(phone=phone,
+		    phone2=phone2,
                     email=email,
                     password=password,
                     sms_option=sms_option,

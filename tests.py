@@ -3,7 +3,6 @@
 import unittest
 from server import app
 # from flask.ext.sqlalchemy import SQLAlchemy
-
 from model import *
 from sample_data import *
 
