@@ -294,7 +294,7 @@ def show_progress():
 def send_sms_message(phone):
     """Sends an SMS message via the Twilio API"""
 
-    send_message(phone)
+    tw_send_message(phone)
 
     return redirect("/record")
 
@@ -315,10 +315,10 @@ def send_sms_from_admin():
 
 @app.route('/sendlog', methods=['GET', 'POST'])
 def sendlog():
-    """Handle incoming sms messages"""
+    """Handle sms messages"""
 
     msg_received = request.form
-    response = handle_incoming_closed(msg_received)
+    response = handle_incoming(msg_received)
 
     return Response(response, mimetype='text/xml')
 

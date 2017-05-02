@@ -5,7 +5,7 @@ from model import *
 
 DFLT_DATE_FMT = '%b %d'
 LONG_DATE_FMT = '%b %d %Y %I:%M%p'
-GENERIC_DATE_INFO = ' 2016  12:01PM'
+GENERIC_DATE_INFO = ' 2017  12:01PM'
 
 
 def get_elapsed_days(start_date):
@@ -13,8 +13,7 @@ def get_elapsed_days(start_date):
     """
 
     #gets the number of days since start date
-    #delta = datetime.now() - start_date
-    delta = datetime(2016,8,31) - start_date
+    delta = datetime.now() - start_date
     
     if delta.days == 0:
         return 1
@@ -34,8 +33,7 @@ def get_formatted_dates(elapsed_days):
 
     day_labels = []
     for x in range(elapsed_days, -1, -1):
-        #day = date.today() - timedelta(days=x)
-        day = datetime(2016,8,31) - timedelta(days=x)
+        day = date.today() - timedelta(days=x)
         day_labels.append(day.strftime(DFLT_DATE_FMT))
 
     return day_labels
@@ -114,7 +112,11 @@ def get_books_by_reader(reader):
 def get_coach_by_phone(phone):
     """Given a phone number, return a Coach object"""
 
-    coach = Coach.query.filter_by(phone=phone).one()
+    #Try primary Coach phone number, then see if it matches phone2
+    try:
+        coach = Coach.query.filter_by(phone=phone).one()
+    except:
+        coach = Coach.query.filter_by(phone2=phone).one()
 
     return coach
 

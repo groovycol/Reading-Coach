@@ -11,7 +11,7 @@ AUTH_TOKEN = os.environ['TWILIO_SECRET']
 FROM_ACCOUNT = os.environ['TWILIO_NUMBER']
 
 
-def send_message(phone_number):
+def tw_send_message(phone_number):
     """Sends an SMS message to the user via the Twilio API"""
 
     #get the recipient's phone number
@@ -19,11 +19,11 @@ def send_message(phone_number):
 
     #determine the message of the day to send
     #for summer reading program
-    #msg = get_message_by_day(get_elapsed_days(recipient.start_date))
+    msg = get_message_by_day(get_elapsed_days(recipient.start_date))
 
     #format message to send
-    #msg_body = "The Reading Coach reminder: " + msg.message_text + " Log in to http://goo.gl/o0H4qh to turn off reminder text messages. Reply to log today's minutes. example: 'log 10 {}'".format(recipient.readers[0].first_name)
-    msg_body = "The Reading Coach: The Summer Reading Program ends Aug 31. You will not be able to record minutes after Aug 31, but you can still log in and view your student's progress through Sept 30. Email feedback or questions to thereadingcoachapp@gmail.com. Thank you for using The Reading Coach!"
+    msg_body = "The Reading Coach reminder: " + msg.message_text + " Log in to http://goo.gl/o0H4qh to turn off reminder text messages. Reply to log today's minutes. example: 'log 10 {}'".format(recipient.readers[0].first_name)
+    #msg_body = "The Reading Coach: The Summer Reading Program ends Aug 31. You will not be able to record minutes after Aug 31, but you can still log in and view your student's progress through Sept 30. Email feedback or questions to thereadingcoachapp@gmail.com. Thank you for using The Reading Coach!"
     #send the message via Twilio. Twilio does not return a success/failure status
     client = TwilioRestClient(ACCOUNT_SID, AUTH_TOKEN)
     client.messages.create(to=phone_number,
@@ -94,7 +94,7 @@ def handle_incoming_closed(sms_message):
         return str(resp)
 
     #otherwise, send the message about the program end
-    resp.message("The Reading Coach: The 2016 Summer Reading Program has ended. Log in to http://goo.gl/o0H4qh to view or print progress, all data will be available until October 1,2016")
+    resp.message("The Reading Coach: The 2017 Summer Reading Program has not yet begun. Registration will begin in June 2017")
     return str(resp)
 
 
