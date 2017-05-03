@@ -18,7 +18,7 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="/">The Reading Coach<sup>beta</sup></a>
+      <a class="navbar-brand" href="/">The Reading Coach</a>
     </div>
 
     <!-- Collect the nav links, forms, and other content for toggling -->
@@ -26,15 +26,15 @@
         <ul class="nav navbar-nav">
         {% if "coach" in session %}
             <!-- <li><a href="/record">Record Reading Minutes </a></li> -->
+            <li><a href="/record">Record Reading Minutes</a></li>
             <li><a href="/dashboard">View Your Reader's Progress</a></li>
-            <li><a href="/summary">Summer 2016 Summary</a></li>
         {% elif "admin" in session %}
             <li><a href="#">Teacher/Admin Portal</a></li>
         {% endif %}
         </ul>
         <ul class="nav navbar-nav navbar-right">
         {% if "coach" in session %}
-            <!-- <li><a href="/change-settings">Change your settings</a></li> -->
+            <li><a href="/change-settings">Change your settings</a></li>
             <li><a href="/logout">Log Out</a></li>
         {% elif "admin" in session %}
             <li><a href="#">{{ session["admin"] }}</a></li>
