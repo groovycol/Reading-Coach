@@ -1,10 +1,12 @@
-env
-logs/*
+archive/
+env/
+logs/
+seed_data/
+seed_data_prod/
 *.pyc
 .coverage
+.coveragerc
+REMIND
 secrets.sh
 htmlcov
 TODO
-readcoachdb.dump
-seed_data_prod/
-REMIND
