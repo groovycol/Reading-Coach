@@ -9,11 +9,8 @@
         <h2 id="chart_name"> {{admin.nameprefix.prefix}} {{admin.name}} Readers Report</h2>
         <h4 id="booktitles" hidden>Books read: </h4>
             <span id="bookdata"></span>
-        
-        <strong><h4 id="total_mins">TOTAL minutes read by students this summer: {{ total_minutes }}</h4></strong>
         <br>
         <h3 id="chart_description">Average Daily Minutes by Reader</h3>
-
         </div>
         <input type="hidden" id="admin_id" value="{{admin.admin_id}}">
         <div class="col-xs-offset- col-xs-6">
@@ -34,22 +31,17 @@
         <script>
             // Initialize some chart variables
             var canvas_tag = '<canvas id="barChart" width="800" height="250"></canvas>'
-
             // initial chart display
             $.post("/admin-progress.json", {"admin_id": $("#admin_id").val() }, function (data) {
-
                 // clear the canvas
                 $("#barChart").remove()
                 $("#canvas").append(canvas_tag)
-
                 // initialize chart
                 var ctx_bar = $("#barChart").get(0).getContext("2d");
                 // var options = { responsive: true, maintainAspectRatio: true};
-
                 // draw chart
                 var myBarChart = new Chart(ctx_bar, data);
            
-
                 // event handler for clicking on a data bar in the chart
                 $("#barChart").click( function(evt) {
                     var activePoints = myBarChart.getElementsAtEvent(evt);
@@ -58,27 +50,21 @@
                     // change the chart heading descriptor
                     $('#chart_name').html(reader)
                     $('#chart_description').html("Minutes Read Per Day")
-
                     // clear the canvas
                     $("#barChart").remove()
                     $("#canvas").append(canvas_tag)
-
                     // re-initialize chart
                     var ctx_bar = $("#barChart").get(0).getContext("2d");
                     // var options = { responsive: true, maintainAspectRatio: true};
-
                     //draw new chart
                     $.post("/admin-reader-detail.json", {"reader": reader}, function (data){
                         var myBarChart = new Chart(ctx_bar, data);
-
                         // show button to return to all students view
                         $('#showbutton').show()
-
                         // show message box and submit button
                         $('#message_desc').show()
                         $('#messagebox').show() 
                         $('#submit').show()
-                        // $('#total_mins').hide()
                         // $('#showbooks').show()
                     });
                     // show book title list
@@ -89,16 +75,13 @@
                     $('#showbooks').prop('disabled', true)
                 });
             });
-
             // messagebox submit event function
             function send_message(evt) {
                 evt.preventDefault();
-
                 var formInputs = {
                     "reader": $('#chart_name').html(),
                     "message_txt": $('#messagebox').val()
                 };
-
                 $.post("/send-sms-from-admin.json", formInputs, function (data){ 
                     $('#messagebox').val(data) });
                     // $('#success_msg').html(data).show() });
@@ -106,11 +89,9 @@
             }
             // event listener for messagebox 
             $('#sendmessage').on("submit", send_message);
-
             // show book titles event function
             // function show_books(evt) {
             //     evt.preventDefault();
-
             //     var reader = $('#chart_name').html()
                     
             //     $.post("/admin-reader-books.json", {"reader": reader}, function (data){
@@ -121,7 +102,6 @@
             // }
             // // event listner for showbooks
             // $('#booklist').on("submit", show_books);
-
         </script>
         </div>
         <div id="success_msg" hidden></div>
