@@ -14,7 +14,7 @@ def get_elapsed_days(start_date):
 
     #gets the number of days since start date
     delta = datetime.now() - start_date
-    
+
     if delta.days == 0:
         return 1
 

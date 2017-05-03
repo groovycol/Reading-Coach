@@ -5,52 +5,51 @@
         <div class="col-xs-12">
         <script src="https://code.jquery.com/jquery.js"></script>
         <form action="/register_process" method="POST">
-            <br>
-            <br>
-            <label for="phone">Login/Phone number:
-                <input class="inputbox" type="text" name="coach_phone" id="phone_num" placeholder="xxx-xxx-xxxx" required>
-                <br>
-                </label> 
-                <span id="phone_msg"><small>xxx-xxx-xxxx format. US numbers only. This must be a text message enabled phone. You will be able to log your reader's minutes right from your phone! </small>
-                </span>
-            <script>
-                // Prevent form submission until phone number matches xxx-xxx-xxx pattern
-               $("form").submit( function(evt) {
-                    var phoneString = $('#phone_num').val(); 
-                    if (! /^[0-9]{3}-[0-9]{3}-[0-9]{4}$/.test(phoneString)) {
-                        evt.preventDefault();
-                        alert("Please enter a telephone number in the format xxx-xxx-xxxx");
-                    }
-                });
-            </script>
-            <br>
-            <br>
-            <span>
-            <script>
-                // SHow a message about password format
-                $(document).ready(function() {
-                    $('#password_msg').hide();
-                    $('#password').on('click', function(){
-                    $('#password_msg').show(); });
-                });
-            </script>
-            <label>Password:
-                <input class="inputbox" type="password" name="password" id="password" required>
-            </label>
-            <span id="password_msg" hidden><small>Password or Phrase (alpha, numeric, spaces and special characters allowed). Minimum 6 characters. Max 30 characters.</span></small>
+        <br>
+        <br>
+        <label for="phone">Login/Phone number:
+            <input class="inputbox" type="text" name="coach_phone" id="phone_num" placeholder="xxx-xxx-xxxx" required>
+        </label> 
+            <span id="phone_msg"><small>xxx-xxx-xxxx format. <br>US numbers only. This must be a text message enabled phone. You will be able to log your reader's minutes right from your phone! </small>
             </span>
-            <script>
-                var counter = 1;
-                var max_readers = 4;
-                function addReaders(divName){
-                    if (counter < max_readers)  {
-                        var newdiv = document.createElement('div');
-                        newdiv.innerHTML = "<br><label>Share progress with a Teacher or Organization: " + "<select name='admin_ids' class='form-control'>{% for admin in admins %} <option value='{{admin.admin_id}}'>{{admin.nameprefix.prefix}} {{admin.name}}</option>{%endfor%}</select></label><label>Reader's First Name: " + "<input type='text' name='reader_names' class='reader_names' id='reader_names'></label>";
-                  document.getElementById(divName).appendChild(newdiv);
-                  counter++;
-                  }
+        <script>
+        // Prevent form submission until phone number mathes xxx-xxx-xxx pattern
+            $("form").submit( function(evt) {
+                var phoneString = $('#phone_num').val(); 
+                if (! /^[0-9]{3}-[0-9]{3}-[0-9]{4}$/.test(phoneString)) {
+                    evt.preventDefault();
+                    alert("Please enter a telephone number in the format xxx-xxx-xxxx");
                 }
-            </script>
+            });
+        </script>
+        <br>
+        <br>
+        <br>
+        <script>
+            // SHow a message about password format
+            $(document).ready(function() {
+                $('#password_msg').hide();
+                $('#password').on('click', function(){
+                $('#password_msg').show(); });
+            });
+        </script>
+        <label>Password:
+            <input class="inputbox" type="password" name="password" id="password" required>
+        </label>
+        <span id="password_msg" hidden><small>Password or Phrase (alpha, numeric, spaces and special characters allowed). Minimum 6 characters. Max 30 characters.</span></small>
+        </span>
+        <script>
+            var counter = 1;
+            var max_readers = 4;
+            function addReaders(divName){
+                if (counter < max_readers)  {
+                    var newdiv = document.createElement('div');
+                    newdiv.innerHTML = "<br><label>Share progress with a Teacher or Organization: " + "<select name='admin_ids' class='form-control'>{% for admin in admins %} <option value='{{admin.admin_id}}'>{{admin.nameprefix.prefix}} {{admin.name}}</option>{%endfor%}</select></label><label>Reader's First Name: " + "<input type='text' name='reader_names' class='reader_names' id='reader_names'></label>";
+                document.getElementById(divName).appendChild(newdiv);
+                counter++;
+                }
+            }
+        </script>
             <span id="add_readers">
             <br><br>
             <label>Share progress with a Teacher or Organization:
@@ -103,7 +102,29 @@
                     }, 2500 );
                 });
             </script>
-            <br><br>
+            <br>
+            <br>
+            <br>
+        <label for="altphone">You can enable another caregiver's phone number to log minutes:
+            <br><small>NOTE: We will send a one-time welcome text message to confirm the registration of this phone.</small>
+            <br>
+            <input class="inputbox" type="text" name="alt_phone" id="phone_two" placeholder="xxx-xxx-xxxx">
+        </label> 
+            <span id="phone_msg"><small>xxx-xxx-xxxx format. US numbers only. This must be a text message enabled phone.</small>
+            </span>
+        <script>
+            // Prevent form submission until phone number matches xxx-xxx-xxx pattern
+            $("form").submit( function(evt) {
+                var phoneString = $('#phone_two').val(); 
+                if (! /^[0-9]{3}-[0-9]{3}-[0-9]{4}$/.test(phoneString)) {
+                    evt.preventDefault();
+                    alert("Please enter a telephone number in the format xxx-xxx-xxxx");
+                }
+            });
+        </script>
+        <br>
+        <br>
+        <br>
             <span>
                 <label>Email address (optional):
                     <input type="text" class="inputbox" name="email" id="email">
