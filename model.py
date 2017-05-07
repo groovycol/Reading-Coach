@@ -5,6 +5,24 @@ from flask.ext.sqlalchemy import SQLAlchemy
 db = SQLAlchemy()
 
 
+class Program(db.Model):
+    """defines a reading program, one to many relationship with admins"""
+
+    __tablename__ = "programs"
+
+    program_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    program_code = db.Column(db.String(15), nullable=False)
+    organization = db.Column(db.String(45), nullable=False)
+
+    administrators = db.relationship('Reader')
+
+    def __repr__(self):
+        return "<Program program_id=%d program_code=%s organization=%s>" % (
+            self.program_id,
+            self.program_code,
+            self.organization)
+
+
 class Coach(db.Model):
     """Parent or other Caregiver, one to many relationship with Readers"""
 
@@ -39,7 +57,9 @@ class Reader(db.Model):
     logs = db.relationship('ReadingLog')
 
     def __repr__(self):
-        return "<Reader reader_id=%s name=%s>" % (self.reader_id, self.first_name)
+        return "<Reader reader_id=%s name=%s>" % (
+            self.reader_id,
+            self.first_name)
 
 
 class Prefix(db.Model):
@@ -64,6 +84,7 @@ class Admin(db.Model):
 
     readers = db.relationship('Reader')
     nameprefix = db.relationship('Prefix')
+    program = db.relationship('Program')
 
     def __repr__(self):
         return "<Admin admin_id=%d name=%s>" % (self.admin_id, self.name)
@@ -84,9 +105,9 @@ class ReadingLog(db.Model):
 
     def __repr__(self):
         return "<ReadingLog id=%d reader_id=%s minutes_read=%s>" % (
-                                                            self.record_id,
-                                                            self.reader_id,
-                                                            self.minutes_read)
+            self.record_id,
+            self.reader_id,
+            self.minutes_read)
 
 
 class Message(db.Model):
@@ -98,7 +119,9 @@ class Message(db.Model):
     message_text = db.Column(db.String(200), nullable=False)
 
     def __repr__(self):
-        return "<Message id=%d message=%s>" % (self.message_id, self.message_text)
+        return "<Message id=%d message=%s>" % (
+            self.message_id,
+            self.message_text)
 
 
 def connect_to_db(app, db_uri=None):
