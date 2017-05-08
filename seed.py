@@ -14,7 +14,7 @@ def load_programs():
 
     for i, row in enumerate(open("seed_data_prod/d.programs")):
         row = row.rstrip()
-        program_id, program_code, organization, start_date, end_date = row.split("|")
+        program_code, organization, start_date, end_date = row.split("|")
 
         program = Program(program_code=program_code,
                           organization=organization,
@@ -95,7 +95,7 @@ def load_admins():
 
     for i, row in enumerate(open("seed_data_prod/d.admins")):
         row = row.rstrip()
-        name, prefix, email, password = row.split("|")
+        name, prefix, email, password, program_id = row.split("|")
 
         admin = Admin(name=name,
                       prefix=prefix,
