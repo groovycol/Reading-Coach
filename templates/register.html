@@ -1,141 +1,150 @@
 {% extends 'base.html' %}
 {% block content %} 
 <div class="container">
-    <div class="row">
-        <div class="col-xs-12">
-        <script src="https://code.jquery.com/jquery.js"></script>
-        <form action="/register_process" method="POST">
+<div class="row">
+<div class="col-xs-12">
+    <script src="https://code.jquery.com/jquery.js"></script>
+    <form action="/register_process" method="POST">
+    <br>
+    <br>
+    <span id="program_code_input">
+        <h2>
+        Ready to sign up? You will be able to log your reader's minutes right from your phone!
         <br>
         <br>
+        <label for="program_code">Enter your school's program code:
+            <input class="inputbox" type="text" name="prog_code" id="pcode" required>
+        </h2>  
+    </span>
+    <script>
+    //Handle an enter event on the program_code_input id. 
+    //Should verify program code is a match, store prog id for use in coach 
+    //registration and then hide program_code_input and show phone_input
+    </script>
+    <span id="phone_input" hidden>
         <label for="phone">Login/Phone number:
             <input class="inputbox" type="text" name="coach_phone" id="phone_num" placeholder="xxx-xxx-xxxx" required>
         </label> 
-            <span id="phone_msg"><small>xxx-xxx-xxxx format. <br>US numbers only. This must be a text message enabled phone. You will be able to log your reader's minutes right from your phone! </small>
-            </span>
-        <script>
-        // Prevent form submission until phone number mathes xxx-xxx-xxx pattern
-            $("form").submit( function(evt) {
-                var phoneString = $('#phone_num').val(); 
-                if (! /^[0-9]{3}-[0-9]{3}-[0-9]{4}$/.test(phoneString)) {
-                    evt.preventDefault();
-                    alert("Please enter a telephone number in the format xxx-xxx-xxxx");
-                }
-            });
-        </script>
-        <br>
-        <br>
-        <br>
-        <script>
-            // SHow a message about password format
-            $(document).ready(function() {
-                $('#password_msg').hide();
-                $('#password').on('click', function(){
-                $('#password_msg').show(); });
-            });
-        </script>
+    </span>
+    <span id="phone_msg" hidden><small>xxx-xxx-xxxx format. <br>US numbers only. This must be a text message enabled phone.</small>
+    </span>
+    <script>
+    // Prevent form submission until phone number mathes xxx-xxx-xxx pattern
+        $("form").submit( function(evt) {
+            var phoneString = $('#phone_num').val(); 
+            if (! /^[0-9]{3}-[0-9]{3}-[0-9]{4}$/.test(phoneString)) {
+                evt.preventDefault();
+                alert("Please enter a telephone number in the format xxx-xxx-xxxx");
+            }
+        });
+    </script>
+    <script>
+        // SHow a message about password format
+        $(document).ready(function() {
+            $('#password_msg').hide();
+            $('#password').on('click', function(){
+            $('#password_msg').show(); });
+        });
+    </script>
+    <span id="input_password" hidden>
         <label>Password:
             <input class="inputbox" type="password" name="password" id="password" required>
         </label>
-        <span id="password_msg" hidden><small>Password or Phrase (alpha, numeric, spaces and special characters allowed). Minimum 6 characters. Max 30 characters.</span></small>
-        </span>
-        <script>
-            var counter = 1;
-            var max_readers = 4;
-            function addReaders(divName){
-                if (counter < max_readers)  {
-                    var newdiv = document.createElement('div');
-                    newdiv.innerHTML = "<br><label>Share progress with a Teacher or Organization: " + "<select name='admin_ids' class='form-control'>{% for admin in admins %} <option value='{{admin.admin_id}}'>{{admin.nameprefix.prefix}} {{admin.name}}</option>{%endfor%}</select></label><label>Reader's First Name: " + "<input type='text' name='reader_names' class='reader_names' id='reader_names'></label>";
-                document.getElementById(divName).appendChild(newdiv);
-                counter++;
-                }
+    </span>
+    <span id="password_msg" hidden><small>Password or Phrase (alpha, numeric, spaces and special characters allowed). Minimum 6 characters. Max 30 characters.</small>
+    </span>
+    <script>
+        var counter = 1;
+        var max_readers = 4;
+        function addReaders(divName){
+        if (counter < max_readers)  {
+            var newdiv = document.createElement('div');
+                newdiv.innerHTML = "<br><label>Share progress with a Teacher or Organization: " + "<select name='admin_ids' class='form-control'>{% for admin in admins %} <option value='{{admin.admin_id}}'>{{admin.nameprefix.prefix}} {{admin.name}}</option>{%endfor%}</select></label><label>Reader's First Name: " + "<input type='text' name='reader_names' class='reader_names' id='reader_names'></label>";
+            document.getElementById(divName).appendChild(newdiv);
+            counter++;
             }
-        </script>
-            <span id="add_readers">
-            <br><br>
-            <label>Share progress with a Teacher or Organization:
-                <select name="admin_ids" class="form-control" >
-                    {% for admin in admins %}
-                            <option value="{{admin.admin_id}}">{{admin.nameprefix.prefix}} {{admin.name}}</option>
-                    {% endfor %}
-                    </select>
-            </label>
-            <label>Reader's first name:
-                <input class="reader_names" id="reader_names" type="text" name="reader_names">
-            </label> 
-            </span>
+        } 
+    </script>
+    <span id="add_readers" hidden>
+        <label>Share progress with a Teacher or Organization:
+            <select name="admin_ids" class="form-control" >
+                {% for admin in admins %}
+                     <option value="{{admin.admin_id}}">{{admin.nameprefix.prefix}} {{admin.name}}</option>
+                {% endfor %}
+            </select>
+        </label>
+        <label>Reader's first name:
+            <input class="reader_names" id="reader_names" type="text" name="reader_names">
+        </label> 
+    </span>
+    <span id "input_more_readers" hidden>
+        <input type="button" class="btn-primary" value="Add another Reader" onClick="addReaders('add_readers');">
+        <small>You can add up to four Reader/Student names</small><br>
+    </span> 
+    <span id="input_sms_option" hidden>
+        <label for="sms">Would you like to receive text message reminders twice a week during the program? You can change this setting at any time.</label><br><small>NOTE: We will send you a one-time welcome text message to confirm registration.</small><br>
+            <input type="radio" name="yesorno" value="yes" id="sms_option"><strong>Yes, please send me text message reminders!<br>
+            <input type="radio" name="yesorno" value="no" id="sms_option" checked>No, thank you.</strong>
             <br>
-            <input type="button" class="btn-primary" value="Add another Reader" onClick="addReaders('add_readers');">
-            <small>You can add up to four Reader/Student names</small><br>
-            <br>
-            <br>
-            <br>
-            <span>
-            <label for="sms">Would you like to receive text message reminders twice a week during the program? You can change this setting at any time.</label><br><small>NOTE: We will send you a one-time welcome text message to confirm registration.</small><br>
-                    <input type="radio" name="yesorno" value="yes" id="sms_option"><strong>Yes, please send me text message reminders!<br>
-                    <input type="radio" name="yesorno" value="no" id="sms_option" checked>No, thank you.</strong>
-                    <br>
-            </span>
-            <script>
-                var delay = (function(){
-                var timer = 0;
-                return function(callback, ms){
-                    clearTimeout (timer);
-                    timer = setTimeout(callback, ms);
-                    };
-                })();
-                $(document).on( "keyup", "#reader_names", function (evt){
-                    delay(function(){
-                        var count = 1
-                        $(".reader_names").each(function() {
-                            var admin = $('.form-control').val()
-                            console.log(this.value + " " + admin);
-                            $.post("/check-reader-name.json", {"reader_name": this.value, "admin_id": admin}, function (data) {
-                                console.log(data.name_exists)
-                                if (data.name_exists === "true") {
-                                    evt.preventDefault();
-                                    var message = "The reader first name is not unique for this Teacher. Try adding a middle or last initial";
-                                    alert(message);
-                                }
-                            });
-                        count++
-                        });
-                    }, 2500 );
+    </span>
+    <script>
+        var delay = (function(){
+        var timer = 0;
+        return function(callback, ms){
+            clearTimeout (timer);
+            timer = setTimeout(callback, ms);
+            };
+        })();
+        $(document).on( "keyup", "#reader_names", function (evt){
+            delay(function(){
+                var count = 1
+                $(".reader_names").each(function() {
+                    var admin = $('.form-control').val()
+                    console.log(this.value + " " + admin);
+                    $.post("/check-reader-name.json", {"reader_name": this.value, "admin_id": admin}, function (data) {
+                        console.log(data.name_exists)
+                        if (data.name_exists === "true") {
+                            evt.preventDefault();
+                            var message = "The reader first name is not unique for this Teacher. Try adding a middle or last initial";
+                            alert(message);
+                        }
+                    });
+                count++
                 });
-            </script>
-            <br>
-            <br>
-            <br>
+            }, 2500 );
+        });
+    </script>
+    <span id="altphont_input" hidden>
         <label for="altphone">You can enable another caregiver's phone number to log minutes:
             <br><small>NOTE: We will send a one-time welcome text message to confirm the registration of this phone.</small>
             <br>
             <input class="inputbox" type="text" name="alt_phone" id="phone_two" placeholder="xxx-xxx-xxxx">
         </label> 
-            <span id="phone_msg"><small>xxx-xxx-xxxx format. US numbers only. This must be a text message enabled phone.</small>
-            </span>
-        <script>
-            // Prevent form submission until phone number matches xxx-xxx-xxx pattern
-            $("form").submit( function(evt) {
-                var phoneString = $('#phone_two').val(); 
-                if (! /^[0-9]{3}-[0-9]{3}-[0-9]{4}$/.test(phoneString)) {
-                    evt.preventDefault();
-                    alert("Please enter a telephone number in the format xxx-xxx-xxxx");
-                }
-            });
-        </script>
-        <br>
-        <br>
-        <br>
-            <span>
-                <label>Email address (optional):
-                    <input type="text" class="inputbox" name="email" id="email">
-                </label>
-            </span>
-            <br><br>
-            <span>
-            <input type="submit" class="btn-primary btn-lg" id="submit" value="Register">
-            </span>
-        </form>
-        </div>
-    </div>
+    </span> 
+    <span id="phone_msg" hidden>
+        <small>xxx-xxx-xxxx format. US numbers only. This must be a text message enabled phone.</small>
+    </span>
+    <script>
+        // Prevent form submission until phone number matches xxx-xxx-xxx pattern
+        $("form").submit( function(evt) {
+            var phoneString = $('#phone_two').val(); 
+            if (! /^[0-9]{3}-[0-9]{3}-[0-9]{4}$/.test(phoneString)) {
+                evt.preventDefault();
+                alert("Please enter a telephone number in the format xxx-xxx-xxxx");
+            }
+        });
+    </script>
+    <span id="email_input" hidden>
+        <label>Email address (optional):
+            <input type="text" class="inputbox" name="email" id="email">
+        </label>
+    </span>
+    <br><br>
+    <span id = "submit_button" hidden>
+        <input type="submit" class="btn-primary btn-lg" id="submit" value="Register">
+    </span>
+    </form>
+</div>
+</div>
 </div>
 {% endblock %}
