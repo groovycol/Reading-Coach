@@ -14,6 +14,10 @@ def example_data():
     ReadingLog.query.delete()
     Message.query.delete()
 
+    #Add sample Programs
+    p1 = Program(program_code="MXSUMMER", organization="Malcolm X Elementary", start_date="2017-05-12 00:00:00", end_date="2017-05-31 00:00:00")
+    p2 = Program(program_code="READTESTER", organization="Barack Obama Elementary", start_date="2017-05-12 00:00:00", end_date="2017-05-31 00:00:00")
+
     # Add sample Coaches
     c1 = Coach(phone="510-384-8508", phone2="510-659-1353", password='$5$rounds=535000$wjufdSNVsChPA256$iiuJn6aXCGk1BqV2Sn2YNgbGM9R/Q46Cex51tAFcSBA', email='groovycol@gmail.com', sms_option="yes", start_date="2017-04-29 10:34:09")
     c2 = Coach(phone="510-655-1353", password='$5$rounds=535000$wjufdSNVsChPA256$iiuJn6aXCGk1BqV2Sn2YNgbGM9R/Q46Cex51tAFcSBA', sms_option="yes", start_date="2016-05-20 10:34:09")
@@ -26,12 +30,11 @@ def example_data():
     prefix3 = Prefix(prefix='Miss')
     prefix4 = Prefix(prefix='Mrs.')
     prefix5 = Prefix(prefix='Teacher')
-    prefix6 = Prefix(prefix='Organization')
 
     # Add sample Admins
-    t1 = Admin(name="Smith", prefix="1", email="teach@gmail.com", password="$5$rounds=535000$wjufdSNVsChPA256$iiuJn6aXCGk1BqV2Sn2YNgbGM9R/Q46Cex51tAFcSBA")
-    t2 = Admin(name="Jones", prefix="2", email="teacheroftheyear@gmail.com", password="$5$rounds=535000$wjufdSNVsChPA256$iiuJn6aXCGk1BqV2Sn2YNgbGM9R/Q46Cex51tAFcSBA")
-    t3 = Admin(name="Oakland Public Library", prefix="6", email="librarian@opl.org", password="$5$rounds=535000$wjufdSNVsChPA256$iiuJn6aXCGk1BqV2Sn2YNgbGM9R/Q46Cex51tAFcSBA")
+    t1 = Admin(name="Smith", prefix="1", email="teach@gmail.com", password="$5$rounds=535000$wjufdSNVsChPA256$iiuJn6aXCGk1BqV2Sn2YNgbGM9R/Q46Cex51tAFcSBA", program_id="1")
+    t2 = Admin(name="Jones", prefix="2", email="teacheroftheyear@gmail.com", password="$5$rounds=535000$wjufdSNVsChPA256$iiuJn6aXCGk1BqV2Sn2YNgbGM9R/Q46Cex51tAFcSBA", program_id="1")
+    t3 = Admin(name="Poppalardo", prefix="5", email="librarian@opl.org", password="$5$rounds=535000$wjufdSNVsChPA256$iiuJn6aXCGk1BqV2Sn2YNgbGM9R/Q46Cex51tAFcSBA", program_id="2")
 
     # Add sample Readers
     r1 = Reader(first_name="Enzo", coach_id="1", admin_id="1")
@@ -62,7 +65,9 @@ def example_data():
     message8 = Message(message_text="Did your child read today? Don't forget to log it!")
 
     #Add all the data to the session
-    db.session.add_all([c1,
+    db.session.add_all([p1,
+                        p2,
+                        c1,
                         c2,
                         c3,
                         c4,
@@ -71,7 +76,6 @@ def example_data():
                         prefix3,
                         prefix4,
                         prefix5,
-                        prefix6,
                         t1,
                         t2,
                         t3,

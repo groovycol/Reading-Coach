@@ -13,8 +13,8 @@ class Program(db.Model):
     program_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     program_code = db.Column(db.String(15), nullable=False)
     organization = db.Column(db.String(45), nullable=False)
-
-    administrators = db.relationship('Reader')
+    start_date = db.Column(db.DateTime, nullable=False)
+    end_date = db.Column(db.DateTime, nullable=False)
 
     def __repr__(self):
         return "<Program program_id=%d program_code=%s organization=%s>" % (
@@ -81,6 +81,7 @@ class Admin(db.Model):
     prefix = db.Column(db.Integer, db.ForeignKey('prefixes.prefix_id'))
     email = db.Column(db.String(35), nullable=True, unique=True)
     password = db.Column(db.String(150), nullable=False)
+    program_id = db.Column(db.Integer, db.ForeignKey('programs.program_id'))
 
     readers = db.relationship('Reader')
     nameprefix = db.relationship('Prefix')
