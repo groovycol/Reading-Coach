@@ -18,51 +18,68 @@
             <input class="inputbox" type="text" name="prog_code" id="pcode" required>
         <input type="button" class="btn-primary btn-lg" id="cont1" value="Continue">
         </h2>  
-        <img src="static/text_sample.jpg" style="width:320px;height:400px;">
+        <br>
+        <img src="static/text_sample.png" style="width:400px;height:450px;">
     </span>
 
-    <!--Screen two: Enter phone number/login-->
+    <!--Screen two: Enter phone number/login and password-->
     <span id="phone_input" hidden>
         <h2>
-        Enter a phone number where you can send and receive text messages
-        <br>
-        <label for="phone">Login/Phone number:
+            Enter a phone number where you can send and receive text messages
+            <br>
+            This will be your login/user id
+            <br>
+            <br>
+            <label for="phone">Login/Phone #:
             <input class="inputbox" type="text" name="coach_phone" id="phone_num" placeholder="xxx-xxx-xxxx" required>
-        </label> 
+            </label> 
         </h2>
-    </span>
-    <span id="phone_msg" hidden>xxx-xxx-xxxx format. <br>US numbers only. This must be a text message enabled phone.
-    </span>
-
-    <!--Screen three: Enter password-->
-    <span id="input_password" hidden>
+        <h3 class="text-center">
+            US numbers only. This must be a text message enabled phone.
+        </h3> 
+        <br>
+        <br>
+        <h2>
         <label>Password:
             <input class="inputbox" type="password" name="password" id="password" required>
         </label>
-    </span>
-    <span id="password_msg" hidden><small>Password or Phrase (alpha, numeric, spaces and special characters allowed). Minimum 6 characters. Max 30 characters.</small>
+        </h2>
+        <h3 class="text-center">
+            Password or Phrase (alpha, numeric, spaces and special characters allowed). 
+            <br>
+            Minimum 6 characters. Max 30 characters.
+        </h3>
+        <br>
+        <br>
+        <input type="button" class="btn-primary btn-lg" id="cont2" value="Continue">
     </span>
 
-    <!--Screen four: Input readers-->
+    <!--Screen three: Input readers-->
     <span id="add_readers" hidden>
-        <label>Share progress with a Teacher or Organization:
-            <select name="admin_ids" class="form-control" >
+        <h2>
+        <label>Reader's first name:
+            <input class="reader_names" id="reader_names" type="text" name="reader_names">
+        </label> 
+        <br>
+        <label>Teacher:
+            <select name="admin_ids" class="form-control">
                 {% for admin in admins %}
                      <option value="{{admin.admin_id}}">{{admin.nameprefix.prefix}} {{admin.name}}</option>
                 {% endfor %}
             </select>
         </label>
-        <label>Reader's first name:
-            <input class="reader_names" id="reader_names" type="text" name="reader_names">
-        </label> 
+        <h2>
+        <br>
     </span>
-    <!--Add more readers button-->
-    <span id "input_more_readers" hidden>
+    <span id="add_reader_button" hidden>
         <input type="button" class="btn-primary" value="Add another Reader" onClick="addReaders('add_readers');">
-        <small>You can add up to four Reader/Student names</small><br>
+        <h3>
+            You can add up to four Reader/Student names
+        </h3>
+        <input type="button" class="btn-primary btn-lg" id="cont2" value="Continue">
     </span> 
 
-    <!--Screen five: sms option-->
+    <!--Screen four: sms option-->
     <span id="input_sms_option" hidden>
         <label for="sms">Would you like to receive text message reminders twice a week during the program? You can change this setting at any time.</label><br><small>NOTE: We will send you a one-time welcome text message to confirm registration.</small><br>
             <input type="radio" name="yesorno" value="yes" id="sms_option"><strong>Yes, please send me text message reminders!<br>
@@ -99,15 +116,16 @@
     <script>
     // Screen one: program code
     // Handle a click event on continue button. 
-    // Should verify program code is a match, store prog id for use in coach 
-    // registration and then hide program_code_input and show phone_input
     $(document).ready(function() {
         $('#cont1').on('click', function(){
         $('#program_code_input').hide();
         $('#phone_input').show(); });
     });
 
-    // Screen two: phone
+    // Should verify program code is a match, store prog id for use in coach 
+    // registration and then hide program_code_input and show phone_input
+
+    // Screen two: phone and password
     // Prevent form submission until phone number mathes xxx-xxx-xxx pattern
     $("form").submit( function(evt) {
         var phoneString = $('#phone_num').val(); 
@@ -117,12 +135,12 @@
         }
     });
 
-    // Screen three: password
-    // SHow a message about password format
+    //handle continue button
     $(document).ready(function() {
-        $('#password_msg').hide();
-        $('#password').on('click', function(){
-        $('#password_msg').show(); });
+        $('#cont2').on('click', function(){
+        $('#phone_input').hide();
+        $('#add_readers').show();
+        $('#add_reader_button').show(); });
     });
 
     // Screen four: handler for add additional readers
@@ -131,7 +149,7 @@
     function addReaders(divName){
     if (counter < max_readers)  {
         var newdiv = document.createElement('div');
-            newdiv.innerHTML = "<br><label>Share progress with a Teacher or Organization: " + "<select name='admin_ids' class='form-control'>{% for admin in admins %} <option value='{{admin.admin_id}}'>{{admin.nameprefix.prefix}} {{admin.name}}</option>{%endfor%}</select></label><label>Reader's First Name: " + "<input type='text' name='reader_names' class='reader_names' id='reader_names'></label>";
+            newdiv.innerHTML = "<h2><label>Reader's First Name: " + "<input type='text' name='reader_names' class='reader_names' id='reader_names'></label><br><label>Teacher: " + "<select name='admin_ids' class='form-control'>{% for admin in admins %} <option value='{{admin.admin_id}}'>{{admin.nameprefix.prefix}} {{admin.name}}</option>{%endfor%}</select></label></h2>";
         document.getElementById(divName).appendChild(newdiv);
         counter++;
         }
