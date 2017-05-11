@@ -1,7 +1,9 @@
 <!doctype html>
+<!--base.html is included in all other html views. It serves up Bootstrap navs-->
 <html>
 <head>
     <title>The Reading Coach</title>
+<!--include Bootstrap 3.3.4-->
 <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">
 <link rel="stylesheet" href="static/style.css">
 <link rel="icon" href="/static/favicon.png" type="image/gif" sizes="16x16">
@@ -47,6 +49,7 @@
   </div><!-- /.container-fluid -->
 </nav>
 
+<!--display any flashed messages-->
 {% for flash in get_flashed_messages() %}
     <div class="col-xs-6">
     <div class="alert alert-info fade in" role="alert" >
