@@ -137,6 +137,14 @@ def get_reader_by_name(name, admin_id):
     return reader
 
 
+def get_program_by_code(program_code):
+    """Given a program code, return the program object"""
+
+    program = Program.query.filter(Program.program_code == program_code).first()
+
+    return program
+
+
 def get_message_by_day(num):
     """Given an integer, retrieve the message_text for that message_id"""
 

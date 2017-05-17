@@ -17,6 +17,8 @@
         <label for="program_code">Enter your school's program code:
             <input class="inputbox" type="text" name="prog_code" id="pcode" required>
         <input type="button" class="btn-primary btn-lg" id="cont1" value="Continue">
+        <p id="alertmsg">
+        </p>
         </h2>  
         <br>
         <img src="static/text_sample.png" style="width:400px;height:450px;">
@@ -136,16 +138,23 @@
     </form>
     <script>
     // Screen one: program code
-    // Handle a click event on continue button. 
-    $(document).ready(function() {
-        $('#cont1').on('click', function(){
-        $('#program_code_input').hide();
-        $('#phone_input').show(); 
+    // Handle continue button : Should verify program code is a match 
+    $(document).on( "click", "#cont1", function (evt){
+        $.post("/check-program-code.json", {"pcode": $("#pcode").val()}, function (data) {
+            console.log(data.code_exists)
+            if (data.code_exists === "true") {
+                $('#program_code_input').hide();
+                $('#phone_input').show(); 
+            } else {
+                evt.preventDefault();
+                alert("don't do that");
+                //alert(message);
+                //var alertdiv = document.createElement('div');
+                //alertdiv.innerHTML = "<div class='alert alert-danger'><strong>ERROR!</strong>You have entered an invalid code </div>";
+                //document.getElementById(alertmsg).appendChild(alertdiv);
+            }
         });
     });
-
-    // Should verify program code is a match, store prog id for use in coach 
-    // registration and then hide program_code_input and show phone_input
 
     // Screen two: phone and password
     // Prevent form submission until phone number mathes xxx-xxx-xxx pattern
@@ -222,7 +231,7 @@
     });
 
     </script>
-</div>
+</div>    
 </div>
 </div>
 {% endblock %}

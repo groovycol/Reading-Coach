@@ -15,7 +15,7 @@ app = Flask(__name__)
 
 app.secret_key = "secret"
 
-ERR_MSG = "The database did not return expected results. Please try again."
+ERR_MSG = "The database did hec return expected results. Please try again."
 CHT_ORANGE = 'rgba(222,114,44,1)'
 CHT_BLUE = 'rgba(44,152,222,1)'
 CHT_HOR = 'horizontalBar'
@@ -321,6 +321,22 @@ def sendlog():
     response = handle_incoming(msg_received)
 
     return Response(response, mimetype='text/xml')
+
+
+@app.route('/check-program-code.json', methods=['POST'])
+def check_progcode_valid():
+    """Return true if program name is in the database"""
+
+    result = {'code_exists': None}
+
+    program_code = get_program_by_code(request.form.get("pcode"))
+
+    if program_code is None:
+        result['code_exists'] = 'false'
+    else:
+        result['code_exists'] = 'true'
+
+    return jsonify(result)
 
 
 @app.route('/check-reader-name.json', methods=['POST'])
