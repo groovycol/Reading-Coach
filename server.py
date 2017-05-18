@@ -346,6 +346,8 @@ def check_name_availability():
     result = {'name_exists': None}
 
     reader = get_reader_by_name(request.form.get("reader_name"), request.form.get("admin_id"))
+    print reader
+    print "end print reader"
     if reader is None:
         result['name_exists'] = 'false'
     else:

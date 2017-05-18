@@ -69,27 +69,28 @@
     <!--this section toggles show/hide on id "add_readers"-->
     <span id="add_readers" hidden>
         <h2>
-        <!--input box for Reader first name-->
-        <label>Reader's first name:
-            <input class="reader_names" id="reader_names" type="text" name="reader_names">
-        </label> 
-        <br>
         <!--dropdown menu for Teacher-->
         <label>Teacher:
             <select name="admin_ids" class="form-control">
+                <option value="" selected disabled>Please select</option>
                 {% for admin in admins %}
                      <option value="{{admin.admin_id}}">{{admin.nameprefix.prefix}} {{admin.name}}</option>
                 {% endfor %}
             </select>
         </label>
+        <br>
+        <!--input box for Reader first name-->
+        <label>Reader's first name:
+            <input class="reader_names" id="reader_names" type="text" name="reader_names">
+        </label> 
         </h2>
         <br>
     </span>
     <!--this button adds more reader input boxes and Teacher dropdowns-->
     <span id="add_reader_button" hidden>
         <h3>
-        <input type="button" class="btn-primary btn-lrg" value="Add another Reader" onClick="addReaders('add_readers');"> OR &nbsp; &nbsp;
-        <input type="button" class="btn-primary btn-lrg" id="cont3" value="Continue with Registration">
+        <input type="button" class="btn-primary btn-lrg" value="Add another Reader" disabled onClick="addReaders('add_readers');"> OR &nbsp; &nbsp;
+        <input type="button" class="btn-primary btn-lrg" id="cont3" value="Continue with Registration" disabled>
         <br>
             You can add up to three Reader/Student names 
         </h3>
@@ -199,53 +200,31 @@
     });
 
     // Screen three: handlers for add additional readers
-    var counter = 1;
-    var max_readers = 2;
-    function addReaders(divName){
-        //hide the original buttons, we'll add them back later, as needed
-        $('#add_reader_button').hide();
-        //check num of readers
-        if (counter < max_readers)  {
-            //if below max, add an input box and teacher drop down div
-            var newdiv = document.createElement('div');
-            newdiv.innerHTML = "<span id='add_readers'><h2><label>Reader's first name: " + "<input type='text' name='reader_names' class='reader_names' id='reader_names'></label><br><label>Teacher: " + "<select name='admin_ids' class='form-control'>{% for admin in admins %} <option value='{{admin.admin_id}}'>{{admin.nameprefix.prefix}} {{admin.name}}</option>{%endfor%}</select></label></h2></span>";
-            //Then add the buttons back
-            var buttondiv = document.createElement('div');
-            buttondiv.innerHTML = "<span id='add_reader_button'><h3><input type='button' class='btn-primary btn-lrg' value='Add another Reader' onClick=\"addReaders('add_readers');\"> OR &nbsp;&nbsp; <input type='button' class='btn-primary btn-lrg' id='cont3' value='Continue with Registration`'> <h3> You can add up to three Reader/Student names </h3></span>"
-            document.getElementById(divName).appendChild(newdiv);
-            document.getElementById(divName).appendChild(buttondiv);
-            counter++;
-        }
-        else {
-            var newdiv = document.createElement('div');
-            newdiv.innerHTML = "<span id='add_readers'><h2><label>Reader's first name: " + "<input type='text' name='reader_names' class='reader_names' id='reader_names'></label><br><label>Teacher: " + "<select name='admin_ids' class='form-control'>{% for admin in admins %} <option value='{{admin.admin_id}}'>{{admin.nameprefix.prefix}} {{admin.name}}</option>{%endfor%}</select></label></h2></span>";
-            var contdiv = document.createElement('div');
-            contdiv.innerHTML = "<h3><input type='button' class='btn-primary btn-lrg' id='cont3' value='Continue with Registration'></h3>"
-            document.getElementById(divName).appendChild(newdiv);
-            document.getElementById(divName).appendChild(contdiv);
-        }
-    };
-
-    //check reader names
+    // First, check that reader names are unique for the teacher 
+    // they are being assigned to
+    //check the previous reader_name
     var delay = (function(){
     var timer = 0;
     return function(callback, ms){
         clearTimeout (timer);
         timer = setTimeout(callback, ms);
         };
-    });
-    $(document).on( "keyup", "#reader_names", function (evt){
+    })();
+   $(document).on( "keyup", "#reader_names", function (evt){
         delay(function(){
             var count = 1
             $(".reader_names").each(function() {
+                var reader = this.value
                 var admin = $('.form-control').val()
+                if (!admin) {
+                    $('#add_reader_button').before('<div class="alert alert-danger">Please select a Teacher</div>');  
+                } 
                 console.log(this.value + " " + admin);
-                $.post("/check-reader-name.json", {"reader_name": this.value, "admin_id": admin}, function (data) {
+                $.post("/check-reader-name.json", {"reader_name": reader, "admin_id": admin}, function (data) {
                     console.log(data.name_exists)
                     if (data.name_exists === "true") {
                         evt.preventDefault();
-                        var message = "The reader first name is not unique for this Teacher. Try adding a middle or last initial";
-                        alert(message);
+                        $('#add_reader_button').before('<div class="alert alert-danger">The reader first name <strong>' + reader + ' </strong> is not unique for Teacher ' + admin +'. Try adding a middle or last initial</div>');
                     }
                 });
             count++
@@ -253,10 +232,38 @@
         }, 2500 );
     });
 
+    // Handle the "Add another Reader" Button
+    var counter = 1;
+    var max_readers = 3;
+    function addReaders(divName){
+        //hide the original buttons, we'll add them back later, as needed
+        $('#add_reader_button').hide();
+        // hide any lingering alerts
+        $('.alert-danger').hide();
+        // Add the teacher dropdown and name input box
+        var newdiv = document.createElement('div');
+        newdiv.innerHTML = "<span id='add_readers'><h2><label>Teacher: " + "<select name='admin_ids' class='form-control'><option value='' selected disabled>Please select</option>{% for admin in admins %} <option value='{{admin.admin_id}}'>{{admin.nameprefix.prefix}} {{admin.name}}</option>{%endfor%}</select></label><br><label>Reader's first name: " + "<input type='text' name='reader_names' class='reader_names' id='reader_names'></label></h2></span>";
+        document.getElementById(divName).appendChild(newdiv);
+        //Then add the buttons back, conditionally
+        if (counter < max_readers)  {
+            var buttondiv = document.createElement('div');
+            buttondiv.innerHTML = "<span id='add_reader_button'><h3><input type='button' class='btn-primary btn-lrg' value='Add another Reader' onClick=\"addReaders('add_readers');\"> OR &nbsp;&nbsp; <input type='button' class='btn-primary btn-lrg' id='cont3' value='Continue with Registration`'> <h3> You can add up to three Reader/Student names </h3></span>"
+            document.getElementById(divName).appendChild(buttondiv);
+        //otherwise, just add continue button
+        } else {
+            var contdiv = document.createElement('div');
+            contdiv.innerHTML = "<h3><input type='button' class='btn-primary btn-lrg' id='cont3' value='Continue with Registration'></h3>"
+            document.getElementById(divName).appendChild(contdiv);
+        }
+        //increase the counter
+        counter++;
+    };
+
     //handle continue button on add readers screen
     $(document).on( "click", "#cont3", function (evt){
         $('#add_readers').hide();
         $('#add_reader_button').hide(); 
+        $('.alert-danger').hide();
         $('#input_options').show();
         $('#submit_button').show();
     });
