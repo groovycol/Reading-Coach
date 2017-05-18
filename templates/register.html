@@ -9,22 +9,27 @@
     <br>
 
     <!--Screen one: Enter program code-->
+    <!--this section toggles show/hide on id "program_code_input"-->
     <span id="program_code_input">
         <h2>
         Ready to sign up? You will be able to log your reader's minutes with a text message!
         <br>
         <br>
+        <!-- input box for program code -->
         <label for="program_code">Enter your school's program code:
             <input class="inputbox" type="text" name="prog_code" id="pcode" required>
+        <!--not a submit, this button hides program_code_input 
+        and shows phone_input. 
+        A match on a genuine program code enforced by ajax call in js-->
         <input type="button" class="btn-primary btn-lg" id="cont1" value="Continue">
-        <p id="alertmsg">
-        </p>
         </h2>  
         <br>
+        <!-- sample image of text message output-->
         <img src="static/text_sample.png" style="width:400px;height:450px;">
     </span>
 
     <!--Screen two: Enter phone number/login and password-->
+    <!--this section toggles show/hide on id "phone_input"-->
     <span id="phone_input" hidden>
         <h2>
             Enter a phone number where you can send and receive text messages
@@ -32,6 +37,7 @@
             This will be your login/user id
             <br>
             <br>
+            <!--phone number input box-->
             <label for="phone">Login/Phone #:
             <input class="inputbox" type="text" name="coach_phone" id="phone_num" placeholder="xxx-xxx-xxxx" required>
             </label> 
@@ -42,6 +48,7 @@
         <br>
         <br>
         <h2>
+        <!-- password input box -->
         <label>Password:
             <input class="inputbox" type="password" name="password" id="password" required>
         </label>
@@ -49,20 +56,25 @@
         <h3 class="text-center">
             Password or Phrase (alpha, numeric, spaces and special characters allowed). 
             <br>
-            Minimum 6 characters. Max 30 characters.
+            Minimum 8 characters. Max 30 characters.
         </h3>
         <br>
         <br>
+        <!--not a submit, this button hides phone_input and shows add_readers-->
+        <!--enter is disabled, input requirements javascript enforced-->
         <input type="button" class="btn-primary btn-lg" id="cont2" value="Next">
     </span>
 
     <!--Screen three: Input readers-->
+    <!--this section toggles show/hide on id "add_readers"-->
     <span id="add_readers" hidden>
         <h2>
+        <!--input box for Reader first name-->
         <label>Reader's first name:
             <input class="reader_names" id="reader_names" type="text" name="reader_names">
         </label> 
         <br>
+        <!--dropdown menu for Teacher-->
         <label>Teacher:
             <select name="admin_ids" class="form-control">
                 {% for admin in admins %}
@@ -73,6 +85,7 @@
         </h2>
         <br>
     </span>
+    <!--this button adds more reader input boxes and Teacher dropdowns-->
     <span id="add_reader_button" hidden>
         <h3>
         <input type="button" class="btn-primary btn-lrg" value="Add another Reader" onClick="addReaders('add_readers');"> OR &nbsp; &nbsp;
@@ -137,34 +150,48 @@
 
     </form>
     <script>
+    //For the entire form, prevent submit when Enter key used in text boxes
+    $(document).on('keydown', function (evt) {
+        //if enter key, do nothing
+        if (evt.which === 13) {
+            return false;
+        }
+    });
     // Screen one: program code
     // Handle continue button : Should verify program code is a match 
     $(document).on( "click", "#cont1", function (evt){
+        //post to route with value for id pcode
         $.post("/check-program-code.json", {"pcode": $("#pcode").val()}, function (data) {
-            console.log(data.code_exists)
+            //if the code matches, continue and show the next screen
             if (data.code_exists === "true") {
                 $('#program_code_input').hide();
                 $('#phone_input').show(); 
+            //otherwise, generate an alert to try again
+            //TODO: Would be nice to limit number of tries
             } else {
                 evt.preventDefault();
-                alert("don't do that");
-                //alert(message);
-                //var alertdiv = document.createElement('div');
-                //alertdiv.innerHTML = "<div class='alert alert-danger'><strong>ERROR!</strong>You have entered an invalid code </div>";
-                //document.getElementById(alertmsg).appendChild(alertdiv);
+                $('#cont1').after('<div class="alert alert-danger">You have entered an invalid code. Try Again. </div>');
             }
         });
     });
 
     // Screen two: phone and password
-    // Prevent form submission until phone number mathes xxx-xxx-xxx pattern
+    // And password is at least 6 chars in length
     $(document).on( "click", "#cont2", function (evt){
         var phoneString = $('#phone_num').val(); 
-        if (! /^[0-9]{3}-[0-9]{3}-[0-9]{4}$/.test(phoneString)) {
+        var passwordString = $('#password').val();
+        //regex will allow (,), ,.,-
+        //orig regex ^[0-9]{3}[-).][0-9]{3}-[0-9]{4}$
+        //prevent continuing to next screen until pattern matches
+        if (! /^\D?(\d{3})\D?\D?(\d{3})\D?(\d{4})$/.test(phoneString)) {
             evt.preventDefault();
-            alert("Please enter a telephone number in the format xxx-xxx-xxxx");
-        }
-        else {
+            $('#phone_num').after('<div class="alert alert-warning">Please enter a US telephone number with area code</div>');
+        //prevent continuing to next screen until password is at least 6 chars
+        } else if ( passwordString.length < 8) {
+            evt.preventDefault();
+            $('#password').after('<div class="alert alert-warning">Please enter a password that is at least 8 characters</div>');
+        //hide phone and password input, show add_readers
+        } else {
             $('#phone_input').hide();
             $('#add_readers').show();
             $('#add_reader_button').show();
@@ -175,10 +202,14 @@
     var counter = 1;
     var max_readers = 2;
     function addReaders(divName){
+        //hide the original buttons, we'll add them back later, as needed
         $('#add_reader_button').hide();
+        //check num of readers
         if (counter < max_readers)  {
+            //if below max, add an input box and teacher drop down div
             var newdiv = document.createElement('div');
             newdiv.innerHTML = "<span id='add_readers'><h2><label>Reader's first name: " + "<input type='text' name='reader_names' class='reader_names' id='reader_names'></label><br><label>Teacher: " + "<select name='admin_ids' class='form-control'>{% for admin in admins %} <option value='{{admin.admin_id}}'>{{admin.nameprefix.prefix}} {{admin.name}}</option>{%endfor%}</select></label></h2></span>";
+            //Then add the buttons back
             var buttondiv = document.createElement('div');
             buttondiv.innerHTML = "<span id='add_reader_button'><h3><input type='button' class='btn-primary btn-lrg' value='Add another Reader' onClick=\"addReaders('add_readers');\"> OR &nbsp;&nbsp; <input type='button' class='btn-primary btn-lrg' id='cont3' value='Continue with Registration`'> <h3> You can add up to three Reader/Student names </h3></span>"
             document.getElementById(divName).appendChild(newdiv);
