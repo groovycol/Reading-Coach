@@ -89,8 +89,10 @@
     <!--this button adds more reader input boxes and Teacher dropdowns-->
     <span id="add_reader_button" hidden>
         <h3>
-        <input type="button" class="btn-primary btn-lrg" value="Add another Reader" disabled onClick="addReaders('add_readers');"> OR &nbsp; &nbsp;
-        <input type="button" class="btn-primary btn-lrg" id="cont3" value="Continue with Registration" disabled>
+        <input type="button" class="btn-primary btn-lrg" value="Add another Reader" id="addread" onclick="addReaders('add_readers')"> OR &nbsp; &nbsp;
+        <!--this isn't a submit, it triggers a check of reader names
+        and then shows the next screen if all reader and admin data is ok-->
+        <input type="button" class="btn-primary btn-lrg" id="cont3" value="Continue with Registration">
         <br>
             You can add up to three Reader/Student names 
         </h3>
@@ -151,13 +153,23 @@
 
     </form>
     <script>
-    //For the entire form, prevent submit when Enter key used in text boxes
+    // For the entire form, prevent submit when Enter key used in text boxes
     $(document).on('keydown', function (evt) {
         //if enter key, do nothing
         if (evt.which === 13) {
             return false;
         }
     });
+
+    // define a delay function to handle asynchronous returns
+    var delay = (function(){
+        var timer = 0;
+        return function(callback, ms){
+            clearTimeout (timer);
+            timer = setTimeout(callback, ms);
+        };
+    })();
+
     // Screen one: program code
     // Handle continue button : Should verify program code is a match 
     $(document).on( "click", "#cont1", function (evt){
@@ -199,37 +211,39 @@
         }
     });
 
-    // Screen three: handlers for add additional readers
-    // First, check that reader names are unique for the teacher 
+    // Screen three: handlers for add additional readers and continue buttons
+    // Handle the "Continue with Registration" button
+    // checks that reader names are unique for the teacher 
     // they are being assigned to
-    //check the previous reader_name
-    var delay = (function(){
-    var timer = 0;
-    return function(callback, ms){
-        clearTimeout (timer);
-        timer = setTimeout(callback, ms);
-        };
-    })();
-   $(document).on( "keyup", "#reader_names", function (evt){
-        delay(function(){
-            var count = 1
-            $(".reader_names").each(function() {
-                var reader = this.value
-                var admin = $('.form-control').val()
-                if (!admin) {
-                    $('#add_reader_button').before('<div class="alert alert-danger">Please select a Teacher</div>');  
-                } 
-                console.log(this.value + " " + admin);
-                $.post("/check-reader-name.json", {"reader_name": reader, "admin_id": admin}, function (data) {
-                    console.log(data.name_exists)
-                    if (data.name_exists === "true") {
-                        evt.preventDefault();
-                        $('#add_reader_button').before('<div class="alert alert-danger">The reader first name <strong>' + reader + ' </strong> is not unique for Teacher ' + admin +'. Try adding a middle or last initial</div>');
-                    }
-                });
+    $(document).on( "click", "#cont3", function (evt){
+        // first, check that names are unique per admin
+        evt.preventDefault();
+        var count = 0;
+        var showNextOption = true;
+        $(".reader_names").each(function() {
+            var reader = this.value
+            var admin = $('.form-control').get(count).value;
+            console.log(reader + " " + admin);
             count++
+            if (!admin) {
+                $('#add_reader_button').before('<div class="alert alert-danger">Please select a Teacher</div>');  
+                showNextOption = false;
+            } 
+           $.post("/check-reader-name.json", {"reader_name": reader, "admin_id": admin}, function (data) {
+                console.log(data.name_exists)
+                if (data.name_exists === "true") {
+                    $('#add_reader_button').before('<div class="alert alert-danger">The reader first name <strong>' + reader + ' </strong> is not unique for this teacher. Try adding a middle or last initial</div>');
+                    showNextOption = false;
+                } 
             });
-        }, 2500 );
+        });
+        if (showNextOption === true ) {
+            $('#add_readers').hide();
+            $('#add_reader_button').hide(); 
+            $('.alert-danger').hide();
+            $('#input_options').show();
+            $('#submit_button').show();
+        }
     });
 
     // Handle the "Add another Reader" Button
@@ -260,13 +274,6 @@
     };
 
     //handle continue button on add readers screen
-    $(document).on( "click", "#cont3", function (evt){
-        $('#add_readers').hide();
-        $('#add_reader_button').hide(); 
-        $('.alert-danger').hide();
-        $('#input_options').show();
-        $('#submit_button').show();
-    });
 
     </script>
 </div>    
