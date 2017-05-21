@@ -7,35 +7,34 @@
 <div class="container">
     <div class="row">
         <div class="col-xs-12">
-        <h2> Record Reading Minutes</h2>
-        <h3> {{ msg.message_text }}</h3>
+        <h1> <strong>{{ msg.message_text }}</h1></strong>
         <br>
         <form action="/log_minutes" method="POST">
-            <div class="col-xs-3">
+        <h2>
             {% if coach.readers|length > 1 %}
-                <label>Reader name:</label>
-                <select name="reader_id" class="form-control">
+                Record reading minutes for:             
+                <select name="reader_id" class="selectpicker" data-width="100px">
                 {% for reader in coach.readers %}
                     <option value="{{ reader.reader_id }}">{{ reader.first_name }}</option>
                 {% endfor %}
                 </select>
             {% else %}
                 {% for reader in coach.readers %}
-                    <h3>{{ reader.first_name }}</h3>
+                    Record Reading Minutes for <strong>{{ reader.first_name }}</strong>
                     <input type="hidden" name="reader_id" value="{{reader.reader_id}}">
                 {% endfor %}
             {% endif %}
-            <br>
+        </h2>
+        <br>
+        <h3>
             {% if dates %}
             <label>Date:</label>
-                <select name="date" id="date" class="form-control">
+                <select name="date" id="date" class="selectpicker"
                 {% for date in dates %}
                     <option value="{{ date }}">{{ date }}</option>
                 {% endfor %}
                 </select>
             {% endif %}
-        </div>
-        <div class="col-xs-12">
             <br>
             <br>
             <label>Number of minutes read:
@@ -47,7 +46,8 @@
                 <input  class="inputbox" type="text" name="title">
             </label>
             <br><br>
-            <input class=" btn btn-primary" type="submit" value="Add to Reading Log">
+            <input class="btn-primary btn-lg" type="submit" value="Add to Reading Log">
+        </h3>
         </form>
         </div>
     </div>

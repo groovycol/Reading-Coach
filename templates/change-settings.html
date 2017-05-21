@@ -6,7 +6,8 @@ Allows coach to change some settings for their account-->
     <div class="row">
       <div class="col-xs-12">
         <form action="/save-settings" method="POST">
-        <h3>Settings for phone {{ coach.phone }}</h3>
+        <h2>Settings for phone {{ coach.phone }}</h2>
+        <h3>
         <br>
         <br>
         <label>Change Password:
@@ -22,10 +23,11 @@ Allows coach to change some settings for their account-->
         <br>
         <br>
         <br>
-            <input class="btn btn-primary" type="submit" id="submit" value="Save Changes">
+            <input class="btn btn-lg btn-success" type="submit" id="submit" value="Save Changes">
         </form>
         <br><br><br><br><br>
-            <button class="btn-primary" id="back" onclick="location.href='/record'" value="back">Return without making changes</button>
+            <button class="btn btn-lg btn-primary" id="back" onclick="location.href='/record'" value="back">Return without making changes</button>
+        </h3>
         </div>
     </div>
 </div
