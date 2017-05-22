@@ -49,14 +49,16 @@ def send_message_from_admin(first_name, admin_email, message):
     coach = reader.coach
     phone_number = coach.phone
 
+    #format phone number
+
     #prepare the message to send
     msg_body = "The Reading Coach message from " + admin_name + ": " + message
 
     #Send the message via Twilio
     client = TwilioRestClient(ACCOUNT_SID, AUTH_TOKEN)
     client.messages.create(to=phone_number,
-                            from_ =FROM_ACCOUNT,
-                            body=msg_body)
+                           from_=FROM_ACCOUNT,
+                           body=msg_body)
 
     #Twilio does not return a success/failure status, but this will
     #verify that the message send process completed
@@ -72,21 +74,23 @@ def send_welcome_msg(phone, first_name):
     #Send the message via Twilio
     client = TwilioRestClient(ACCOUNT_SID, AUTH_TOKEN)
     client.messages.create(to=phone,
-                            from_ =FROM_ACCOUNT,
-                            body=msg_body)
+                           from_=FROM_ACCOUNT,
+                           body=msg_body)
 
 
 def handle_incoming_closed(sms_message):
     """handle incoming sms messages"""
     #get and format the phone number from which msg was received
     phone = sms_message["From"][2:]
-    phone_number = '-'.join([phone[:3], phone[3:6], phone[6:]])
+
+    #phone numbers are now stored as 9char strings, stripping all dashes,dots, etc
+    #phone_number = '-'.join([phone[:3], phone[3:6], phone[6:]])
 
     #set up the response
     resp = twilio.twiml.Response()
 
     #Find the user associated with this phone number
-    incoming_coach = get_coach_by_phone(phone_number)
+    incoming_coach = get_coach_by_phone(phone)
 
     #if the phone number does not match our db
     if incoming_coach is None:
@@ -94,7 +98,7 @@ def handle_incoming_closed(sms_message):
         return str(resp)
 
     #otherwise, send the message about the program end
-    resp.message("The Reading Coach: The 2017 Summer Reading Program has not yet begun. Registration will begin in June 2017")
+    resp.message("The Reading Coach: The 2017 Summer Reading Program has ended")
     return str(resp)
 
 
@@ -102,7 +106,9 @@ def handle_incoming(sms_message):
     """handle incoming sms messages"""
     #get and format the phone number from which msg was received
     phone = sms_message["From"][2:]
-    phone_number = '-'.join([phone[:3], phone[3:6], phone[6:]])
+
+    #phone numbers are now stored as 9char strings, dots and dashes stripped
+    #phone_number = '-'.join([phone[:3], phone[3:6], phone[6:]])
 
     #get and format the message received
     received_message = sms_message["Body"]
@@ -128,7 +134,7 @@ def handle_incoming(sms_message):
             possible_names.add(word.lower())
 
     #Find the user associated with this phone number
-    incoming_coach = get_coach_by_phone(phone_number)
+    incoming_coach = get_coach_by_phone(phone)
 
     #if the phone number does not match our db
     if incoming_coach is None:

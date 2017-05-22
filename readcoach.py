@@ -1,4 +1,5 @@
 
+import re
 from datetime import datetime, date, timedelta
 
 from model import *
@@ -6,6 +7,16 @@ from model import *
 DFLT_DATE_FMT = '%b %d'
 LONG_DATE_FMT = '%b %d %Y %I:%M%p'
 GENERIC_DATE_INFO = ' 2017  12:01PM'
+
+
+def format_phone_string(phone_num):
+    """Strip all non-digit data (-.) from phone strings"""
+
+    #remove any non digit data from phone string. Make sure 9 chars
+    fixed_phone_string = re.sub('[^0-9]', '', phone_num)
+
+    #return formatted phone string
+    return fixed_phone_string
 
 
 def get_elapsed_days(start_date):
@@ -99,7 +110,7 @@ def get_books_by_reader(reader):
     """Given a reader object, return title data from reading logs"""
 
     #setup an empty dictionary
-    books = {'readerdata':[]}
+    books = {'readerdata': []}
     titles = set()
 
     for entry in reader.logs:
@@ -112,11 +123,14 @@ def get_books_by_reader(reader):
 def get_coach_by_phone(phone):
     """Given a phone number, return a Coach object"""
 
+    #format the phone string 
+    formatted_phone = format_phone_string(phone)
+
     #Try primary Coach phone number, then see if it matches phone2
     try:
-        coach = Coach.query.filter_by(phone=phone).one()
+        coach = Coach.query.filter_by(phone=formatted_phone).one()
     except:
-        coach = Coach.query.filter_by(phone2=phone).one()
+        coach = Coach.query.filter_by(phone2=formatted_phone).one()
 
     return coach
 
@@ -163,11 +177,11 @@ def build_a_chart(x_axis_labels, chart_label, data, chart_type, bar_color):
             "datasets":
             [
                 {
-                "label": chart_label,
-                "backgroundColor": bar_color,
-                "borderColor": bar_color,
-                "borderWidth": 1,
-                "data": data
+                    "label": chart_label,
+                    "backgroundColor": bar_color,
+                    "borderColor": bar_color,
+                    "borderWidth": 1,
+                    "data": data
                 }
             ]
         },
@@ -191,14 +205,15 @@ def build_a_report(reader, dates):
     return logs
 
 
-def add_coach_to_db(phone, password, email, sms_option):
+def add_coach_to_db(phone, password, email, sms_option, alt_phone):
     """Add a new user to the database"""
 
     new_coach = Coach(phone=phone,
-                    password=password,
-                    email=email,
-                    sms_option = sms_option,
-                    start_date=datetime.strftime(datetime.now(), '%Y-%m-%d %H:%M:%S'))
+                      phone2=alt_phone,
+                      password=password,
+                      email=email,
+                      sms_option=sms_option,
+                      start_date=datetime.strftime(datetime.now(), '%Y-%m-%d %H:%M:%S'))
     db.session.add(new_coach)
     db.session.commit()
 
@@ -207,8 +222,8 @@ def add_reader_to_db(first_name, coach_id, admin):
     """Add a new reader to the database"""
 
     new_reader = Reader(first_name=first_name,
-                     coach_id=coach_id,
-                     admin_id=admin)
+                        coach_id=coach_id,
+                        admin_id=admin)
     db.session.add(new_reader)
     db.session.commit()
 
@@ -224,9 +239,9 @@ def add_logentry_to_db(reader_id, minutes, title, logdate):
 
     #prepare entry for database insert
     logentry = ReadingLog(reader_id=reader_id,
-                        minutes_read=minutes,
-                        date_time=date_time,
-                        title=title)
+                          minutes_read=minutes,
+                          date_time=date_time,
+                          title=title)
 
     #add & commit entry to the session
     db.session.add(logentry)
@@ -247,8 +262,11 @@ def update_sms_option(coach, sms_preference):
 def update_second_phone(coach, phone2):
     """Update the second phone number in the coach table for the given coach"""
 
+    #format the phone string 
+    stripped_phone = format_phone_string(phone2)
+
     #reassign the new value to the phone2 value
-    coach.phone2 = phone2
+    coach.phone2 = stripped_phone
 
     #send the change to the database
     db.session.flush()

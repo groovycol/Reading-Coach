@@ -155,11 +155,20 @@ def register_process():
     """Process registration."""
 
     #retrieve values from the form
-    coach_phone = request.form["coach_phone"]
+    phone1 = request.form["coach_phone"]
     names = request.form.getlist("reader_names")
     admins = request.form.getlist("admin_ids")
     sms_option = request.form["yesorno"]
+    phone2 = request.form.get("alt_phone", None)
     email = request.form.get("email", None)
+
+
+    #format phone strings
+    coach_phone = format_phone_string(phone1)
+    if phone2:
+        alt_phone = format_phone_string(phone2)
+    else:
+        alt_phone = None
 
     #hash the password
     passhash = sha256_crypt.encrypt(request.form["password"])
@@ -174,7 +183,7 @@ def register_process():
     except:
 
         #Add new coach to the database
-        add_coach_to_db(coach_phone, passhash, email, sms_option)
+        add_coach_to_db(coach_phone, passhash, email, sms_option, alt_phone)
 
         #retrieve the new coach id
         coach = get_coach_by_phone(coach_phone)
@@ -182,8 +191,8 @@ def register_process():
         #add a new reader to the db
         for reader_number in range(len(names)):
             add_reader_to_db(names[reader_number],
-                        coach.coach_id,
-                        admins[reader_number])
+                             coach.coach_id,
+                             admins[reader_number])
 
         #Give the coach a confirmation message about being registered.
         flash(coach_phone + " is now registered")
@@ -192,7 +201,7 @@ def register_process():
         session["coach"] = coach_phone
 
         #send a welcoming text message
-        #send_welcome_msg(coach_phone, names[0])
+        send_welcome_msg(coach_phone, names[0])
 
         return render_template("new-coach-info.html", first_name=names[0])
 
@@ -351,8 +360,6 @@ def check_name_availability():
     result = {'name_exists': None}
 
     reader = get_reader_by_name(request.form.get("reader_name"), request.form.get("admin_id"))
-    print reader
-    print "end print reader"
     if reader is None:
         result['name_exists'] = 'false'
     else:
