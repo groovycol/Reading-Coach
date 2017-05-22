@@ -244,6 +244,17 @@ def update_sms_option(coach, sms_preference):
     db.session.commit()
 
 
+def update_second_phone(coach, phone2):
+    """Update the second phone number in the coach table for the given coach"""
+
+    #reassign the new value to the phone2 value
+    coach.phone2 = phone2
+
+    #send the change to the database
+    db.session.flush()
+    db.session.commit()
+
+
 def update_password(coach, passhash):
     """Update the sms_option in the coach table for the given coach"""
 

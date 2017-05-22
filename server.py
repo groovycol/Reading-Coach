@@ -118,6 +118,7 @@ def save_settings():
 
     sms_option = request.form.get("yesorno", None)
     password = request.form.get("password", None)
+    phone2 = request.form.get("alt_phone", None)
     coach = get_coach_by_phone(session["coach"])
 
     if sms_option:
@@ -130,6 +131,10 @@ def save_settings():
         passhash = sha256_crypt.encrypt(password)
         update_password(coach, passhash)
         flash("Your password was updated")
+
+    if phone2:
+        update_second_phone(coach, phone2)
+        flash("An alternate phone number has been saved")
 
     return redirect("/record")
 

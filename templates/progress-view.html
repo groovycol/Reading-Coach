@@ -7,7 +7,7 @@
     <div class="row">
         <div class="col-xs-6">
         <h2 id="chart_name"> {{admin.nameprefix.prefix}} {{admin.name}} Readers Report</h2>
-        <h4 id="booktitles" hidden>Books read: </h4>
+        <h3 id="booktitles" hidden>Books read: </h3>
             <span id="bookdata"></span>
         <br>
         <h3 id="chart_description">Average Daily Minutes by Reader</h3>
@@ -15,7 +15,7 @@
         <input type="hidden" id="admin_id" value="{{admin.admin_id}}">
         <div class="col-xs-offset- col-xs-6">
         <br>
-        <span id="message_desc" hidden>Send a real-time text message to this reader</span>
+        <h3><span id="message_desc" hidden>Send a real-time text message to this reader</span>
         <form action="/send-sms-from-admin.json" id="sendmessage" method="post">
             <textarea id="messagebox" hidden rows="4" cols="40"  placeholder="Send encouragement, book suggestions or feedback" wrap="hard" class="inputbox"></textarea>
             <input  class="btn-primary" type="submit" id="submit" value="Send" hidden>
@@ -27,6 +27,7 @@
         <button type="button" id="showbutton" class="btn-primary" onclick="location='/progress-view'" hidden>Return to All Students View</button>
         <br>
         <br>
+    </h3>
         
         <script>
             // Initialize some chart variables
@@ -108,6 +109,7 @@
         <div class="col-xs-12"></div>
         <div id="canvas"></div>
         <button type="button" id="showbutton" class="btn-primary" onclick="location='/progress-view'" hidden>Return to All Students View</button>
+        </h2>
         </div>
     </div>
 </div>
