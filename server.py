@@ -242,7 +242,7 @@ def show_dashboard():
         for reader in coach.readers:
             reader_totals[reader.first_name] = get_total_mins(reader)
 
-        return render_template("dashboard_end.html", coach=coach, reader_totals=reader_totals)
+        return render_template("dashboard.html", coach=coach, reader_totals=reader_totals)
 
     except:
         flash("You must be logged in to view progress charts")

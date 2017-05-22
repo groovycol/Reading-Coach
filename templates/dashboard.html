@@ -5,9 +5,9 @@
 <div class="container">
     <div class="row">
         <div class="col-xs-3"> 
-        <h2> Reading Progress</h2>
+        <h2> Reading Progress
         {% if coach.readers|length > 1 %}
-            <select name="reader_id" id="reader_id" class="form-control">
+            <select name="reader_id" id="reader_id" class="selectpicker">
             {% for reader in coach.readers %}
                 <option value="{{ reader.reader_id }}">{{ reader.first_name }}</option>
             {% endfor %}
@@ -21,10 +21,11 @@
                 {%endif%}
             {% endfor %}
         {% endif %}
+        </h2>
         </div>
         <div class="col-xs-12">
         <div id="canvas"></div>
-        <button class="btn-primary" id="time_period" value="week">Show All</button>
+        <button class="btn-primary btn-lg" id="time_period" value="week">Show All</button>
         <script>
             // Initialize some chart variables
             var canvas_tag = '<canvas id="barChart" width="600" height="200"></canvas>'
