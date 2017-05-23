@@ -201,7 +201,8 @@ def register_process():
         session["coach"] = coach_phone
 
         #send a welcoming text message
-        send_welcome_msg(coach_phone, names[0])
+        #uncomment before deploying or testing
+        #send_welcome_msg(coach_phone, names[0])
 
         return render_template("new-coach-info.html", first_name=names[0])
 
