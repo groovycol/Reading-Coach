@@ -123,7 +123,7 @@ def get_books_by_reader(reader):
 def get_coach_by_phone(phone):
     """Given a phone number, return a Coach object"""
 
-    #format the phone string 
+    #format the phone string
     formatted_phone = format_phone_string(phone)
 
     #Try primary Coach phone number, then see if it matches phone2
@@ -133,6 +133,15 @@ def get_coach_by_phone(phone):
         coach = Coach.query.filter_by(phone2=formatted_phone).one()
 
     return coach
+
+
+def get_admins_by_program_code(program_code):
+    """Given a program code, return the Admin objects associated with it"""
+
+    #retrieve the program
+    program = Program.query.filter_by(program_code=program_code).one()
+
+    return program.admins
 
 
 def get_admin_by_email(email):

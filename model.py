@@ -16,6 +16,8 @@ class Program(db.Model):
     start_date = db.Column(db.DateTime, nullable=False)
     end_date = db.Column(db.DateTime, nullable=False)
 
+    admins = db.relationship('Admin')
+
     def __repr__(self):
         return "<Program program_id=%d program_code=%s organization=%s>" % (
             self.program_id,

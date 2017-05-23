@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% block content %} 
+<div class="container">
+<div class="row">
+<div class="col-xs-12">
+    <form action="/verify_program" method="POST">
+    <br>
+    <br>
+
+    <!--capture a program code and verify it-->
+    <span id="program_code_input">
+        <h2>
+        Ready to sign up? You will be able to log your reader's minutes with a text message!
+        <br>
+        <br>
+        <!-- input box for program code -->
+        <label for="program_code">Enter your school's program code:
+            <input class="inputbox" type="text" name="prog_code" id="pcode" <span id = "submit_button">
+        <input type="submit" class="btn-primary btn-lg" id="submit" value="Continue" required>
+        </h2>  
+        <br>
+        <!-- sample image of text message output-->
+        <img src="static/text_sample.png" style="width:400px;height:450px;">
+    </span>
+
+    <!--Finally, submit-->
+    <br><br>
+    
+    </span>
+    </form>
+</div>    
+</div>
+</div>
+{% endblock %}

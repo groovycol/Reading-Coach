@@ -8,29 +8,9 @@
     <br>
     <br>
 
-    <!--Screen one: Enter program code-->
-    <!--this section toggles show/hide on id "program_code_input"-->
-    <span id="program_code_input">
-        <h2>
-        Ready to sign up? You will be able to log your reader's minutes with a text message!
-        <br>
-        <br>
-        <!-- input box for program code -->
-        <label for="program_code">Enter your school's program code:
-            <input class="inputbox" type="text" name="prog_code" id="pcode" required>
-        <!--not a submit, this button hides program_code_input 
-        and shows phone_input. 
-        A match on a genuine program code enforced by ajax call in js-->
-        <input type="button" class="btn-primary btn-lg" id="cont1" value="Continue">
-        </h2>  
-        <br>
-        <!-- sample image of text message output-->
-        <img src="static/text_sample.png" style="width:400px;height:450px;">
-    </span>
-
-    <!--Screen two: Enter phone number/login and password-->
+    <!--Screen one: Enter phone number/login and password-->
     <!--this section toggles show/hide on id "phone_input"-->
-    <span id="phone_input" hidden>
+    <span id="phone_input">
         <h2>
             Enter a phone number where you can send and receive text messages
             <br>
@@ -170,25 +150,7 @@
         };
     })();
 
-    // Screen one: program code
-    // Handle continue button : Should verify program code is a match 
-    $(document).on( "click", "#cont1", function (evt){
-        //post to route with value for id pcode
-        $.post("/check-program-code.json", {"pcode": $("#pcode").val()}, function (data) {
-            //if the code matches, continue and show the next screen
-            if (data.code_exists === "true") {
-                $('#program_code_input').hide();
-                $('#phone_input').show(); 
-            //otherwise, generate an alert to try again
-            //TODO: Would be nice to limit number of tries
-            } else {
-                evt.preventDefault();
-                $('#cont1').after('<div class="alert alert-danger">You have entered an invalid code. Try Again. </div>');
-            }
-        });
-    });
-
-    // Screen two: phone and password
+    // Screen one: phone and password
     // And password is at least 6 chars in length
     $(document).on( "click", "#cont2", function (evt){
         var phoneString = $('#phone_num').val(); 

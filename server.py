@@ -139,17 +139,48 @@ def save_settings():
     return redirect("/record")
 
 
+#Verify program code
+@app.route('/verify')
+def program_code():
+    """return a form to submit a program code"""
+
+    return render_template("verify.html")
+
+
+#process the verify_program posted data
+@app.route('/verify_program', methods=['POST'])
+def verify_program():
+    """Process registration."""
+
+    #retrieve values from the form
+    program = request.form["prog_code"]
+
+    #if it matches a code in the dbase, render the register template, passing in only admins that match that code
+    try:
+        #get admins for program code
+        admins = get_admins_by_program_code(program)
+
+        return render_template("register.html", admins=admins)
+
+    except:
+        flash("You have entered an invalid code. Try Again.")
+        
+        return redirect("/verify")
+
+
 #Manage new registrations
-@app.route('/register')
-def register():
-    """Return a registration form"""
+#I might need to remove this route, as it gets rendered another way now.
+#@app.route('/register')
+#def register():
+#    """Return a registration form"""
+#
+#    #get a list of admins to supply in dropdown menu
+#    admins = Admin.query.all()
+#
+#    return render_template("register.html", admins=admins)
 
-    #get a list of admins to supply in dropdown menu
-    admins = Admin.query.all()
 
-    return render_template("register.html", admins=admins)
-
-
+#process the registration form posted data
 @app.route('/register_process', methods=['POST'])
 def register_process():
     """Process registration."""
