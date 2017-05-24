@@ -31,8 +31,8 @@ def format_phone_display(phone_num):
 def format_reader_name(name):
     """remove all white space from reader name"""
 
+    #replace all white space in the string
     stripped_name = name.replace(" ", "")
-    print stripped_name
 
     return stripped_name
 
