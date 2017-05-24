@@ -28,6 +28,14 @@ def format_phone_display(phone_num):
     return phone_string
 
 
+def format_reader_name(name):
+    """remove all white space from reader name"""
+
+    stripped_name = name.replace(" ", "")
+    print stripped_name
+
+    return stripped_name
+
 def get_elapsed_days(start_date):
     """Given a date, return an integer for the number of elapsed days
     """
@@ -239,7 +247,11 @@ def add_coach_to_db(phone, password, email, sms_option, alt_phone):
 def add_reader_to_db(first_name, coach_id, admin):
     """Add a new reader to the database"""
 
-    new_reader = Reader(first_name=first_name,
+    #remove all whitespace from reader name
+    formatted_name = format_reader_name(first_name)
+
+    #add reader to the database
+    new_reader = Reader(first_name=formatted_name,
                         coach_id=coach_id,
                         admin_id=admin)
     db.session.add(new_reader)
