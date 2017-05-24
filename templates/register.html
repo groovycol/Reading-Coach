@@ -232,6 +232,17 @@
     };
 
     //handle continue button on add readers screen
+    $(document).on( "click", "#submit", function (evt){
+        var phone2String = $('#phone_two').val(); 
+        //regex will allow (,), ,.,-
+        //prevent continuing to next screen until pattern matches
+        if (phone2String.length !== 0) {
+            if (! /^\D?(\d{3})\D?\D?(\d{3})\D?(\d{4})$/.test(phone2String)) {
+                evt.preventDefault();
+                $('#phone_two').after('<div class="alert alert-warning">Please enter a US telephone number with area code</div>');
+            }
+        }
+    });
 
     </script>
 </div>    

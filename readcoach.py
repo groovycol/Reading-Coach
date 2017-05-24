@@ -19,6 +19,15 @@ def format_phone_string(phone_num):
     return fixed_phone_string
 
 
+def format_phone_display(phone_num):
+    """Add dashes to phone number string for display"""
+
+    #add dashes to format phone string xxx-xxx-xxxx
+    phone_string = '-'.join([phone_num[:3], phone_num[3:6], phone_num[6:]])
+
+    return phone_string
+
+
 def get_elapsed_days(start_date):
     """Given a date, return an integer for the number of elapsed days
     """

@@ -108,8 +108,12 @@ def logout():
 @app.route('/change-settings')
 def change_settings():
     """Allow Coach to reset password and change text message options """
+    #get the coach object
     coach = get_coach_by_phone(session["coach"])
-    return render_template("change-settings.html", coach=coach)
+    #format the coach's phone number with dashes for display
+    phone_string = format_phone_display(coach.phone)
+
+    return render_template("change-settings.html", coach=coach, phone_string=phone_string)
 
 
 @app.route('/save-settings', methods=['POST'])
@@ -164,20 +168,8 @@ def verify_program():
 
     except:
         flash("You have entered an invalid code. Try Again.")
-        
+
         return redirect("/verify")
-
-
-#Manage new registrations
-#I might need to remove this route, as it gets rendered another way now.
-#@app.route('/register')
-#def register():
-#    """Return a registration form"""
-#
-#    #get a list of admins to supply in dropdown menu
-#    admins = Admin.query.all()
-#
-#    return render_template("register.html", admins=admins)
 
 
 #process the registration form posted data
@@ -231,11 +223,14 @@ def register_process():
         #Add the new phone to the session to keep coach logged in.
         session["coach"] = coach_phone
 
+        #format the phone number for display
+        phone_string = format_phone_display(coach_phone)
+
         #send a welcoming text message
         #uncomment before deploying or testing
         #send_welcome_msg(coach_phone, names[0])
 
-        return render_template("new-coach-info.html", first_name=names[0])
+        return render_template("new-coach-info.html", first_name=names[0], phone_string=phone_string)
 
 
 #Routes to manage input and displaying data
