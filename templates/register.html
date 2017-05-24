@@ -188,13 +188,16 @@
             count++
             if (!admin) {
                 $('#add_reader_button').before('<div class="alert alert-danger">Please select a Teacher</div>');  
+               return false; 
             } else if (!reader) {
                 $('#add_reader_button').before('<div class="alert alert-danger">Name field cannot be empty</div>');
+               return false; 
             } else {
                 $.post("/check-reader-name.json", {"reader_name": reader, "admin_id": admin}, function (data) {
                     console.log(data.name_exists)
                     if (data.name_exists === "true") {
                         $('#add_reader_button').before('<div class="alert alert-danger">The reader first name <strong>' + reader + ' </strong> is not unique for this teacher. Try adding a middle or last initial</div>');
+                        return false;
                     } else {
                         $('#add_readers').hide();
                         $('#add_reader_button').hide(); 
