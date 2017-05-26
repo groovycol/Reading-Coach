@@ -133,6 +133,9 @@
 
     </form>
     <script>
+    // global variable reader_count, to track the number of readers added
+    var reader_count = 0;
+
     // For the entire form, prevent submit when Enter key used in text boxes
     $(document).on('keydown', function (evt) {
         //if enter key, do nothing
@@ -140,15 +143,6 @@
             return false;
         }
     });
-
-    // define a delay function to handle asynchronous returns
-    var delay = (function(){
-        var timer = 0;
-        return function(callback, ms){
-            clearTimeout (timer);
-            timer = setTimeout(callback, ms);
-        };
-    })();
 
     // Screen one: phone and password
     // And password is at least 6 chars in length
@@ -180,64 +174,74 @@
     $(document).on( "click", "#cont3", function (evt){
         // first, check that names are unique per admin
         evt.preventDefault();
-        var count = 0;
-        $(".reader_names").each(function() {
-            var reader = this.value
-            var admin = $('.form-control').get(count).value;
-            console.log(reader + " " + admin);
-            count++
-            if (!admin) {
-                $('#add_reader_button').before('<div class="alert alert-danger">Please select a Teacher</div>');  
-               return false; 
-            } else if (!reader) {
-                $('#add_reader_button').before('<div class="alert alert-danger">Name field cannot be empty</div>');
-               return false; 
-            } else {
-                $.post("/check-reader-name.json", {"reader_name": reader, "admin_id": admin}, function (data) {
-                    console.log(data.name_exists)
-                    if (data.name_exists === "true") {
-                        $('#add_reader_button').before('<div class="alert alert-danger">The reader first name <strong>' + reader + ' </strong> is not unique for this teacher. Try adding a middle or last initial</div>');
-                        return false;
-                    } else {
-                        $('#add_readers').hide();
-                        $('#add_reader_button').hide(); 
-                        $('.alert-danger').hide();
-                        $('#input_options').show();
-                        $('#submit_button').show();
-                    }
-                });
-            }
-        });
+        var reader = $('.reader_names').get(reader_count).value;
+        var admin = $('.form-control').get(reader_count).value;
+        console.log(reader + " " + admin + " " + reader_count);
+        if (!admin) {
+            $('#add_reader_button').before('<div class="alert alert-danger">Please select a Teacher</div>');  
+        } else if (!reader) {
+            $('#add_reader_button').before('<div class="alert alert-danger">Name field cannot be empty</div>');
+        } else {
+            $.post("/check-reader-name.json", {"reader_name": reader, "admin_id": admin}, function (data) {
+                console.log(data.name_exists)
+                if (data.name_exists === "true") {
+                    $('#add_reader_button').before('<div class="alert alert-danger">The reader first name <strong>' + reader + ' </strong> is not unique for this teacher. Try adding a middle or last initial</div>');
+                } else {
+                    reader_count++
+                    $('#add_readers').hide();
+                    $('#add_reader_button').hide(); 
+                    $('.alert-danger').hide();
+                    $('#input_options').show();
+                    $('#submit_button').show();
+                }
+            });
+        }
     });
 
     // Handle the "Add another Reader" Button
-    var counter = 1;
-    var max_readers = 3;
+    var max_readers = 2;
     function addReaders(divName){
-        //hide the original buttons, we'll add them back later, as needed
-        $('#add_reader_button').hide();
-        // hide any lingering alerts
-        $('.alert-danger').hide();
-        // Add the teacher dropdown and name input box
-        var newdiv = document.createElement('div');
-        newdiv.innerHTML = "<span id='add_readers'><h2><label>Teacher: " + "<select name='admin_ids' class='form-control'><option value='' selected disabled>Please select</option>{% for admin in admins %} <option value='{{admin.admin_id}}'>{{admin.nameprefix.prefix}} {{admin.name}}</option>{%endfor%}</select></label><br><label>Reader's first name: " + "<input type='text' name='reader_names' class='reader_names' id='reader_names'></label></h2></span>";
-        document.getElementById(divName).appendChild(newdiv);
-        //Then add the buttons back, conditionally
-        if (counter < max_readers)  {
-            var buttondiv = document.createElement('div');
-            buttondiv.innerHTML = "<span id='add_reader_button'><h3><input type='button' class='btn-primary btn-lrg' value='Add another Reader' onClick=\"addReaders('add_readers');\"> OR &nbsp;&nbsp; <input type='button' class='btn-primary btn-lrg' id='cont3' value='Continue with Registration`'> <h3> You can add up to three Reader/Student names </h3></span>"
-            document.getElementById(divName).appendChild(buttondiv);
-        //otherwise, just add continue button
+        // First check that the name already added is unique for that teacher
+        var reader = $('.reader_names').get(reader_count).value;
+        var admin = $('.form-control').get(reader_count).value;
+        console.log(reader + " " + admin + " " + reader_count);
+        if (!admin) {
+            $('#add_reader_button').before('<div class="alert alert-danger">Please select a Teacher</div>');  
+        } else if (!reader) {
+            $('#add_reader_button').before('<div class="alert alert-danger">Name field cannot be empty</div>');
         } else {
-            var contdiv = document.createElement('div');
-            contdiv.innerHTML = "<h3><input type='button' class='btn-primary btn-lrg' id='cont3' value='Continue with Registration'></h3>"
-            document.getElementById(divName).appendChild(contdiv);
+            $.post("/check-reader-name.json", {"reader_name": reader, "admin_id": admin}, function (data) {
+                console.log(data.name_exists)
+                if (data.name_exists === "true") {
+                    $('#add_reader_button').before('<div class="alert alert-danger">The reader first name <strong>' + reader + ' </strong> is not unique for this teacher. Try adding a middle or last initial</div>');
+                } else {
+                    // hide the original buttons, we'll add them back later, as needed
+                    $('#add_reader_button').hide();
+                    // hide any lingering alerts
+                    $('.alert-danger').hide();
+                    // Add the teacher dropdown and name input box
+                    var newdiv = document.createElement('div');
+                    newdiv.innerHTML = "<span id='add_readers'><h2><label>Teacher: " + "<select name='admin_ids' class='form-control'><option value='' selected disabled>Please select</option>{% for admin in admins %} <option value='{{admin.admin_id}}'>{{admin.nameprefix.prefix}} {{admin.name}}</option>{%endfor%}</select></label><br><label>Reader's first name: " + "<input type='text' name='reader_names' class='reader_names' id='reader_names'></label></h2></span>";
+                    document.getElementById(divName).appendChild(newdiv);
+                    //increase the counter
+                    reader_count++;
+                    //Then add the buttons back, conditionally
+                    if (reader_count < max_readers)  {
+                        var buttondiv = document.createElement('div');
+                        buttondiv.innerHTML = "<span id='add_reader_button'><h3><input type='button' class='btn-primary btn-lrg' value='Add another Reader' onClick=\"addReaders('add_readers');\"> OR &nbsp;&nbsp; <input type='button' class='btn-primary btn-lrg' id='cont3' value='Continue with Registration`'> <h3> You can add up to three Reader/Student names </h3></span>"
+                        document.getElementById(divName).appendChild(buttondiv);
+                    //otherwise, just add continue button
+                    } else {
+                        var contdiv = document.createElement('div');
+                        contdiv.innerHTML = "<h3><input type='button' class='btn-primary btn-lrg' id='cont3' value='Continue with Registration'></h3>"
+                        document.getElementById(divName).appendChild(contdiv);
+                    }
+                }
+            });
         }
-        //increase the counter
-        counter++;
     };
 
-    //handle continue button on add readers screen
+    //handle submit/Register button
     $(document).on( "click", "#submit", function (evt){
         var phone2String = $('#phone_two').val(); 
         //regex will allow (,), ,.,-
