@@ -185,7 +185,6 @@ def register_process():
     phone2 = request.form.get("alt_phone", None)
     email = request.form.get("email", None)
 
-
     #format phone strings
     coach_phone = format_phone_string(phone1)
     if phone2:
