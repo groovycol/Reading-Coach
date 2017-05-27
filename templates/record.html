@@ -54,6 +54,7 @@
         $(document).on( "click", "#submit", function (evt){
             evt.preventDefault();
             $('#confirmation').hide();
+            $('.alert-danger').hide();
             var reader = $('#reader_id').val();
             if (!reader) {
                 var reader = $('#reader_select').val();
