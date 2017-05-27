@@ -9,11 +9,11 @@
         <div class="col-xs-12">
         <h1> <strong>{{ msg.message_text }}</h1></strong>
         <br>
-        <form action="/log_minutes" method="POST">
+        <form action="/log-minutes.json" method="POST">
         <h2>
             {% if coach.readers|length > 1 %}
                 Record reading minutes for:             
-                <select name="reader_id" class="selectpicker">
+                <select name="reader_select" class="selectpicker" id="reader_select">
                 {% for reader in coach.readers %}
                     <option value="{{ reader.reader_id }}">{{ reader.first_name }}</option>
                 {% endfor %}
@@ -21,7 +21,7 @@
             {% else %}
                 {% for reader in coach.readers %}
                     Record Reading Minutes for <strong>{{ reader.first_name }}</strong>
-                    <input type="hidden" name="reader_id" value="{{reader.reader_id}}">
+                    <input type="hidden" id="reader_id" name="reader_id" value="{{reader.reader_id}}">
                 {% endfor %}
             {% endif %}
         </h2>
@@ -29,7 +29,7 @@
         <h3>
             {% if dates %}
             <label>Date:</label>
-                <select name="date" id="date" class="selectpicker">
+                <select name="date_recorded" id="date_recorded" class="selectpicker">
                 {% for date in dates %}
                     <option value="{{ date }}">{{ date }}</option>
                 {% endfor %}
@@ -38,17 +38,47 @@
             <br>
             <br>
             <label>Number of minutes read:
-                <input class="inputbox" type="text" name="minutes_read">
+                <input class="inputbox" type="text" id="minutes_read" name="minutes_read">
             </label>
             <br>
             <br>
             <label>Title (optional):
-                <input  class="inputbox" type="text" name="title">
+                <input  class="inputbox" type="text" name="title" id="title">
             </label>
             <br><br>
-            <input class="btn-success btn-lg" type="submit" value="Add to Reading Log">
+            <div class="alert alert-info" id="confirmation" hidden></div>
+            <input class="btn-success btn-lg" id="submit" type="submit" value="Add to Reading Log">
         </h3>
         </form>
+        <script>
+        $(document).on( "click", "#submit", function (evt){
+            evt.preventDefault();
+            $('#confirmation').hide();
+            var reader = $('#reader_id').val();
+            if (!reader) {
+                var reader = $('#reader_select').val();
+            }
+            var minutes = $('#minutes_read').val();
+            var date = $('#date_recorded').val();
+            var title = $('#title').val();
+            console.log(reader + " " + minutes + " " + date + " " + title);
+            if (!reader) {
+                $('#reader_id').after('<div class="alert alert-danger">Please select a reader</div>');  
+            } else if (!minutes) {
+                $('#minutes_read').after('<div class="alert alert-danger">Minutes field cannot be empty</div>');
+            } else if (!date){
+                $('#date_recorded').after('<div class="alert alert-danger">Date field cannot be empty</div>');
+            } else {
+                $.post("/log-minutes.json", {"reader_id": reader, "minutes_read": minutes, "date_recorded": date, "title": title}, function (data) {
+                    console.log(data);
+                    $('#confirmation').html("");
+                    $('#confirmation').html(data);
+                    $('#confirmation').show();
+                    $('#minutes_read').val("");
+                });
+            }
+        });
+        </script>
         </div>
     </div>
 </div>

@@ -256,19 +256,26 @@ def record_mins():
         return redirect("/login")
 
 
-@app.route("/log_minutes", methods=['POST'])
+@app.route("/log-minutes.json", methods=['POST'])
 def log_minutes():
     """Adds submitted minutes read to the database"""
 
-    minutes = request.form["minutes_read"]
-    title = request.form["title"]
-    reader_id = request.form["reader_id"]
-    date = request.form["date"]
+    minutes = request.form.get("minutes_read")
+    title = request.form.get("title")
+    reader_id = request.form.get("reader_id")
+    date = request.form.get("date_recorded")
+    message = ""
 
-    add_logentry_to_db(reader_id, minutes, title, date)
+    print minutes
 
-    flash(minutes + " minutes recorded")
-    return redirect("/record")
+    try:
+        add_logentry_to_db(reader_id, minutes, title, date)
+        message = minutes + " minutes added to the database."
+        return message
+
+    except:
+        message = "error updating the database"
+        return message
 
 
 @app.route("/dashboard")
