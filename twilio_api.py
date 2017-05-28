@@ -22,13 +22,13 @@ def tw_send_message(phone_number):
     msg = get_message_by_day(get_elapsed_days(recipient.start_date))
 
     #format message to send
-    msg_body = "The Reading Coach reminder: " + msg.message_text + " Log in to http://goo.gl/o0H4qh to turn off reminder text messages. Reply to log today's minutes. example: 'log 10 {}'".format(recipient.readers[0].first_name)
+    msg_body = "The Reading Coach reminder: " + msg.message_text + " Log in to https://goo.gl/ry9Duf to turn off reminder text messages. Reply to log today's minutes. example: 'log 10 {}'".format(recipient.readers[0].first_name)
     #msg_body = "The Reading Coach: The Summer Reading Program ends Aug 31. You will not be able to record minutes after Aug 31, but you can still log in and view your student's progress through Sept 30. Email feedback or questions to thereadingcoachapp@gmail.com. Thank you for using The Reading Coach!"
     #send the message via Twilio. Twilio does not return a success/failure status
     client = TwilioRestClient(ACCOUNT_SID, AUTH_TOKEN)
     client.messages.create(to=phone_number,
-                            from_ =FROM_ACCOUNT,
-                            body=msg_body)
+                           from_=FROM_ACCOUNT,
+                           body=msg_body)
 
 
 def send_message_from_admin(first_name, admin_email, message):
