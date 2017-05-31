@@ -1,11 +1,10 @@
 
 from flask import Flask, render_template, request, flash, redirect, session
 from jinja2 import StrictUndefined
-from flask_debugtoolbar import DebugToolbarExtension
+#from flask_debugtoolbar import DebugToolbarExtension
 from flask import jsonify
 from flask import Response
 from passlib.hash import sha256_crypt
-
 from twilio_api import *
 from model import *
 from readcoach import *
@@ -197,7 +196,7 @@ def register_process():
 
     #make sure this phone number isn't already in use
     try:
-        get_coach_by_phone(coach_phone)
+        match_coach_by_phone(coach_phone)
 
         #already in the dbase, redirect to login page
         flash("This phone number is already registered. Login?")

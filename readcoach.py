@@ -138,7 +138,18 @@ def get_books_by_reader(reader):
 
 
 def get_coach_by_phone(phone):
-    """Given a phone number, return a Coach object"""
+    """Given a phone number, return a Coach object that matches primary phone"""
+
+    #format the phone string
+    formatted_phone = format_phone_string(phone)
+
+    #if a coach record matches, return the object
+    coach = Coach.query.filter_by(phone=formatted_phone).one()
+    return coach
+
+
+def match_coach_by_phone(phone):
+    """Given a phone number, return any coach obj that matches phone or phone2"""
 
     #format the phone string
     formatted_phone = format_phone_string(phone)
@@ -149,6 +160,7 @@ def get_coach_by_phone(phone):
     except:
         coach = Coach.query.filter_by(phone2=formatted_phone).one()
 
+    #return any coach object where that phone number is a match
     return coach
 
 

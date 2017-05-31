@@ -90,7 +90,7 @@ def handle_incoming_closed(sms_message):
     resp = twilio.twiml.Response()
 
     #Find the user associated with this phone number
-    incoming_coach = get_coach_by_phone(phone)
+    incoming_coach = match_coach_by_phone(phone)
 
     #if the phone number does not match our db
     if incoming_coach is None:
@@ -134,7 +134,7 @@ def handle_incoming(sms_message):
             possible_names.add(word.lower())
 
     #Find the user associated with this phone number
-    incoming_coach = get_coach_by_phone(phone)
+    incoming_coach = match_coach_by_phone(phone)
 
     #if the phone number does not match our db
     if incoming_coach is None:
