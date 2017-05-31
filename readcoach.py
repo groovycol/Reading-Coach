@@ -36,6 +36,7 @@ def format_reader_name(name):
 
     return stripped_name
 
+
 def get_elapsed_days(start_date):
     """Given a date, return an integer for the number of elapsed days
     """
@@ -43,10 +44,7 @@ def get_elapsed_days(start_date):
     #gets the number of days since start date
     delta = datetime.now() - start_date
 
-    if delta.days == 0:
-        return 1
-
-    return delta.days
+    return delta.days + 1
 
 
 def get_start_date(reader):

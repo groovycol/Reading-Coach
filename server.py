@@ -422,6 +422,7 @@ def reader_progress_data():
 
         chart_data = build_a_chart(dates, label, minutes_data, CHT_BAR, CHT_BLUE)
 
+        print chart_data
         return jsonify(chart_data)
     except:
         return render_template("error.html", err_msg=ERR_MSG)
