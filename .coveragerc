@@ -2,6 +2,7 @@
 [run]
 branch = True
 omit =
+    data_process.py
     env/*
     seed_data/*
     logs/*

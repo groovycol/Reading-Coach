@@ -265,11 +265,9 @@ def log_minutes():
     date = request.form.get("date_recorded")
     message = ""
 
-    print minutes
-
     try:
         add_logentry_to_db(reader_id, minutes, title, date)
-        message = minutes + " minutes added to the database."
+        message = minutes + " minutes recorded."
         return message
 
     except:
@@ -295,27 +293,27 @@ def show_dashboard():
         return redirect("/login")
 
 
-@app.route("/summary")
-def show_summary():
-    """show a summary page"""
-
-    #make sure coach is logged in
-    try:
-        coach = get_coach_by_phone(session["coach"])
-        reader_totals = {}
-        for reader in coach.readers:
-            reader_totals[reader.first_name] = get_total_mins(reader)
-
-            #retrieve a list of dates from when reader signed up
-            dates = get_formatted_dates(get_elapsed_days(get_start_date(reader)))
-
-            reader_logs = build_a_report(reader, dates)
-
-        return render_template("summary.html", coach=coach, reader_totals=reader_totals, reader_logs=reader_logs)
-
-    except:
-        flash("You must be logged in to view progress charts")
-        return redirect("/login")
+#@app.route("/summary")
+#def show_summary():
+#    """show a summary page"""
+#
+#    #make sure coach is logged in
+#    try:
+#        coach = get_coach_by_phone(session["coach"])
+#        reader_totals = {}
+#        for reader in coach.readers:
+#            reader_totals[reader.first_name] = get_total_mins(reader)
+#
+#            #retrieve a list of dates from when reader signed up
+#            dates = get_formatted_dates(get_elapsed_days(get_start_date(reader)))
+#
+#            reader_logs = build_a_report(reader, dates)
+#
+#        return render_template("summary.html", coach=coach, reader_totals=reader_totals, reader_logs=reader_logs)
+#
+#    except:
+#        flash("You must be logged in to view progress charts")
+#        return redirect("/login")
 
 
 @app.route("/progress-view")
@@ -326,7 +324,6 @@ def show_progress():
     try:
         admin = get_admin_by_email(session["admin"])
         total_minutes = get_total_by_admin(admin)
-        print total_minutes
 
         return render_template("progress-view.html", admin=admin, total_minutes=total_minutes)
 
@@ -364,6 +361,7 @@ def sendlog():
     """Handle sms messages"""
 
     msg_received = request.form
+    print msg_received
     response = handle_incoming(msg_received)
 
     return Response(response, mimetype='text/xml')
@@ -422,7 +420,6 @@ def reader_progress_data():
 
         chart_data = build_a_chart(dates, label, minutes_data, CHT_BAR, CHT_BLUE)
 
-        print chart_data
         return jsonify(chart_data)
     except:
         return render_template("error.html", err_msg=ERR_MSG)

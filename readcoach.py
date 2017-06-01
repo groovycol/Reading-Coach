@@ -302,7 +302,7 @@ def update_sms_option(coach, sms_preference):
 def update_second_phone(coach, phone2):
     """Update the second phone number in the coach table for the given coach"""
 
-    #format the phone string 
+    #format the phone string
     stripped_phone = format_phone_string(phone2)
 
     #reassign the new value to the phone2 value

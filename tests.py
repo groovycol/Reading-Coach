@@ -32,7 +32,7 @@ class FlaskTestsBasic(unittest.TestCase):
         self.assertIn("Email address:", result.data)
 
     def test_login_form_coach(self):
-        """test the login form for an coach"""
+        """test the login form for a coach"""
 
         result = self.client.get("/login")
         self.assertIn("Phone number:", result.data)
@@ -41,7 +41,7 @@ class FlaskTestsBasic(unittest.TestCase):
         """test the error page"""
 
         result = self.client.get("/error")
-        self.assertIn("The database did not return expected results", result.data)
+        self.assertIn("<body>\n     <h2>", result.data)
 
 
 class FlaskTestsDatabase(unittest.TestCase):
@@ -118,20 +118,32 @@ class FlaskTestsDatabase(unittest.TestCase):
                                   follow_redirects=True)
         self.assertIn("Incorrect password", result.data)
 
-    def test_register_page(self):
-        """Test registration page"""
+    def test_verify_page(self):
+        """Test program verification page"""
 
-        result = self.client.get("/register")
+        result = self.client.get("/verify")
 
-        self.assertIn("Share progress with a Teacher or Organization", result.data)
+        self.assertIn("Enter your school's program code:", result.data)
+
+    def test_verify_process(self):
+        """Test verification"""
+
+        result = self.client.post("/verify_program", data={"prog_code": "READTESTER"}, follow_redirects=True)
+
+        self.assertIn("Enter a phone number where you can send and receive text messages", result.data)
+
+    def test_verify_process_wrong_program(self):
+        """test sending wrong code"""
+
+        result = self.client.post("/verify_program", data={"prog_code": "FUNTESTER"}, follow_redirects=True)
+        self.assertIn("You have entered an invalid code. Try Again.", result.data)
 
     def test_registration_process(self):
         """Test registration of a coach"""
 
         result = self.client.post("/register_process",
-                                  data={"coach_phone": "510-658-1353", "password": "MyPassword", "yesorno": "no", "reader_names": ["Geraldo", "Julia"], "admin_ids": [1, 2], "email": "mrhooper@muppetmail.com"},
+                                  data={"coach_phone": "5106581353", "password": "MyPassword", "yesorno": "no", "reader_names": ["Severus", "Julia"], "admin_ids": [1, 2], "email": "mrhooper@muppetmail.com", "alt_phone": "4106513757"},
                                   follow_redirects=True)
-
         self.assertIn("is now registered", result.data)
         self.assertIn("With your phone", result.data)
 
@@ -153,10 +165,50 @@ class FlaskTestsDatabase(unittest.TestCase):
     def test_add_log_entry(self):
         """test adding reading log entries to db"""
 
-        result = self.client.post("/log_minutes",
-                                  data={"minutes_read": 10, "title": "Phantom Tollbooth", "reader_id": 1, "date": "May 22"},
+        result = self.client.post("/log-minutes.json",
+                                  data={"minutes_read": 10, "title": "Phantom Tollbooth", "reader_id": 1, "date": "May 30"},
                                   follow_redirects=True)
-        self.assertIn("10 minutes recorded", result.data)
+        self.assertIn("10 minutes recorded.", result.data)
+
+    def test_add_log_entry_error(self):
+        """test error adding reading log entry """
+
+        result = self.client.post("/log-minutes.json",
+                                  data={"minutes_read": 10, "title": "Phantom Tollbooth", "reader_id": 100, "date": "May 30"},
+                                  follow_redirects=True)
+        self.assertIn("error updating the database", result.data)
+
+    def test_check_program_code_json(self):
+        """test calling the /check-program-code.json route"""
+
+        result = self.client.post("/check-program-code.json",
+                                  data={"pcode": "MXSUMMER"},
+                                  follow_redirects=True)
+        self.assertIn("true", result.data)
+
+    def test_check_program_code_json_wrong(self):
+        """test calling the /check-program-code.json route"""
+
+        result = self.client.post("/check-program-code.json",
+                                  data={"pcode": "FUNTESTER"},
+                                  follow_redirects=True)
+        self.assertIn("false", result.data)
+
+    def test_check_reader_name_json_match(self):
+        """test calling the /check-reader-name.json route"""
+
+        result = self.client.post("/check-reader-name.json",
+                                  data={"reader_name": "Enzo", "admin_id": 1},
+                                  follow_redirects=True)
+        self.assertIn("true", result.data)
+
+    def test_check_reader_name_json_no_match(self):
+        """test calling the /check-reader-name.json route"""
+
+        result = self.client.post("/check-reader-name.json",
+                                  data={"reader_name": "Texas", "admin_id": 1},
+                                  follow_redirects=True)
+        self.assertIn("false", result.data)
 
     def test_admin_progress_json(self):
         """test calling the /admin-progress.json route"""
@@ -174,7 +226,7 @@ class FlaskTestsDatabase(unittest.TestCase):
         result = self.client.post("/admin-progress.json",
                                   data={"admin_id": 11},
                                   follow_redirects=True)
-        self.assertIn("The database did not return expected results", result.data)
+        self.assertIn("<body>\n     <h2>", result.data)
 
     def test_admin_reader_detail_json_err(self):
         """test calling the /admin-reader-detail.json route"""
@@ -183,7 +235,7 @@ class FlaskTestsDatabase(unittest.TestCase):
                                   data={"reader": "Alexandria"},
                                   follow_redirects=True)
 
-        self.assertIn("The database did not return expected results", result.data)
+        self.assertIn("<body>\n     <h2>", result.data)
 
     def test_reader_progress_json_err(self):
         """test the /reader-progress.json route"""
@@ -191,7 +243,7 @@ class FlaskTestsDatabase(unittest.TestCase):
         result = self.client.post("/reader-progress.json",
                                   data={"reader_id": 100, "time_period": "week"},
                                   follow_redirects=True)
-        self.assertIn('The database did not return expected results', result.data)
+        self.assertIn('<body>\n     <h2>', result.data)
 
     def test_reader_progress_json_week(self):
         """test the /reader-progress.json route"""
@@ -210,6 +262,7 @@ class FlaskTestsDatabase(unittest.TestCase):
                                   follow_redirects=True)
         self.assertIn('"label": "Reading Minutes Logged"', result.data)
         self.assertNotIn("horizontalBar", result.data)
+
 
 class FlaskTestsAdminLoggedIn(unittest.TestCase):
     """Flask tests with admin logged in to session."""
@@ -266,6 +319,23 @@ class FlaskTestsAdminLoggedIn(unittest.TestCase):
                                   follow_redirects=True)
         self.assertIn("SMS message sent", result.data)
 
+    def test_reader_books_json(self):
+        """test calling the /admin-reader-books.json route"""
+
+        result = self.client.post("/admin-reader-books.json",
+                                  data={"reader": "Enzo"},
+                                  follow_redirects=True)
+        self.assertIn("Penderwicks", result.data)
+
+    def test_reader_books_json_err(self):
+        """test calling the /admin-reader-books.json route"""
+
+        result = self.client.post("/admin-reader-books.json",
+                                  data={"reader": "Texas"},
+                                  follow_redirects=True)
+
+        self.assertIn("<body>\n     <h2>", result.data)
+
 
 class FlaskTestsCoachLoggedIn(unittest.TestCase):
     """Flask tests with coach logged in to session."""
@@ -278,7 +348,7 @@ class FlaskTestsCoachLoggedIn(unittest.TestCase):
 
         with self.client as c:
             with c.session_transaction() as sess:
-                sess['coach'] = "510-384-8508"
+                sess['coach'] = "5103848508"
 
          # Connect to test database
         connect_to_db(app, "postgresql:///testdb")
@@ -320,12 +390,12 @@ class FlaskTestsCoachLoggedIn(unittest.TestCase):
         """Test changing password and text preferences"""
 
         result = self.client.post("/save-settings",
-                                  data={"password": "BananaPeel", "yesorno": "no"},
+                                  data={"password": "BananaPeel", "yesorno": "no", "alt_phone": "4106513757"},
                                   follow_redirects=True)
         self.assertIn("Your password was updated", result.data)
 
     def test_change_settings(self):
-        """"Test the change settings form"""
+        """Test the change settings form"""
 
         result = self.client.get("/change-settings")
         self.assertIn("Change Text Message Reminder option", result.data)

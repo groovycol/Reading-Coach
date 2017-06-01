@@ -6,6 +6,7 @@ seed_data_prod/
 *.pyc
 .coverage
 .coveragerc
+example_incoming
 ENHANCE
 REMIND
 secrets.sh
