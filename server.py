@@ -96,11 +96,42 @@ def logout():
 
     login_info = session.keys()
     for key in login_info:
+        if key == "admin":
+            route_redirect = "/login-admin"
+        else:
+            route_redirect = "/login"
         del session[key]
 
     flash("You have logged out.")
 
-    return redirect("/login")
+    return redirect(route_redirect)
+
+
+#Manage making changes to password
+@app.route('/change-password')
+def change_password():
+    """Allow an admin to reset password"""
+    #get the admin object
+    admin = get_admin_by_email(session["admin"])
+
+    return render_template("change-pword.html", admin=admin)
+
+
+#write password changes to the dbase
+@app.route('/save-password', methods=['POST'])
+def save_password():
+    """Save password changes submitted from change-password route"""
+
+    password = request.form.get("password", None)
+    admin = get_admin_by_email(session["admin"])
+
+    if password:
+        #hash the password
+        passhash = sha256_crypt.encrypt(password)
+        update_password_admin(admin, passhash)
+        flash("Your password was updated")
+
+    return redirect("/progress-view")
 
 
 #Manage making changes to settings
@@ -115,6 +146,7 @@ def change_settings():
     return render_template("change-settings.html", coach=coach, phone_string=phone_string)
 
 
+#write changed settings to the database
 @app.route('/save-settings', methods=['POST'])
 def save_settings():
     """Save any changes submitted from change-settings route"""
@@ -132,7 +164,7 @@ def save_settings():
     if password:
         #hash the password
         passhash = sha256_crypt.encrypt(password)
-        update_password(coach, passhash)
+        update_password_coach(coach, passhash)
         flash("Your password was updated")
 
     if phone2:

@@ -40,6 +40,7 @@
             <li><a href="/logout">Log Out</a></li>
         {% elif "admin" in session %}
             <li><a href="#">{{ session["admin"] }}</a></li>
+            <li><a href="/change-password">Change your password</a></li>
             <li><a href="/logout">Logout</a></li>
         {% else %}
             <li><a href="/login-admin">Teacher/Admin Portal</a></li>

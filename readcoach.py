@@ -313,11 +313,22 @@ def update_second_phone(coach, phone2):
     db.session.commit()
 
 
-def update_password(coach, passhash):
-    """Update the sms_option in the coach table for the given coach"""
+def update_password_coach(coach, passhash):
+    """Update the password in the coach table for the given coach"""
 
     #reassign the new value to the sms_option value
     coach.password = passhash
+
+    #send the change to the database
+    db.session.flush()
+    db.session.commit()
+
+
+def update_password_admin(admin, passhash):
+    """Update the password in the admin table for the given admin"""
+
+    #reassign the new value to the sms_option value
+    admin.password = passhash
 
     #send the change to the database
     db.session.flush()

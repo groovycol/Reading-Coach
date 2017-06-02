@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block content %} 
+<!--change-settings.html, retrievable from the navbar when a coach is in seesion
+Allows coach to change some settings for their account-->
+<div class="container">
+    <div class="row">
+      <div class="col-xs-12">
+      <script src="https://code.jquery.com/jquery.js"></script>
+        <form action="/save-password" method="POST">
+        <h2>Settings for {{admin.nameprefix.prefix}} {{admin.name}}</h2>
+        <h3>
+        <br>
+        <br>
+        <label>Change Password:
+            <input type="password" name="password" id="password">
+        </label>
+        <br>
+        <input class="btn btn-lg btn-success" type="submit" id="submit" value="Save Changes">
+        </form>
+        <br>
+        <br>
+        <br>
+        <button class="btn btn-lg btn-primary" id="back" onclick="location.href='/record'" value="back">Return without making changes</button>
+        </h3>
+
+        <script>
+        $(document).on( "click", "#submit", function (evt){
+            var password = $('#password').val(); 
+            //prevent continuing to next screen until password 8chars or more
+            if (password.length < 8 ) {
+                evt.preventDefault();
+                $('#password').after('<div class="alert alert-warning">Your password should be at least 8 characters</div>');
+                }
+            }
+        });
+        </script>
+        </div>
+    </div>
+</div
+{% endblock %}
