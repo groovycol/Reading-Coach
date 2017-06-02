@@ -144,14 +144,13 @@ def handle_incoming(sms_message):
         return str(resp)
 
     for reader in incoming_coach.readers:
-        #chedk to see if the name occurs in the possible_names set
+        #check to see if the name occurs in the possible_names set
         if reader.first_name.lower() in possible_names:
             #if so, set first_name and remove that value from the remaining words list
             first_name = reader.first_name
-            if first_name in remaining_words:
-                remaining_words.remove(reader.first_name)
-            else:
-                remaining_words.remove(reader.first_name.lower())
+            for single_word in remaining_words:
+                if single_word.lower() == first_name.lower():
+                    remaining_words.remove(single_word)
             reader_id = reader.reader_id
 
     #do we have a reader?
