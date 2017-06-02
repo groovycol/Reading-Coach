@@ -122,7 +122,7 @@ def handle_incoming(sms_message):
 
     #look for Log or log, a string of digits and all other words may be names
     for word in received_message.split():
-        if word == "log" or word == "Log":
+        if word == "log" or word == "Log" or word == "LOG":
             log_minutes = True
         elif word.isdigit() and minutes is None:
             minutes = word
