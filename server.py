@@ -1,4 +1,5 @@
 
+from datetime import timedelta
 from flask import Flask, render_template, request, flash, redirect, session
 from jinja2 import StrictUndefined
 #from flask_debugtoolbar import DebugToolbarExtension
@@ -27,25 +28,34 @@ DEBUG = "NO_DEBUG" not in os.environ
 app.jinja_env.undefined = StrictUndefined
 
 
+#Timeout sessions after 30 mins
+@app.before_request
+def make_session_permanent():
+    session.permanent = True
+    app.permanent_session_lifetime = timedelta(minutes=30)
+
+
 @app.route("/")
 def index():
     """Index route"""
     return render_template("index.html")
 
 
-#Routes to manage login and logout
+#coach login
 @app.route('/login')
 def login_form():
     """Show login form."""
     return render_template("login.html")
 
 
+#login for the Teacher/Admin Portal
 @app.route('/login-admin')
 def login_admin():
     """Show login form for Admin portal"""
     return render_template("login-admin.html")
 
 
+#process posted login data
 @app.route('/login', methods=['POST'])
 def login_process():
     """Process login."""
@@ -68,6 +78,7 @@ def login_process():
         return redirect("/login")
 
 
+#process posted admin login data
 @app.route('/process_admin_login', methods=['POST'])
 def process_admin_login():
     """Process login for admin."""
@@ -90,6 +101,7 @@ def process_admin_login():
         return redirect("/login-admin")
 
 
+#logout for both user types
 @app.route("/logout")
 def logout():
     """ Remove values from the session"""
