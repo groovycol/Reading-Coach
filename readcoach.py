@@ -223,7 +223,14 @@ def build_a_chart(x_axis_labels, chart_label, data, chart_type, bar_color):
         },
         "options": {
             "responsive": "true",
-            "maintainAspectRatio": "false"
+            "maintainAspectRatio": "false",
+            "scales": {
+                "yAxes": [{
+                    "ticks": {
+                        "beginAtZero": "true"
+                    }
+                }]
+            }
         }
     }
 
