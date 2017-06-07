@@ -156,7 +156,10 @@ def match_coach_by_phone(phone):
     try:
         coach = Coach.query.filter_by(phone=formatted_phone).one()
     except:
-        coach = Coach.query.filter_by(phone2=formatted_phone).one()
+        try:
+            coach = Coach.query.filter_by(phone2=formatted_phone).one()
+        except:
+            coach = None
 
     #return any coach object where that phone number is a match
     return coach
@@ -237,15 +240,15 @@ def build_a_chart(x_axis_labels, chart_label, data, chart_type, bar_color):
     return chart
 
 
-def build_a_report(reader, dates):
-    """build a report of a readers reading logs, return a list of lists with [[date,minutes,title], [date,minutes,title]]"""
-    # for day in dates:
-    #     entries[day] = 0
-    logs = []
-    #iterate through the logs and add minutes read for days that match
-    for log_entry in reader.logs:
-        logs.append([log_entry.date_time.date().strftime(DFLT_DATE_FMT), log_entry.minutes_read, log_entry.title])
-    return logs
+#def build_a_report(reader, dates):
+    #"""build a report of a readers reading logs, return a list of lists with [[date,minutes,title], [date,minutes,title]]"""
+    ## for day in dates:
+    ##     entries[day] = 0
+    #logs = []
+    ##iterate through the logs and add minutes read for days that match
+    #for log_entry in reader.logs:
+        #logs.append([log_entry.date_time.date().strftime(DFLT_DATE_FMT), log_entry.minutes_read, log_entry.title])
+    #return logs
 
 
 def add_coach_to_db(phone, password, email, sms_option, alt_phone):

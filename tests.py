@@ -142,19 +142,28 @@ class FlaskTestsDatabase(unittest.TestCase):
         """Test registration of a coach"""
 
         result = self.client.post("/register_process",
-                                  data={"coach_phone": "5106581353", "password": "MyPassword", "yesorno": "no", "reader_names": ["Severus", "Julia"], "admin_ids": [1, 2], "email": "mrhooper@muppetmail.com", "alt_phone": "4106513757"},
+                                  data={"coach_phone": "5106581353", "password": "MyPassword", "yesorno": "no", "reader_names": ["Gracie", "Julia"], "admin_ids": [1, 2], "email": "mrhooper@muppetmail.com", "alt_phone": "4106513757"},
                                   follow_redirects=True)
         self.assertIn("is now registered", result.data)
         self.assertIn("With your phone", result.data)
 
+    def test_registration_process_nodupe(self):
+        """Test non-dupe registration of a coach"""
+
+        result = self.client.post("/check-uniq-phone.json",
+                                  data={"phone": "(410)399-8508"},
+                                  follow_redirects=True)
+
+        self.assertIn("false", result.data)
+
     def test_registration_process_dupe(self):
         """Test duplicate registration of a coach"""
 
-        result = self.client.post("/register_process",
-                                  data={"coach_phone": "510-384-8508", "password": "MyPassword", "yesorno": "no", "reader_names": ["Geraldo", "Julia"], "admin_ids": [1, 2], "email": "mrhooper@muppetmail.com"},
+        result = self.client.post("/check-uniq-phone.json",
+                                  data={"phone": "(510)384-8508"},
                                   follow_redirects=True)
 
-        self.assertIn("is already registered", result.data)
+        self.assertIn("true", result.data)
 
     def test_send_sms(self):
         """Test sending of an sms message"""
@@ -167,6 +176,14 @@ class FlaskTestsDatabase(unittest.TestCase):
 
         result = self.client.post("/log-minutes.json",
                                   data={"minutes_read": 10, "title": "Phantom Tollbooth", "reader_id": 1, "date": "May 30"},
+                                  follow_redirects=True)
+        self.assertIn("10 minutes recorded.", result.data)
+
+    def test_add_log_entry_no_date(self):
+        """test adding reading log entries to db w/o specified date"""
+
+        result = self.client.post("/log-minutes.json",
+                                  data={"minutes_read": 10, "title": "Phantom Tollbooth", "reader_id": 1},
                                   follow_redirects=True)
         self.assertIn("10 minutes recorded.", result.data)
 
@@ -301,6 +318,14 @@ class FlaskTestsAdminLoggedIn(unittest.TestCase):
         self.assertIn("Readers Report", result.data)
         self.assertIn('<canvas id="barChart"', result.data)
 
+    def test_change_password(self):
+        """Test changing admin password"""
+
+        result = self.client.post("/save-password",
+                                  data={"password": "MyPassword"},
+                                  follow_redirects=True)
+        self.assertIn("Your password was updated", result.data)
+
     def test_admin_reader_detail_json(self):
         """test calling the /admin-reader-detail.json route"""
 
@@ -335,6 +360,18 @@ class FlaskTestsAdminLoggedIn(unittest.TestCase):
                                   follow_redirects=True)
 
         self.assertIn("<body>\n     <h2>", result.data)
+
+    def test_change_pword(self):
+        """Test the change password form"""
+
+        result = self.client.get("/change-password")
+        self.assertIn("Settings for Ms.", result.data)
+
+    def test_logout_admin(self):
+        """test logout of admin"""
+
+        result = self.client.get("/logout")
+        self.assertIn("/login-admin", result.data)
 
 
 class FlaskTestsCoachLoggedIn(unittest.TestCase):
