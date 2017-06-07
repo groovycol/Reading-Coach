@@ -107,11 +107,10 @@ def logout():
     """ Remove values from the session"""
 
     login_info = session.keys()
+    route_redirect = "/login"
     for key in login_info:
         if key == "admin":
             route_redirect = "/login-admin"
-        else:
-            route_redirect = "/login"
         del session[key]
 
     flash("You have logged out.")

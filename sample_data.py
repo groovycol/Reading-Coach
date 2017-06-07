@@ -19,7 +19,7 @@ def example_data():
     p2 = Program(program_code="READTESTER", organization="Barack Obama Elementary", start_date="2017-05-12 00:00:00", end_date="2017-05-31 00:00:00")
 
     # Add sample Coaches
-    c1 = Coach(phone="5103848508", phone2="5106591353", password='$5$rounds=535000$wjufdSNVsChPA256$iiuJn6aXCGk1BqV2Sn2YNgbGM9R/Q46Cex51tAFcSBA', email='groovycol@gmail.com', sms_option="yes", start_date="2017-05-29 10:34:09")
+    c1 = Coach(phone="5103848508", phone2="5106591353", password='$5$rounds=535000$wjufdSNVsChPA256$iiuJn6aXCGk1BqV2Sn2YNgbGM9R/Q46Cex51tAFcSBA', email='groovycol@gmail.com', sms_option="yes", start_date="2017-06-05 10:34:09")
     c2 = Coach(phone="5106551353", password='$5$rounds=535000$wjufdSNVsChPA256$iiuJn6aXCGk1BqV2Sn2YNgbGM9R/Q46Cex51tAFcSBA', sms_option="yes", start_date="2016-05-20 10:34:09")
     c3 = Coach(phone="5106323222", password='$5$rounds=535000$wjufdSNVsChPA256$iiuJn6aXCGk1BqV2Sn2YNgbGM9R/Q46Cex51tAFcSBA', email='adfoodie@gmail.com', sms_option="yes", start_date="2016-05-20 10:34:09")
     c4 = Coach(phone="5106513757", password='$5$rounds=535000$wjufdSNVsChPA256$iiuJn6aXCGk1BqV2Sn2YNgbGM9R/Q46Cex51tAFcSBA', sms_option="yes", start_date="2016-05-20 10:34:09")
