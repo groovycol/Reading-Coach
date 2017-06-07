@@ -161,9 +161,16 @@
             $('#password').after('<div class="alert alert-warning">Please enter a password that is at least 8 characters</div>');
         //hide phone and password input, show add_readers
         } else {
-            $('#phone_input').hide();
-            $('#add_readers').show();
-            $('#add_reader_button').show();
+            //check to make sure this phone is not already registered
+            $.post("/check-uniq-phone.json", { "phone": phoneString }, function (data) {
+                if (data.phone_exists === "true") {
+                    $('#phone_num').after('<div class="alert alert-danger">This phone number <strong>' + phoneString + ' </strong> is already registered. Check number or <a href="/login">login?</a></div>');
+                } else {
+                    $('#phone_input').hide();
+                    $('#add_readers').show();
+                    $('#add_reader_button').show();
+                }
+            }); 
         }
     });
 

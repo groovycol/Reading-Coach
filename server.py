@@ -237,41 +237,30 @@ def register_process():
     #hash the password
     passhash = sha256_crypt.encrypt(request.form["password"])
 
-    #make sure this phone number isn't already in use
-    try:
-        match_coach_by_phone(coach_phone)
+    #Add new coach to the database
+    add_coach_to_db(coach_phone, passhash, email, sms_option, alt_phone)
+    #retrieve the new coach id
+    coach = get_coach_by_phone(coach_phone)
 
-        #already in the dbase, redirect to login page
-        flash("This phone number is already registered. Login?")
-        return redirect("/login")
-    except:
+    #add a new reader to the db
+    for reader_number in range(len(names)):
+        add_reader_to_db(names[reader_number],
+                         coach.coach_id,
+                         admins[reader_number])
+    #Give the coach a confirmation message about being registered.
+    flash(coach_phone + " is now registered")
 
-        #Add new coach to the database
-        add_coach_to_db(coach_phone, passhash, email, sms_option, alt_phone)
+    #Add the new phone to the session to keep coach logged in.
+    session["coach"] = coach_phone
 
-        #retrieve the new coach id
-        coach = get_coach_by_phone(coach_phone)
+    #format the phone number for display
+    phone_string = format_phone_display(coach_phone)
 
-        #add a new reader to the db
-        for reader_number in range(len(names)):
-            add_reader_to_db(names[reader_number],
-                             coach.coach_id,
-                             admins[reader_number])
+    #send a welcoming text message
+    #uncomment before deploying or testing
+    send_welcome_msg(coach_phone, names[0])
 
-        #Give the coach a confirmation message about being registered.
-        flash(coach_phone + " is now registered")
-
-        #Add the new phone to the session to keep coach logged in.
-        session["coach"] = coach_phone
-
-        #format the phone number for display
-        phone_string = format_phone_display(coach_phone)
-
-        #send a welcoming text message
-        #uncomment before deploying or testing
-        send_welcome_msg(coach_phone, names[0])
-
-        return render_template("new-coach-info.html", first_name=names[0], phone_string=phone_string)
+    return render_template("new-coach-info.html", first_name=names[0], phone_string=phone_string)
 
 
 #Routes to manage input and displaying data
@@ -423,6 +412,20 @@ def check_progcode_valid():
     else:
         result['code_exists'] = 'true'
 
+    return jsonify(result)
+
+
+@app.route('/check-uniq-phone.json', methods=['POST'])
+def check_uniq_phone():
+    """Return true or false if phone number in database"""
+
+    result = {'phone_exists': None}
+    phonenum = match_coach_by_phone(request.form.get("phone"))
+
+    if phonenum is None:
+        result['phone_exists'] = 'false'
+    else:
+        result['phone_exists'] = 'true'
     return jsonify(result)
 
 
