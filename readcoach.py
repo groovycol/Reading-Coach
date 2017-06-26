@@ -251,6 +251,15 @@ def build_a_chart(x_axis_labels, chart_label, data, chart_type, bar_color):
     #return logs
 
 
+def want_reminders():
+    """return a list of coach primary phone numbers and the value of sms_option"""
+
+    #for each coach, add primary phone as key and sms_option value as value to dictionary
+    Coaches = Coach.query.all()
+    for entry in Coaches:
+        print entry.phone, entry.sms_option
+
+
 def add_coach_to_db(phone, password, email, sms_option, alt_phone):
     """Add a new user to the database"""
 
