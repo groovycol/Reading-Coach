@@ -257,7 +257,7 @@ def want_reminders():
     #for each coach, add primary phone as key and sms_option value as value to dictionary
     Coaches = Coach.query.all()
     for entry in Coaches:
-        print entry.phone, entry.sms_option
+        print entry.coach_id, entry.phone, entry.sms_option
 
 
 def add_coach_to_db(phone, password, email, sms_option, alt_phone):
