@@ -1,6 +1,4 @@
 
-from sqlalchemy import func
-
 from model import *
 from server import app
 from readcoach import *
