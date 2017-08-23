@@ -182,6 +182,14 @@ def get_admin_by_email(email):
     return admin
 
 
+def get_reader_by_id(id):
+    """Given a reader's id, return the reader object"""
+
+    reader = Reader.query.filter(Reader.reader_id == id).first()
+
+    return reader
+
+
 def get_reader_by_name(name, admin_id):
     """Given a reader's name, return the reader object"""
 
@@ -240,15 +248,15 @@ def build_a_chart(x_axis_labels, chart_label, data, chart_type, bar_color):
     return chart
 
 
-#def build_a_report(reader, dates):
-    #"""build a report of a readers reading logs, return a list of lists with [[date,minutes,title], [date,minutes,title]]"""
-    ## for day in dates:
-    ##     entries[day] = 0
-    #logs = []
-    ##iterate through the logs and add minutes read for days that match
-    #for log_entry in reader.logs:
-        #logs.append([log_entry.date_time.date().strftime(DFLT_DATE_FMT), log_entry.minutes_read, log_entry.title])
-    #return logs
+def build_a_report(reader):
+    """build a report of a readers reading logs, return a list of lists with [[date,minutes,title], [date,minutes,title]]"""
+
+    #dictionary that will hold a date, and logs for that date
+    logs = []
+    #iterate through the logs and add minutes read for days that match
+    for log_entry in reader.logs:
+        logs.append([log_entry.date_time.date().strftime(DFLT_DATE_FMT), log_entry.minutes_read, log_entry.title])
+    return logs
 
 
 def want_reminders():

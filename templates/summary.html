@@ -1,29 +1,17 @@
 {% extends 'base.html' %}
 {% block content %}
-<script src="https://code.jquery.com/jquery.js"></script>
+
 <div class="container">
-    <div class="row">
-        <div class="col-xs-12"> 
-        <h2> Reading Logs for Summer 2016</h2>
-        {% if coach.readers|length > 1 %}
-            <h3><a href="/summary-l">View Linden's Logs</a><br>
-            <a href="/summary-s">View Sophia's Logs</a></h3>
-                
-        {% else %}
-            {% for reader in coach.readers %}
-                <h3>{{ reader.first_name }}</h3>
-                <input type="hidden" id="reader_id" name="reader_id" value="{{reader.reader_id}}">
-                {% if reader_totals %}
-                    <span>TOTAL minutes read: {{reader_totals[reader.first_name]}}</span>
-                {%endif%}
-            {% endfor %}
-        
-        </div>
-        <div class="col-xs-12">
-        <div id="canvas"></div>
-        <button class="btn-primary" id="time_period" value="all" hidden>Show All</button>
-        <br>
-        <table>
+<div class="row">
+<div class="col-xs-12">
+<body>
+    <h1>{{ reader.first_name }}</h1>
+    <br>
+        <h2>TOTAL minutes read: {{reader_totals[reader.first_name]}}</h2>
+    <br>
+    <br>
+    <h3>Summer 2017 Reading Logs</h3>
+    <table>
         <col width="100">
         <col width="130">
         <col width="400">
@@ -39,9 +27,10 @@
             <td>{{log_entry[2]}}</td>
         </tr>
         {% endfor %}
-        {% endif %}
-        </table>
-        </div>
-    </div>
+    </table>
+</body>
 </div>
+</div>
+</div>
+
 {% endblock %}

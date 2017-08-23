@@ -26,6 +26,7 @@
         <div class="col-xs-12">
         <div id="canvas"></div>
         <button class="btn-primary btn-lg" id="time_period" value="week">Show All</button>
+        <button class="btn-success btn-lg" id="summary" value="summary">View Reading Logs</button>
         <script>
             // Initialize some chart variables
             var canvas_tag = '<canvas id="barChart" width="600" height="200"></canvas>'
@@ -53,6 +54,12 @@
                 draw_chart();
             }
 
+            // function to go to summary route
+            function goToSummary(evt) {
+                var reader_id = $('#reader_id').val();
+                window.location = '/summary/' + reader_id
+            }
+            
             //initial chart display
             draw_chart();
 
@@ -61,6 +68,9 @@
 
             // evt handler for button click to toggle chart data display
             $('#time_period').click(toggleDataDisplay)
+
+            // evt handler for button click to View Reading Logs
+            $('#summary').click(goToSummary)
 
         </script>
         </div>

@@ -325,27 +325,18 @@ def show_dashboard():
         return redirect("/login")
 
 
-#@app.route("/summary")
-#def show_summary():
-#    """show a summary page"""
-#
-#    #make sure coach is logged in
-#    try:
-#        coach = get_coach_by_phone(session["coach"])
-#        reader_totals = {}
-#        for reader in coach.readers:
-#            reader_totals[reader.first_name] = get_total_mins(reader)
-#
-#            #retrieve a list of dates from when reader signed up
-#            dates = get_formatted_dates(get_elapsed_days(get_start_date(reader)))
-#
-#            reader_logs = build_a_report(reader, dates)
-#
-#        return render_template("summary.html", coach=coach, reader_totals=reader_totals, reader_logs=reader_logs)
-#
-#    except:
-#        flash("You must be logged in to view progress charts")
-#        return redirect("/login")
+@app.route("/summary/<reader_id>")
+def show_summary(reader_id):
+    """show a summary page"""
+
+    reader = get_reader_by_id(reader_id)
+    reader_totals = {}
+    reader_totals[reader.first_name] = get_total_mins(reader)
+    ##retrieve a list of dates from when reader signed up
+    #dates = get_formatted_dates(get_elapsed_days(get_start_date(reader)))
+    reader_logs = build_a_report(reader)
+    print reader_logs
+    return render_template("summary.html", reader=reader, reader_totals=reader_totals, reader_logs=reader_logs)
 
 
 @app.route("/progress-view")
