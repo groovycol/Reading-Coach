@@ -18,12 +18,14 @@ def tw_send_message(phone_number):
     recipient = get_coach_by_phone(phone_number)
 
     #determine the message of the day to send
-    #for summer reading program
-    msg = get_message_by_day(get_elapsed_days(recipient.start_date))
-
+    #during program
+    #msg = get_message_by_day(get_elapsed_days(recipient.start_date))
+    
     #format message to send
-    msg_body = "The Reading Coach reminder: " + msg.message_text + " Log in to http://bit.ly/2rTxwxK to turn off reminder text messages. Reply to log today's minutes. example: 'log 10 {}'".format(recipient.readers[0].first_name)
-    #msg_body = "The Reading Coach: The Summer Reading Program ends Aug 31. You will not be able to record minutes after Aug 31, but you can still log in and view your student's progress through Sept 30. Email feedback or questions to thereadingcoachapp@gmail.com. Thank you for using The Reading Coach!"
+    #during program
+    #msg_body = "The Reading Coach reminder: " + msg + " Log in to http://bit.ly/2rTxwxK to turn off reminder text messages. Reply to log today's minutes. example: 'log 10 {}'".format(recipient.readers[0].first_name)
+    #end of program special message
+    msg_body = "The Reading Coach: The Summer Reading Program ends September 1. You will not be able to record minutes after Sep 1, but you can still log in and view your student's progress through Sept 30. Email feedback or questions to thereadingcoachapp@gmail.com. Thank you for using The Reading Coach!"
     #send the message via Twilio. Twilio does not return a success/failure status
     client = TwilioRestClient(ACCOUNT_SID, AUTH_TOKEN)
     client.messages.create(to=phone_number,
