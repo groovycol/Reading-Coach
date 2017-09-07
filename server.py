@@ -385,7 +385,7 @@ def sendlog():
 
     msg_received = request.form
     print msg_received
-    response = handle_incoming(msg_received)
+    response = handle_incoming_closed(msg_received)
 
     return Response(response, mimetype='text/xml')
 
