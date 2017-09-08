@@ -62,7 +62,7 @@ def get_formatted_dates(elapsed_days):
         #toggle for program in progress/program end
         #day = date.today() - timedelta(days=x)
         day = datetime(2017, 9, 1) - timedelta(days=x)
-
+        
         day_labels.append(day.strftime(DFLT_DATE_FMT))
 
     return day_labels
