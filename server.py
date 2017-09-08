@@ -68,7 +68,9 @@ def login_process():
         if sha256_crypt.verify(request.form["password"], coach.password):
             #add coach to the session
             session["coach"] = coach_phone
-            return redirect("/record")
+            #toggle back to record when program is in session
+            #return redirect("/record")
+            return redirect("/dashboard") 
         else:
             #if password doesn't match, back to /login rte w/msg
             flash("Incorrect password")
