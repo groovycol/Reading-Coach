@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<script src="https://code.jquery.com/jquery.js"></script>
+<script src="../static/Chart.min.js"></script>
+<div class="container">
+    <div class="row">
+        <div class="col-xs-6">
+        <h2 id="chart_name"> {{program.organization}} Readers Report</h2>
+        <h3> Summer 2017 Total Minutes read: {{ total_minutes }} </h3>
+        <h3 id="booktitles" hidden>Books read: </h3>
+            <span id="bookdata"></span>
+        <br>
+        <h3 id="chart_description">Average Daily Minutes by Reader</h3>
+        </div>
+        <input type="hidden" id="program_id" value="{{program.program_id}}">
+        <div class="col-xs-offset- col-xs-6">
+        <br>
+        </div>
+        <div class="col-xs-12"></div>
+        <div id="canvas"></div>
+        <button type="button" id="showbutton" class="btn-primary" onclick="location='/program-view'" hidden>Return to All Students View</button>
+        <br>
+        <br>
+    </h3>
+        
+        <script>
+            // Initialize some chart variables
+            var canvas_tag = '<canvas id="barChart" width="800" height="250"></canvas>'
+            // initial chart display
+            $.post("/admin-program.json", {"program_id": $("#program_id").val() }, function (data) {
+                // clear the canvas
+                $("#barChart").remove()
+                $("#canvas").append(canvas_tag)
+                // initialize chart
+                var ctx_bar = $("#barChart").get(0).getContext("2d");
+                // var options = { responsive: true, maintainAspectRatio: true};
+                // draw chart
+                var myBarChart = new Chart(ctx_bar, data);
+           
+                // event handler for clicking on a data bar in the chart
+                $("#barChart").click( function(evt) {
+                    var activePoints = myBarChart.getElementsAtEvent(evt);
+                    var reader = activePoints[0]._model.label;
+                    
+                    // change the chart heading descriptor
+                    $('#chart_name').html(reader)
+                    $('#chart_description').html("Minutes Read Per Day")
+                    // clear the canvas
+                    $("#barChart").remove()
+                    $("#canvas").append(canvas_tag)
+                    // re-initialize chart
+                    var ctx_bar = $("#barChart").get(0).getContext("2d");
+                    // var options = { responsive: true, maintainAspectRatio: true};
+                    //draw new chart
+                    $.post("/admin-reader-detail.json", {"reader": reader}, function (data){
+                        var myBarChart = new Chart(ctx_bar, data);
+                        // show button to return to all students view
+                        $('#showbutton').show()
+                        // show message box and submit button
+                        $('#message_desc').show()
+                        $('#messagebox').show() 
+                        $('#submit').show()
+                        // $('#showbooks').show()
+                    });
+                    // show book title list
+                    $.post("/admin-reader-books.json", {"reader": reader}, function (data){
+                        $('#booktitles').show() 
+                        console.log(data.readerdata)
+                        $('#bookdata').html(data.readerdata)  });
+                    $('#showbooks').prop('disabled', true)
+                });
+            });
+        </script>
+        </div>
+        <div class="col-xs-12"></div>
+        <div id="canvas"></div>
+        <button type="button" id="showbutton" class="btn-primary" onclick="location='/program-view'" hidden>Return to All Students View</button>
+        </h2>
+        </div>
+    </div>
+</div>
+{% endblock %}

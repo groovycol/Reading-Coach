@@ -62,7 +62,6 @@ def get_formatted_dates(elapsed_days):
         #toggle for program in progress/program end
         #day = date.today() - timedelta(days=x)
         day = datetime(2017, 9, 1) - timedelta(days=x)
-        
         day_labels.append(day.strftime(DFLT_DATE_FMT))
 
     return day_labels
@@ -77,6 +76,18 @@ def get_total_by_admin(admin):
     return total_mins
 
 
+def get_total_program_mins(program):
+    """Given a program id, return the total number of minutes for all readers"""
+
+    total_mins = 0
+    admins = program.admins
+    for admin in admins:
+        total_mins += get_total_by_admin(admin)
+    print admins
+    print total_mins
+    return total_mins
+
+
 def get_total_mins(reader):
     """Given a reader object, return the total number of minutes read from ReadingLog table"""
 
@@ -85,6 +96,27 @@ def get_total_mins(reader):
         total_mins += log.minutes_read
 
     return total_mins
+
+
+def get_program_logs(program_id):
+    """
+    Given a program's id return a dictionary of name keys
+    and the avg num minutes read as values
+    """
+    #retrieve the program object
+    program = Program.query.get(program_id)
+
+    #initialize an empty dictionary
+    reader_data = {}
+
+    #loop through each Admin for that project and build reader data
+    for admin in program.admins:
+        #generate a list of names
+        for reader in admin.readers:
+            avg_minutes = get_total_mins(reader) / (get_elapsed_days(get_start_date(reader)))
+            reader_data[reader.first_name] = avg_minutes
+
+    return reader_data
 
 
 def get_admin_logs(admin_id):
@@ -166,6 +198,14 @@ def match_coach_by_phone(phone):
 
     #return any coach object where that phone number is a match
     return coach
+
+
+def get_program_by_id(prog_id):
+    """Given a program id, return the program object"""
+
+    program = Program.query.filter(Program.program_id == prog_id).first()
+
+    return program
 
 
 def get_admins_by_program_code(program_code):

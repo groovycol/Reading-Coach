@@ -341,6 +341,26 @@ def show_summary(reader_id):
     return render_template("summary.html", reader=reader, reader_totals=reader_totals, reader_logs=reader_logs)
 
 
+@app.route("/program-view")
+def show_program():
+    """Allows logged in admin to view program charts"""
+
+    #make sure admin is logged in
+    try:
+        admin = get_admin_by_email(session["admin"])
+        print admin
+        program = get_program_by_id(admin.program_id)
+        print program
+        total_minutes = get_total_program_mins(program)
+        print total_minutes
+
+        return render_template("program-view.html", admin=admin, program=program, total_minutes=total_minutes)
+
+    except:
+        flash("You must be logged in to view progress")
+        return redirect("/login-admin")
+
+
 @app.route("/progress-view")
 def show_progress():
     """Allows logged in admin to view progress charts"""
@@ -499,6 +519,34 @@ def admin_reader_detail():
 
         #get chart.js dictionary for chart
         chart_data = build_a_chart(dates, reader.first_name, minutes_data, CHT_BAR, CHT_ORANGE)
+
+        return jsonify(chart_data)
+
+    except:
+        return render_template("error.html", err_msg=ERR_MSG)
+
+
+@app.route('/admin-program.json', methods=['POST'])
+def admin_program_data():
+    """Return chart data for all readers associated with a Program"""
+
+    try:
+        program_id = request.form.get("program_id")
+
+        #get reader's log data in the form of a dictionary
+        log_data = get_program_logs(program_id)
+
+        #name_labels are the sorted keys of the log_data dictionary
+        name_labels = log_data.keys()
+
+        #make a list to append minute data to
+        avg_minutes_data = log_data.values()
+
+        #set a label
+        label = "Average Reading Minutes Per Day"
+
+        #get chart.js dictionary for chart
+        chart_data = build_a_chart(name_labels, label, avg_minutes_data, CHT_HOR, CHT_BLUE)
 
         return jsonify(chart_data)
 
