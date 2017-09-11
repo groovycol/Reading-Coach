@@ -506,7 +506,7 @@ def admin_reader_detail():
     #get the reader object
     try:
         admin = get_admin_by_email(session["admin"])
-        reader = get_reader_by_name(request.form.get("reader"), admin.admin_id)
+        reader = get_reader_by_name(request.form.get("reader"))
 
         #get the dates for this chart
         dates = get_formatted_dates(get_elapsed_days(get_start_date(reader)))
@@ -547,6 +547,7 @@ def admin_program_data():
 
         #get chart.js dictionary for chart
         chart_data = build_a_chart(name_labels, label, avg_minutes_data, CHT_HOR, CHT_BLUE)
+        print chart_data
 
         return jsonify(chart_data)
 

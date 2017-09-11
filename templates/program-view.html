@@ -7,7 +7,7 @@
     <div class="row">
         <div class="col-xs-6">
         <h2 id="chart_name"> {{program.organization}} Readers Report</h2>
-        <h3> Summer 2017 Total Minutes read: {{ total_minutes }} </h3>
+        <h3 id="total_all"> Summer 2017 Total Minutes read: {{ total_minutes }} </h3>
         <h3 id="booktitles" hidden>Books read: </h3>
             <span id="bookdata"></span>
         <br>
@@ -45,6 +45,7 @@
                     
                     // change the chart heading descriptor
                     $('#chart_name').html(reader)
+                    $('#total_all').hide()
                     $('#chart_description').html("Minutes Read Per Day")
                     // clear the canvas
                     $("#barChart").remove()

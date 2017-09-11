@@ -233,10 +233,10 @@ def get_reader_by_id(id):
     return reader
 
 
-def get_reader_by_name(name, admin_id):
+def get_reader_by_name(name):
     """Given a reader's name, return the reader object"""
 
-    reader = Reader.query.filter(Reader.first_name == name, Reader.admin_id == admin_id).first()
+    reader = Reader.query.filter(Reader.first_name == name).first()
 
     return reader
 
