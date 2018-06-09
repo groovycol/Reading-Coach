@@ -7,7 +7,9 @@
  
  .navbar-default .navbar-brand {
     color: #FFFFFF;
+    font-size: 100px !important; 
  }
+
 
  .btn-primary {
     color: #ffffff;
