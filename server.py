@@ -260,7 +260,7 @@ def register_process():
 
     #send a welcoming text message
     #uncomment before deploying or testing
-    send_welcome_msg(coach_phone, names[0])
+    tw_send_welcome_msg(coach_phone, names[0])
 
     return render_template("new-coach-info.html", first_name=names[0], phone_string=phone_string)
 
@@ -396,7 +396,7 @@ def send_sms_from_admin():
     admin = session["admin"]
 
     #send the message, and return a string about status
-    msg_status = send_message_from_admin(first_name, admin, message)
+    msg_status = tw_send_message_from_admin(first_name, admin, message)
 
     return msg_status
 
@@ -407,7 +407,7 @@ def sendlog():
 
     msg_received = request.form
     print msg_received
-    response = handle_incoming(msg_received)
+    response = tw_handle_incoming(msg_received)
 
     return Response(response, mimetype='text/xml')
 

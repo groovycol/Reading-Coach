@@ -31,7 +31,7 @@ def tw_send_message(phone_number):
     print(message.sid)
 
 
-def send_message_from_admin(first_name, admin_email, message):
+def tw_send_message_from_admin(first_name, admin_email, message):
     """send a real-time sms message from the admin to the coach/reader"""
 
     #get the admin name
@@ -40,7 +40,7 @@ def send_message_from_admin(first_name, admin_email, message):
     admin_name = admin.nameprefix.prefix + " " + admin.name
 
     #get the coach's phone number
-    reader = get_reader_by_name(first_name, admin.admin_id)
+    reader = get_reader_by_name(first_name)
 
     coach = reader.coach
     phone_number = coach.phone
@@ -62,7 +62,7 @@ def send_message_from_admin(first_name, admin_email, message):
     return "SMS message sent."
 
 
-def send_welcome_msg(phone, first_name):
+def tw_send_welcome_msg(phone, first_name):
     """Send a one time welcome message to registrants"""
 
     #prepare the message to send
@@ -76,7 +76,7 @@ def send_welcome_msg(phone, first_name):
     print(message.sid)
 
 
-def handle_incoming_closed(sms_message):
+def tw_handle_incoming_closed(sms_message):
     """handle incoming sms messages"""
     #get and format the phone number from which msg was received
     phone = sms_message["From"][2:]
@@ -100,7 +100,7 @@ def handle_incoming_closed(sms_message):
     return str(resp)
 
 
-def handle_incoming(sms_message):
+def tw_handle_incoming(sms_message):
     """handle incoming sms messages"""
     #get and format the phone number from which msg was received
     phone = sms_message["From"][2:]
