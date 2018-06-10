@@ -2,6 +2,7 @@
 import os
 import twilio.twiml
 from twilio.rest import Client
+from twilio.twiml.messaging_response import MessagingResponse
 
 from model import *
 from readcoach import *
@@ -85,7 +86,7 @@ def tw_handle_incoming_closed(sms_message):
     #phone_number = '-'.join([phone[:3], phone[3:6], phone[6:]])
 
     #set up the response
-    resp = twilio.twiml.Response()
+    resp = MessagingResponse()
 
     #Find the user associated with this phone number
     incoming_coach = match_coach_by_phone(phone)
@@ -113,7 +114,7 @@ def tw_handle_incoming(sms_message):
     received_message = sms_message["Body"]
 
     #set up the response
-    resp = twilio.twiml.Response()
+    resp = MessagingResponse()
 
     #initialize some variables
     remaining_words = []
