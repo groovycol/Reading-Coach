@@ -23,9 +23,9 @@ def tw_send_message(phone_number):
     
     #format message to send
     #during program
-    #msg_body = "The Reading Coach reminder: " + msg + " Log in to http://bit.ly/2rTxwxK to turn off reminder text messages. Reply to log today's minutes. example: 'log 10 {}'".format(recipient.readers[0].first_name)
+    msg_body = "The Reading Coach reminder: " + msg + " Log in to http://bit.ly/2rTxwxK to turn off reminder text messages. Reply to log today's minutes. example: 'log 10 {}'".format(recipient.readers[0].first_name)
     #end of program special message
-    msg_body = "The Reading Coach: THANK YOU! The Summer Reading Program ends tomorrow. Best wishes for a great school year!"
+    #msg_body = "The Reading Coach: THANK YOU! The Summer Reading Program ends tomorrow. Best wishes for a great school year!"
     #send the message via Twilio. Twilio does not return a success/failure status
     client = TwilioRestClient(ACCOUNT_SID, AUTH_TOKEN)
     client.messages.create(to=phone_number,

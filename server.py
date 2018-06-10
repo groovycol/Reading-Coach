@@ -69,8 +69,8 @@ def login_process():
             #add coach to the session
             session["coach"] = coach_phone
             #toggle back to record when program is in session
-            #return redirect("/record")
-            return redirect("/dashboard") 
+            return redirect("/record")
+            #return redirect("/dashboard") 
         else:
             #if password doesn't match, back to /login rte w/msg
             flash("Incorrect password")
@@ -407,7 +407,7 @@ def sendlog():
 
     msg_received = request.form
     print msg_received
-    response = handle_incoming_closed(msg_received)
+    response = handle_incoming(msg_received)
 
     return Response(response, mimetype='text/xml')
 
