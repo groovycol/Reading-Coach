@@ -260,7 +260,7 @@ def register_process():
 
     #send a welcoming text message
     #uncomment before deploying or testing
-    #send_welcome_msg(coach_phone, names[0])
+    send_welcome_msg(coach_phone, names[0])
 
     return render_template("new-coach-info.html", first_name=names[0], phone_string=phone_string)
 
