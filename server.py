@@ -448,7 +448,7 @@ def check_name_availability():
 
     result = {'name_exists': None}
 
-    reader = get_reader_by_name(request.form.get("reader_name"), request.form.get("admin_id"))
+    reader = get_reader_by_name(request.form.get("reader_name"))
     if reader is None:
         result['name_exists'] = 'false'
     else:
@@ -491,7 +491,7 @@ def admin_reader_books():
     #get the reader object
     try:
         admin = get_admin_by_email(session["admin"])
-        reader = get_reader_by_name(request.form.get("reader"), admin.admin_id)
+        reader = get_reader_by_name(request.form.get("reader"))
 
         book_list = get_books_by_reader(reader)
         return jsonify(book_list)
