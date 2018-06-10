@@ -1,7 +1,7 @@
 
 import os
 import twilio.twiml
-from twilio.rest import TwilioRestClient
+from twilio.rest import Client
 
 from model import *
 from readcoach import *
@@ -14,23 +14,21 @@ FROM_ACCOUNT = os.environ['TWILIO_NUMBER']
 def tw_send_message(phone_number):
     """Sends an SMS message to the user via the Twilio API"""
 
-    #get the recipient's phone number
+    #get the recipient's information
     recipient = get_coach_by_phone(phone_number)
 
     #determine the message of the day to send
     #during program
-    #msg = get_message_by_day(get_elapsed_days(recipient.start_date))
+    msg = get_message_by_day(get_elapsed_days(recipient.start_date))
     
     #format message to send
-    #during program
     msg_body = "The Reading Coach reminder: " + msg + " Log in to http://bit.ly/2rTxwxK to turn off reminder text messages. Reply to log today's minutes. example: 'log 10 {}'".format(recipient.readers[0].first_name)
-    #end of program special message
-    #msg_body = "The Reading Coach: THANK YOU! The Summer Reading Program ends tomorrow. Best wishes for a great school year!"
     #send the message via Twilio. Twilio does not return a success/failure status
-    client = TwilioRestClient(ACCOUNT_SID, AUTH_TOKEN)
-    client.messages.create(to=phone_number,
+    client = Client(ACCOUNT_SID, AUTH_TOKEN)
+    message = client.messages.create(to=phone_number,
                            from_=FROM_ACCOUNT,
                            body=msg_body)
+    print(message.sid)
 
 
 def send_message_from_admin(first_name, admin_email, message):
@@ -53,10 +51,11 @@ def send_message_from_admin(first_name, admin_email, message):
     msg_body = "The Reading Coach message from " + admin_name + ": " + message
 
     #Send the message via Twilio
-    client = TwilioRestClient(ACCOUNT_SID, AUTH_TOKEN)
-    client.messages.create(to=phone_number,
+    client = Client(ACCOUNT_SID, AUTH_TOKEN)
+    message = client.messages.create(to=phone_number,
                            from_=FROM_ACCOUNT,
                            body=msg_body)
+    print(message.sid)
 
     #Twilio does not return a success/failure status, but this will
     #verify that the message send process completed
@@ -70,10 +69,11 @@ def send_welcome_msg(phone, first_name):
     msg_body = "Welcome to the Reading Coach! You can record reading minutes by sending a text message to this number. For example, to log 10 minutes for {}, text 'log 10 {}'  Enjoy reading this summer!".format(first_name, first_name)
 
     #Send the message via Twilio
-    client = TwilioRestClient(ACCOUNT_SID, AUTH_TOKEN)
-    client.messages.create(to=phone,
+    client = Client(ACCOUNT_SID, AUTH_TOKEN)
+    message = client.messages.create(to=phone,
                            from_=FROM_ACCOUNT,
                            body=msg_body)
+    print(message.sid)
 
 
 def handle_incoming_closed(sms_message):
@@ -96,7 +96,7 @@ def handle_incoming_closed(sms_message):
         return str(resp)
 
     #otherwise, send the message about the program end
-    resp.message("The Reading Coach: The 2017 Summer Reading Program has ended")
+    resp.message("The Reading Coach: The 2018 Summer Reading Program has ended")
     return str(resp)
 
 
